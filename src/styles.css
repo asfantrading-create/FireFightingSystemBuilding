@@ -252,3 +252,5 @@ textarea.lic { width: 100%; height: 90px; font-family: var(--mono); font-size: .
 .editor .form-grid label { justify-content: flex-end; }
 .nav-hint { position: absolute; top: 232px; inset-inline-end: 14px; max-width: 250px; font-size: .75em; color: var(--muted);
   background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; z-index: 5; line-height: 1.5; }
+.vid { display: inline-block; font-size: .85em; background: #fee2e2; color: #b91c1c; border-radius: 999px; padding: 3px 10px; margin: 2px 0 6px; }
+.vbadge { font-size: .4em; vertical-align: middle; background: #fee2e2; color: #b91c1c; border-radius: 999px; padding: 2px 8px; }
