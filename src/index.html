@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <title>Fire Protection Digital Twin</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#1f2a37"/><path d="M16.8 4c.6 4.2-3.6 6.2-3.6 10.3 0 1.7.8 3 2 3.6-.2-2.1 1.3-3.6 2.6-4.9 1 2.8 3.9 4.4 3.9 7.8A5.7 5.7 0 0 1 16 26.5a6.1 6.1 0 0 1-6.3-6.1c0-6 7.4-8.6 7.1-16.4Z" fill="#f97316"/><path d="M16 26.5a3.3 3.3 0 0 1-3.3-3.4c0-2.5 3.3-3.7 3.5-6.6 1.5 1.7 3.1 3.3 3.1 5.9 0 2.3-1.4 4.1-3.3 4.1Z" fill="#fde047"/></svg>
+      </div>
+      <div>
+        <div class="app-name" data-i18n="appName"></div>
+        <div class="app-sub" data-i18n="appSub"></div>
+      </div>
+    </div>
+    <div class="fac-picker">
+      <button id="facBtn" class="fac-btn"><span class="dot" id="facDot"></span><span id="facId">HIGH_RISE</span><span class="caret">▾</span></button>
+      <div id="facMenu" class="fac-menu hidden"></div>
+    </div>
+    <span class="ref-badge" id="refBadge">◆ <span data-i18n="refDesign"></span></span>
+    <nav class="tabs" id="tabs">
+      <button data-page="twin" class="active"><span class="ic">🏙️</span><span data-i18n="tabTwin"></span></button>
+      <button data-page="dash"><span class="ic">📈</span><span data-i18n="tabDash"></span></button>
+      <button data-page="data"><span class="ic">⚙️</span><span data-i18n="tabData"></span></button>
+      <button data-page="learn"><span class="ic">📘</span><span data-i18n="tabLearn"></span></button>
+      <button data-page="quiz"><span class="ic">🎓</span><span data-i18n="tabQuiz"></span></button>
+      <button data-page="class"><span class="ic">🏫</span><span data-i18n="tabClass"></span></button>
+      <button data-page="reports"><span class="ic">📄</span><span data-i18n="tabReports"></span></button>
+    </nav>
+    <div class="tools">
+      <button id="licBadge" class="lic-badge">🔑 <span id="licText"></span></button>
+      <button id="fontDown" class="tbtn">A−</button>
+      <button id="fontUp" class="tbtn">A+</button>
+      <button id="themeBtn" class="tbtn">🌙</button>
+      <div class="lang"><button data-lang="en" class="active">English</button><button data-lang="ar">العربية</button></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 3D twin -->
+    <section class="page active" id="page-twin">
+      <div class="viewport" id="viewport">
+        <div class="info-card" id="infoCard">
+          <h2 id="facName"></h2>
+          <div class="info-sub" id="facSite"></div>
+          <div class="info-row mono" id="facCond"></div>
+          <div class="scen-row">
+            <label data-i18n="scenario"></label>
+            <select id="scenSel"></select>
+          </div>
+          <details class="faults">
+            <summary data-i18n="faults"></summary>
+            <div id="faultList"></div>
+          </details>
+        </div>
+        <div class="vbtns">
+          <button id="btnLabels">🏷️ <span data-i18n="labels"></span>: <b id="lblState"></b></button>
+          <button id="btnQuality">◐ <span data-i18n="quality"></span>: <b id="qState"></b></button>
+          <button id="btnOrbit">↻ <span data-i18n="orbit"></span>: <b id="oState"></b></button>
+          <button id="btnShot">📷 <span data-i18n="screenshot"></span></button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="player">
+          <div class="prow">
+            <button id="btnPlay" class="play">▶</button>
+            <span class="plabel" data-i18n="speed"></span>
+            <div class="speeds" id="speeds"></div>
+            <button id="btnReset" class="icon" title="Reset">⟲</button>
+          </div>
+          <div class="prow">
+            <span class="mono small" id="tStart">00:00</span>
+            <input type="range" id="scrub" min="0" max="1800" step="0.5" value="0" />
+            <span class="mono tnow" id="tNow">00:00</span>
+          </div>
+        </div>
+        <div class="alarm-banner hidden" id="alarmBanner"></div>
+      </div>
+      <aside class="side">
+        <div class="card">
+          <h3 data-i18n="kpis"></h3>
+          <div class="kpis" id="kpis"></div>
+        </div>
+        <div class="card">
+          <h3 data-i18n="alarms"></h3>
+          <div class="alarms" id="alarms"></div>
+        </div>
+        <div class="card">
+          <h3 data-i18n="selected"></h3>
+          <div id="selComp" class="sel-comp"><span class="muted" data-i18n="selectedHint"></span></div>
+        </div>
+        <div class="card">
+          <h3 data-i18n="components"></h3>
+          <p class="muted" data-i18n="componentsHint"></p>
+          <div class="comp-list" id="compList"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="page" id="page-dash"><div class="page-inner" id="dashInner"></div></section>
+    <section class="page" id="page-data"><div class="page-inner" id="dataInner"></div></section>
+    <section class="page" id="page-learn"><div class="page-inner" id="learnInner"></div></section>
+    <section class="page" id="page-quiz"><div class="page-inner" id="quizInner"></div></section>
+    <section class="page" id="page-class"><div class="page-inner" id="classInner"></div></section>
+    <section class="page" id="page-reports"><div class="page-inner" id="reportsInner"></div></section>
+  </main>
+
+  <footer class="footer">
+    <div class="asfan"><svg viewBox="0 0 40 28" width="30" height="21"><path d="M20 2 38 26H2Z" fill="none" stroke="#7c5cff" stroke-width="3"/><path d="M20 10 31 26H9Z" fill="#7c5cff" opacity=".45"/></svg><b>ASFAN</b></div>
+    <span class="muted" data-i18n="support"></span>
+    <span>✉ E-mail <a href="mailto:info@asfanco.com">info@asfanco.com</a></span>
+    <span>📱 WhatsApp <a href="https://wa.me/962776140404">+962 77 614 0404</a></span>
+    <span class="grow"></span>
+    <span class="muted" data-i18n="rights"></span>
+  </footer>
+
+  <div class="modal hidden" id="modal"><div class="modal-box" id="modalBox"></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
