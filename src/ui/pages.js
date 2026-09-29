@@ -17,7 +17,10 @@ let current = 'twin';
 let charts = [];
 let lastChart = 0;
 
+export const getHelpers = () => helpers_;
+let helpers_ = {};
 export function show(page, c, h) {
+  helpers_ = h;
   helpers = h;
   current = page;
   if (page === 'dash') renderDashboard(c);
@@ -131,6 +134,153 @@ function updateCharts(c) {
   }
 }
 
+
+// ───────────────────────── design-data editor
+const PUMP_GPM = [250, 300, 400, 450, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000];
+const F = (key, en, ar, unit, min, max, step, opts) => ({ key, en, ar, unit, min, max, step, opts });
+function editorFields(c) {
+  const kind = c.fac.system.kind, sys = c.fac.system;
+  const fire = [
+    F('fire.growth', 'Fire growth rate (t²)', 'معدل نمو الحريق', '', 0, 0, 0, ['slow', 'medium', 'fast', 'ultrafast']),
+    F('fire.qMax', 'Peak heat release rate', 'ذروة معدل انطلاق الحرارة', 'kW', 20, 1000000, 10),
+    F('ambient', 'Ambient temperature', 'درجة حرارة المحيط', '°C', -10, 55, 1),
+  ];
+  const equip = [
+    F('pump.gpm', 'Fire pump rating (0 = auto)', 'تصنيف مضخة الحريق (0 = تلقائي)', 'gpm', 0, 5000, 0, [0, ...PUMP_GPM]),
+    F('pump.P', 'Pump rated pressure (0 = auto)', 'الضغط المقنن للمضخة (0 = تلقائي)', 'bar', 0, 24, 0.5),
+    F('pump.count', 'Number of duty pumps (0 = auto)', 'عدد المضخات العاملة (0 = تلقائي)', '', 0, 4, 1),
+    F('tank', 'Water storage (0 = auto)', 'سعة خزان المياه (0 = تلقائي)', 'm³', 0, 20000, 5),
+  ];
+  if (kind === 'cleanAgent') {
+    return [
+      [L('Protected room', 'الغرفة المحمية'), [
+        F('sys.room.l', 'Room length', 'طول الغرفة', 'm', 2, 100, 0.5), F('sys.room.w', 'Room width', 'عرض الغرفة', 'm', 2, 100, 0.5),
+        F('sys.room.h', 'Room height', 'ارتفاع الغرفة', 'm', 2, 10, 0.1), F('sys.designTemp', 'Minimum design temperature', 'أدنى درجة حرارة تصميمية', '°C', 0, 50, 1),
+        F('sys.concentration', 'Design concentration', 'تركيز التصميم', '%', 5, 10.5, 0.1), F('sys.preDischarge', 'Pre-discharge delay', 'تأخير ما قبل التفريغ', 's', 0, 120, 5)]],
+      [L('Fire scenario', 'سيناريو الحريق'), fire],
+    ];
+  }
+  if (kind === 'foam') {
+    const geom = sys.mode === 'deluge'
+      ? [F('sys.area', 'Protected area', 'المساحة المحمية', 'm²', 100, 20000, 10)]
+      : [F('sys.tankD', 'Tank diameter', 'قطر الخزان', 'm', 5, 120, 0.5)];
+    return [
+      [L('Foam system', 'منظومة الرغوة'), [...geom,
+        F('sys.rate', 'Application rate', 'معدل الاستخدام', 'L/min·m²', 1, 30, 0.1), F('sys.duration', 'Discharge time', 'زمن التفريغ', 'min', 5, 120, 1),
+        F('sys.pct', 'Foam concentrate', 'نسبة المركّز', '%', 1, 6, 0, [1, 3, 6]), F('sys.cooling', 'Cooling water', 'مياه التبريد', 'L/min', 0, 30000, 10),
+        F('sys.supplementary', 'Supplementary streams / monitors', 'الخطوط والمدافع الإضافية', 'L/min', 0, 20000, 10),
+        F('sys.nozzleK', 'Outlet K-factor', 'معامل K للمخرج', 'L/min/√bar', 10, 2000, 1), F('sys.nozzleP', 'Outlet pressure', 'ضغط المخرج', 'bar', 0.5, 10, 0.1),
+        F('sys.mainDia', 'Main pipe size', 'قطر الخط الرئيسي', 'mm', 0, 0, 0, [100, 150, 200, 250, 300, 350, 400]), F('sys.mainLength', 'Main pipe length', 'طول الخط الرئيسي', 'm', 10, 5000, 10),
+        F('sys.elevation', 'Outlet elevation', 'ارتفاع المخرج', 'm', 0, 100, 0.5)]],
+      [L('Fire scenario', 'سيناريو الحريق'), fire], [L('Pumps & water', 'المضخات والمياه'), equip],
+    ];
+  }
+  const spr = [];
+  if (sys.esfr) spr.push(F('sys.esfr.heads', 'ESFR design sprinklers', 'رشاشات تصميم ESFR', '', 4, 20, 1), F('sys.esfr.minP', 'ESFR minimum pressure', 'أدنى ضغط ESFR', 'bar', 0.5, 7, 0.1));
+  else spr.push(F('sys.hazard', 'Occupancy hazard', 'تصنيف الخطورة', '', 0, 0, 0, ['LH', 'OH1', 'OH2', 'EH1', 'EH2']));
+  spr.push(
+    F('sys.K', 'Sprinkler K-factor', 'معامل K للرشاش', 'L/min/√bar', 40, 400, 0.1), F('sys.spacing', 'Sprinkler spacing (square)', 'التباعد بين الرشاشات', 'm', 1.8, 5, 0.1),
+    F('sys.RTI', 'Response time index RTI', 'مؤشر زمن الاستجابة RTI', '(m·s)^½', 20, 400, 1), F('sys.Tact', 'Temperature rating', 'درجة التفعيل', '°C', 0, 0, 0, [57, 68, 74, 79, 93, 141]),
+    F('sys.hose', 'Hose allowance', 'بدل الخراطيم', 'L/min', 0, 5000, 10), F('sys.duration', 'Water supply duration', 'مدة الإمداد', 'min', 10, 240, 5),
+  );
+  return [
+    [L('Sprinkler system (NFPA 13)', 'منظومة الرشاشات (NFPA 13)'), spr],
+    [L('Piping & building', 'الأنابيب والمبنى'), [
+      F('sys.mainDia', 'Main pipe size', 'قطر الخط الرئيسي', 'mm', 0, 0, 0, [50, 65, 80, 100, 150, 200, 250, 300]), F('sys.mainLength', 'Main pipe length', 'طول الخط الرئيسي', 'm', 5, 3000, 5),
+      F('sys.elevation', 'Fire floor elevation above pump', 'ارتفاع طابق الحريق عن المضخة', 'm', -30, 600, 0.5), F('sys.prv', 'Floor PRV setting (0 = none)', 'ضبط صمام خفض الضغط (0 = بدون)', 'bar', 0, 12, 0.5),
+      F('comp.h', 'Ceiling height', 'ارتفاع السقف', 'm', 2.4, 20, 0.1), F('comp.w', 'Room length', 'طول الغرفة', 'm', 6, 60, 1), F('comp.d', 'Room width', 'عرض الغرفة', 'm', 6, 40, 1),
+      F('fire.x', 'Fire position x', 'موقع الحريق x', 'm', 0.5, 60, 0.1), F('fire.z', 'Fire position y', 'موقع الحريق y', 'm', 0.5, 40, 0.1)]],
+    [L('Fire scenario', 'سيناريو الحريق'), fire], [L('Pumps & water', 'المضخات والمياه'), equip],
+  ];
+}
+
+function getPath(c, key) {
+  const [root, ...rest] = key.split('.');
+  let o = root === 'sys' ? c.fac.system : root === 'fire' ? c.sc.fire : root === 'comp' ? c.sc.compartment : null;
+  if (key === 'ambient') return c.fac.ambient;
+  if (key === 'tank') return 0;
+  if (root === 'pump') return 0;
+  for (const p of rest) o = o?.[p];
+  if (o === undefined || o === null) {
+    // values not stored on the system come from the design calculation (e.g. hose / duration by hazard)
+    const d = c.design, last = rest[rest.length - 1];
+    if (key === 'sys.prv') return 0;
+    if (d && d[last] !== undefined) return d[last];
+  }
+  return o ?? '';
+}
+
+function renderEditor(c) {
+  const edits = helpers_.getEdits?.() || {};
+  const groups = editorFields(c);
+  const input = (f) => {
+    const cur = edits[f.key] ?? getPath(c, f.key);
+    const changed = f.key in edits;
+    const ctl = f.opts
+      ? `<select data-k="${f.key}">${f.opts.map((o) => `<option value="${o}" ${String(o) === String(cur) ? 'selected' : ''}>${o === 0 ? 'auto' : o}</option>`).join('')}</select>`
+      : `<input type="number" data-k="${f.key}" value="${cur === null ? 0 : cur}" min="${f.min}" max="${f.max}" step="${f.step}" />`;
+    return `<label class="${changed ? 'changed' : ''}">${esc(L(f.en, f.ar))}${f.unit ? ` <span class="muted">(${esc(f.unit)})</span>` : ''}${ctl}</label>`;
+  };
+  return `<div class="card editor"><h3>✏️ ${L('Edit design data – your own values', 'تعديل بيانات التصميم – قيمك الخاصة')}</h3>
+    <p class="muted" style="margin:0 0 10px">${L('Change any value, then run the simulation on your data. Changed fields are highlighted; values are saved per facility and scenario.',
+      'غيّر أي قيمة ثم شغّل المحاكاة على بياناتك. الحقول المعدلة مميزة، وتُحفظ القيم لكل منشأة وسيناريو.')}</p>
+    ${groups.map(([title, fields]) => `<h4>${esc(title)}</h4><div class="form-grid g3">${fields.map(input).join('')}</div>`).join('')}
+    <div class="ed-actions no-print">
+      <button class="btn primary" id="edRun">▶ ${L('Run simulation with my data', 'تشغيل المحاكاة ببياناتي')}</button>
+      <button class="btn" id="edApply">✓ ${L('Recalculate', 'إعادة الحساب')}</button>
+      <button class="btn" id="edReset">↺ ${L('Reset to reference design', 'استعادة التصميم المرجعي')}</button>
+      <button class="btn" id="edExport">⬇ ${L('Export JSON', 'تصدير JSON')}</button>
+      <label class="btn" style="display:inline-block">⬆ ${L('Import JSON', 'استيراد JSON')}<input type="file" id="edImport" accept=".json" hidden /></label>
+    </div>
+    <div id="edMsg"></div></div>`;
+}
+
+function collectEdits(c) {
+  const out = {};
+  const ref = {};
+  document.querySelectorAll('.editor [data-k]').forEach((el) => {
+    const k = el.dataset.k;
+    const raw = el.value;
+    const num = Number(raw);
+    const v = raw !== '' && !Number.isNaN(num) ? num : raw;
+    const base = getPath(c, k);
+    ref[k] = base;
+    // keep only values that differ from the reference or were already edited
+    const prev = helpers_.getEdits?.() || {};
+    if (String(v) !== String(base) || k in prev) out[k] = v;
+  });
+  // validate against ranges
+  const errs = [];
+  for (const [, fields] of editorFields(c)) {
+    for (const f of fields) {
+      if (!(f.key in out) || f.opts) continue;
+      if (out[f.key] < f.min || out[f.key] > f.max) errs.push(`${L(f.en, f.ar)}: ${f.min} – ${f.max}`);
+    }
+  }
+  if (out['fire.x'] !== undefined && c.sc.compartment && out['fire.x'] > (out['comp.w'] ?? c.sc.compartment.w)) errs.push(L('Fire must be inside the room', 'يجب أن يكون الحريق داخل الغرفة'));
+  if (out['fire.z'] !== undefined && c.sc.compartment && out['fire.z'] > (out['comp.d'] ?? c.sc.compartment.d)) errs.push(L('Fire must be inside the room', 'يجب أن يكون الحريق داخل الغرفة'));
+  for (const k of ['pump.gpm', 'pump.P', 'pump.count', 'tank']) if (out[k] === 0) delete out[k];
+  return { out, errs };
+}
+
+function wireEditor(c) {
+  const act = (run) => {
+    const { out, errs } = collectEdits(c);
+    if (errs.length) { $('edMsg').innerHTML = `<p class="err">✗ ${errs.map(esc).join('<br>')}</p>`; return; }
+    helpers_.setEdits(out, run);
+  };
+  $('edRun').onclick = () => act(true);
+  $('edApply').onclick = () => act(false);
+  $('edReset').onclick = () => helpers_.setEdits({}, false);
+  $('edExport').onclick = () => download(`${c.fac.id}_${c.sc.id}_design.json`, JSON.stringify({ facility: c.fac.id, scenario: c.sc.id, edits: helpers_.getEdits() }, null, 2), 'application/json');
+  $('edImport').onchange = async (e) => {
+    try {
+      const j = JSON.parse(await e.target.files[0].text());
+      helpers_.setEdits(j.edits || j, false);
+    } catch { $('edMsg').innerHTML = `<p class="err">✗ ${L('Invalid JSON file', 'ملف JSON غير صالح')}</p>`; }
+  };
+}
+
 // ───────────────────────── design data
 function renderData(c) {
   const d = c.design, f = c.fac, sys = { ...f.system, ...(c.sc.override || {}) };
@@ -168,7 +318,11 @@ function renderData(c) {
       ${row(L('Jockey start', 'تشغيل الجوكي'), p.jockeyStart, 'bar')}${row(L('Electric pump start', 'تشغيل الكهربائية'), p.mainStart, 'bar')}
       ${row(L('Diesel pump start', 'تشغيل الديزل'), p.dieselStart, 'bar')}${row(L('Jockey flow', 'تدفق الجوكي'), p.jockeyFlow, 'L/min')}
       ${row(L('Motor rating (approx.)', 'قدرة المحرك'), p.motorKw, 'kW', false)}</table></div>` : '';
-  $('dataInner').innerHTML = `<h1>${t('dataTitle')}</h1><p class="lead">${esc(tr(f.name))} — ${esc(tr(c.sc.name))}</p>
+  const checks = (d.checks || []).map((k) => `<div class="chk ${k.ok ? 'ok' : 'bad'}">${k.ok ? '✅' : '⚠️'} ${esc(ar() ? k.ar : k.en)}</div>`).join('');
+  const nEd = Object.keys(helpers_.getEdits?.() || {}).length;
+  $('dataInner').innerHTML = `<h1>${t('dataTitle')}</h1><p class="lead">${esc(tr(f.name))} — ${esc(tr(c.sc.name))}${nEd ? ` · <b style="color:var(--warn)">${L('USER DESIGN', 'تصميم المستخدم')} (${nEd})</b>` : ''}</p>
+    ${renderEditor(c)}
+    <div class="card" style="margin:14px 0"><h3>🧾 ${L('NFPA compliance checks', 'فحوصات المطابقة لـ NFPA')}</h3><div class="checks">${checks}</div></div>
     <div class="grid2">
       <div class="card"><h3>${t('siteFacts')}</h3><table class="data">
         <tr><td>${L('Location', 'الموقع')}</td><td class="num">${esc(tr(f.site))}</td></tr>
@@ -181,6 +335,7 @@ function renderData(c) {
       ${pumps}
     </div>
     <div style="margin-top:14px" class="no-print"><button class="btn" id="csvBtn">⬇ ${L('Export simulation timeline (CSV)', 'تصدير الخط الزمني للمحاكاة (CSV)')}</button></div>`;
+  wireEditor(c);
   $('csvBtn').onclick = () => {
     const lines = [FIELDS.join(',')];
     for (let i = 0; i < c.tl.n; i += 2) lines.push(FIELDS.map((k) => (+c.tl.data[k][i]).toFixed(3)).join(','));

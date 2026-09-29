@@ -1,7 +1,7 @@
 import { World } from './scene/world.js';
 import { buildSite } from './scene/sites.js';
 import { FACILITIES, FAULTS, customFacility } from './data/facilities.js';
-import { designSystem } from './engine/design.js';
+import { applyEdits, designWithEdits } from './engine/edits.js';
 import { runScenario, sampleAt, scenarioSystem } from './engine/sim.js';
 import { t, tr, setLang, getLang } from './i18n.js';
 import { kpis, metricValue, componentDetails, mmss, fmt } from './ui/metrics.js';
@@ -14,7 +14,7 @@ const SPEEDS = [1, 5, 10, 30, 60];
 
 const state = {
   fac: null, scIdx: 0, sc: null, design: null, tl: null, time: 0, playing: false, speed: 10,
-  faults: {}, selected: null, page: 'twin', challenge: null, customFac: null, labelRecs: {},
+  faults: {}, edits: {}, refFac: null, selected: null, page: 'twin', challenge: null, customFac: null, labelRecs: {},
 };
 
 let world;
@@ -52,8 +52,14 @@ function buildFacMenu() {
 }
 
 // ───────────────────────── facility / scenario
+const editKey = () => `${state.refFac.id}/${state.refFac.scenarios[state.scIdx].id}`;
+function currentEdits() { return state.edits[editKey()] || {}; }
+function saveEdits() { try { localStorage.setItem('ftw.edits', JSON.stringify(state.edits)); } catch { /* ignore */ } }
+
 function loadFacility(fac, scIdx = 0, keepFaults = false) {
-  state.fac = fac; state.scIdx = scIdx; state.sc = fac.scenarios[scIdx];
+  state.refFac = fac; state.scIdx = scIdx;
+  const eff = applyEdits(fac, fac.scenarios[scIdx], currentEdits());
+  state.fac = eff.fac; state.sc = eff.sc;
   if (!keepFaults) state.faults = {};
   state.selected = null;
   $('facId').textContent = fac.id;
@@ -82,8 +88,7 @@ function loadFacility(fac, scIdx = 0, keepFaults = false) {
 }
 
 function simulate() {
-  const sys = scenarioSystem(state.fac, state.sc);
-  state.design = designSystem(sys);
+  state.design = designWithEdits(scenarioSystem(state.fac, state.sc), currentEdits());
   state.tl = runScenario(state.fac, state.sc, state.design, { ambient: state.fac.ambient, faults: state.faults });
   state.time = 0;
   state.playing = false;
@@ -231,12 +236,22 @@ function setPage(p) {
   state.page = p;
   document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('active', b.dataset.page === p));
   document.querySelectorAll('.page').forEach((s) => s.classList.toggle('active', s.id === `page-${p}`));
-  Pages.show(p, ctx(), { openModal, closeModal, goTwin, startChallenge, screenshot: () => world.screenshot() });
+  Pages.show(p, ctx(), { openModal, closeModal, goTwin, startChallenge, screenshot: () => world.screenshot(), getEdits: currentEdits, setEdits });
+}
+
+/** Replace the user's design edits for the current facility/scenario, rebuild and (optionally) run. */
+function setEdits(edits, run = false) {
+  const k = editKey();
+  if (edits && Object.keys(edits).length) state.edits[k] = edits; else delete state.edits[k];
+  saveEdits();
+  loadFacility(state.refFac, state.scIdx, true);
+  if (run) { setPage('twin'); world.site && selectComponent(state.fac.system.kind === 'sprinkler' ? 'floor' : null); state.time = 0; state.playing = true; }
+  else Pages.show(state.page, ctx(), Pages.getHelpers());
 }
 
 function goTwin(facId, compId) {
   const f = FACILITIES.find((x) => x.id === facId);
-  if (f && f !== state.fac) loadFacility(f, 0);
+  if (f && f !== state.refFac) loadFacility(f, 0);
   setPage('twin');
   if (compId) setTimeout(() => selectComponent(compId), 300);
 }
@@ -257,13 +272,13 @@ function startChallenge(student) {
 function wire() {
   $('facBtn').onclick = (e) => { e.stopPropagation(); $('facMenu').classList.toggle('hidden'); };
   document.addEventListener('click', (e) => { if (!$('facMenu').contains(e.target)) $('facMenu').classList.add('hidden'); });
-  $('scenSel').onchange = () => loadFacility(state.fac, +$('scenSel').value, true);
+  $('scenSel').onchange = () => loadFacility(state.refFac, +$('scenSel').value, true);
   document.querySelectorAll('.tabs button').forEach((b) => { b.onclick = () => setPage(b.dataset.page); });
   document.querySelectorAll('.lang button').forEach((b) => {
     b.onclick = () => {
       setLang(b.dataset.lang);
       try { localStorage.setItem('ftw.lang', b.dataset.lang); } catch { /* ignore */ }
-      applyI18n(); loadFacility(state.fac, state.scIdx, true); setPage(state.page); refreshToggles(); initLicense(() => {});
+      applyI18n(); loadFacility(state.refFac, state.scIdx, true); setPage(state.page); refreshToggles(); initLicense(() => {});
     };
   });
   let fs = 14;
@@ -336,6 +351,7 @@ function refreshToggles() {
 async function main() {
   try {
     const l = localStorage.getItem('ftw.lang'); if (l) setLang(l);
+    state.edits = JSON.parse(localStorage.getItem('ftw.edits') || '{}');
     const th = localStorage.getItem('ftw.theme'); if (th === 'dark') { document.documentElement.dataset.theme = 'dark'; $('themeBtn').textContent = '☀️'; }
   } catch { /* ignore */ }
   applyI18n();

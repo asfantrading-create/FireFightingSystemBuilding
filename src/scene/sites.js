@@ -2,6 +2,8 @@
 //   { root, anchors: {id: Vector3}, focus: {id: {pos, target}}, overview, env, terrain, update(sample, tl, t), animate(dt) }
 import * as THREE from 'three';
 import { buildBurjKhalifa, buildDowntown } from './dubai.js';
+import { instancedBlocks, cityMats, stsCrane, containerShip, tanker, runway, apron as apronSlab } from './context.js';
+import { terrainHeight } from './world.js';
 import {
   M, V, box, cyl, pipe, cloneMat, facadeTexture, ribbedTexture, storageTank, pumpHouse, hydrant, fdc, valveStation,
   palm, tree, car, truck, fireTruck, road, parking, sprinklerArray, FireFX, SprayFX, FogFX, scatter, label3D,
@@ -164,6 +166,8 @@ function buildHighRise(fac, sc, design, world) {
   };
 }
 
+const WH_TERRAIN = { flat: 650, mountain: 520, biome: 'desert', seed: 3, sea: (x, z) => x < -480 };
+
 // ───────────────────────── Aqaba ESFR warehouse
 function buildWarehouse(fac, sc, design) {
   const root = new THREE.Group();
@@ -217,6 +221,37 @@ function buildWarehouse(fac, sc, design) {
   }
   root.add(road(700, 14, 0, 110, 0)); root.add(road(500, 12, -140, 0, Math.PI / 2));
   root.add(parking(16, 2, 70, -85, 0, 0.6));
+  // Aqaba container terminal: quay wall, ship-to-shore gantry cranes, berthed container ships
+  root.add(box(40, 3, 1400, M.concreteDark, -470, -1.5, 0));
+  for (let i = 0; i < 6; i++) { const cr = stsCrane(i % 2 ? 0xc62828 : 0x1e5aa8); cr.rotation.y = Math.PI / 2; cr.position.set(-468, 1.5, -520 + i * 190); root.add(cr); }
+  for (const [z, len, sd] of [[-360, 260, 5], [120, 220, 8], [520, 300, 11]]) { const sh = containerShip(len, sd); sh.rotation.y = Math.PI / 2; sh.position.set(-525, 0, z); root.add(sh); }
+  // container yard behind the quay: dense blocks of stacked 40 ft boxes (textured rows)
+  const boxTex = (seed) => {
+    const cv = document.createElement('canvas'); cv.width = 512; cv.height = 128;
+    const g2 = cv.getContext('2d');
+    const cols = ['#1f4e8c', '#b3261e', '#2f7d3a', '#d98e04', '#6b7280', '#0f766e', '#e5e7eb', '#7c2d12'];
+    let r = seed;
+    for (let x = 0; x < 16; x++) for (let y = 0; y < 4; y++) {
+      r = (r * 9301 + 49297) % 233280;
+      g2.fillStyle = cols[r % cols.length]; g2.fillRect(x * 32, y * 32, 31, 31);
+      g2.fillStyle = 'rgba(0,0,0,0.18)'; for (let k = 3; k < 31; k += 4) g2.fillRect(x * 32 + k, y * 32, 1, 31);
+    }
+    const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    return new THREE.MeshStandardMaterial({ map: t, roughness: 0.75 });
+  };
+  const yardMats = [boxTex(3), boxTex(7), boxTex(11)];
+  for (let r = 0; r < 6; r++) for (let c = 0; c < 14; c++) {
+    if ((r * 5 + c) % 9 === 0) continue;
+    const tiers = 2 + ((r * 7 + c * 3) % 4);
+    root.add(box(24.4 * 2, 2.6 * tiers, 2.44 * 8, yardMats[(r + c) % 3], -390 + r * 58, 0, -620 + c * 26));
+  }
+  // Aqaba town to the north (low sand-coloured blocks, following the terrain)
+  const hWh = terrainHeight(WH_TERRAIN);
+  instancedBlocks(root, {
+    count: 2600, seed: 17, mats: cityMats(21), ground: hWh,
+    place: (R) => { const x = -420 + R() * 2600, z = -700 - R() * 2200; return hWh(x, z) > 60 ? null : [x, z]; },
+    height: (R) => 6 + Math.floor(R() * 4) * 3.3, footprint: (R) => [12 + R() * 16, 12 + R() * 14],
+  });
   scatter(root, 30, () => palm(6 + Math.random() * 3), { x0: -200, x1: 200, z0: 80, z1: 140 }, (x, z) => Math.abs(z - 110) < 10);
   const trucks = [fireTruck(), fireTruck()]; trucks[0].position.set(-70, 0, 70); trucks[1].position.set(-55, 0, 72);
   trucks.forEach((tt) => { tt.visible = false; root.add(tt); });
@@ -224,10 +259,12 @@ function buildWarehouse(fac, sc, design) {
     root, anchors, focus, comp, trucks, ph,
     overview: { pos: [-190, 120, -170], target: [-10, 0, 0] },
     env: { ...standardEnv('desert', 62), radius: 350, shadowSize: 260 },
-    terrain: { flat: 650, mountain: 520, biome: 'desert', seed: 3, sea: (x, z) => x < -1100 + z * 0.15 },
-    sea: { size: [5000, 9000], pos: [-3600, -0.5, 0] },
+    terrain: WH_TERRAIN,
+    sea: { size: [6000, 12000], pos: [-3480, -0.5, 0] },
   };
 }
+
+const DC_TERRAIN = { flat: 150, mountain: 180, biome: 'hills', seed: 5 };
 
 // ───────────────────────── Amman data centre (FM-200)
 function buildDataCenter(fac, sc, design) {
@@ -288,21 +325,21 @@ function buildDataCenter(fac, sc, design) {
   root.add(storageTank({ r: 2.5, h: 3, text: null, shell: M.white }).translateX(58).translateZ(-26));
   anchors.generators = V(44, 6, -1); focus.generators = focusOf(V(44, 1, -1), 40);
   // Amman: white limestone buildings on hills, olive trees
-  const stone = new THREE.MeshStandardMaterial({ map: facadeTexture({ cols: 6, rows: 4, bg: '#6c7880', win: '#8fa0ab', frame: '#ece6d8', lit: 0.02 }), roughness: 0.85 });
+  // Amman's white limestone buildings climbing the surrounding hills
+  const hDc = terrainHeight(DC_TERRAIN);
+  instancedBlocks(root, {
+    count: 4200, seed: 11, mats: cityMats(31).slice(0, 3), ground: hDc,
+    place: (R) => { const a = R() * Math.PI * 2, r = 125 + Math.pow(R(), 0.7) * 2600; const x = Math.cos(a) * r, z = Math.sin(a) * r; return hDc(x, z) > 330 ? null : [x, z, Math.round(R() * 4) * Math.PI / 8]; },
+    height: (R) => 7 + Math.floor(R() * 4) * 3.3, footprint: (R) => [12 + R() * 14, 12 + R() * 12],
+  });
   const rnd = mulberry(11);
-  for (let i = 0; i < 140; i++) {
-    const a = rnd() * Math.PI * 2, r = 120 + rnd() * 520;
-    const x = Math.cos(a) * r, z = Math.sin(a) * r;
-    const h = 8 + Math.floor(rnd() * 4) * 3.3;
-    root.add(box(12 + rnd() * 14, h, 12 + rnd() * 12, stone, x, 0, z));
-  }
   scatter(root, 90, () => tree(4 + Math.random() * 2, cloneMat(M.foliage, { color: new THREE.Color(0x6f7d4a) })), { x0: -110, x1: 110, z0: -90, z1: 90 }, (x, z) => Math.abs(x) < 72 && Math.abs(z) < 52);
   root.add(road(600, 12, 0, 60, 0)); root.add(parking(12, 2, -10, 40, 0, 0.7));
   return {
     root, anchors, focus, comp, fog, strobe, bank,
     overview: { pos: [-70, 55, -75], target: [-8, 2, -2] },
     env: { ...standardEnv('hills', 44), radius: 180, shadowSize: 130 },
-    terrain: { flat: 150, mountain: 140, biome: 'hills', seed: 5 },
+    terrain: DC_TERRAIN,
   };
 }
 
@@ -399,6 +436,10 @@ function buildTankFarm(fac, sc, design) {
   const monitorSpray = new SprayFX(root, { drop: -14, radius: 26, perHead: 90, maxHeads: 2, color: 0xffffff, size: 0.5 });
   // sea & jetty
   root.add(box(12, 1.5, 240, M.concreteDark, -330, -0.5, 0));
+  root.add(box(300, 1.5, 10, M.concreteDark, -470, -0.5, 0));
+  root.add(box(60, 3, 30, M.concreteDark, -620, -1.5, 0));
+  for (let k = 0; k < 4; k++) root.add(box(1.2, 14, 1.2, M.fireRed, -605 + k * 10, 1.5, 12));
+  const tk = tanker(280); tk.rotation.y = Math.PI / 2; tk.position.set(-620, 0, 0); tk.translateX(-40); root.add(tk);
   root.add(road(700, 12, 0, 150, 0));
   const trucks = [fireTruck(), fireTruck(), fireTruck()];
   trucks.forEach((tt, i) => { tt.position.set(tp.x - 60 + i * 12, 0, tp.z - 52); tt.visible = false; root.add(tt); });
@@ -407,7 +448,7 @@ function buildTankFarm(fac, sc, design) {
     overview: { pos: [-260, 190, -300], target: [0, 0, -10] },
     env: { ...standardEnv('coast', 50), radius: 420, shadowSize: 300 },
     terrain: { flat: 480, mountain: 600, biome: 'coast', seed: 9, sea: (x, z) => x < -320 },
-    sea: { size: [4000, 9000], pos: [-2330, -0.4, 0] },
+    sea: { size: [6000, 12000], pos: [-3330, -0.4, 0] },
   };
 }
 
@@ -482,8 +523,13 @@ function buildHangar(fac, sc, design) {
   root.add(pipe([V(-109, 0.4, -40), V(-94, 0.4, -40)], 0.3));
   root.add(pipe([V(-76, 0.4, -40), V(-50, 0.4, -40), V(-50, 0.4, z0 + 3), V(x0 + 2, 0.4, z0 + 3)], 0.3));
   // apron, second aircraft, terminal with QAIA-style shallow domes, control tower
-  const apron = new THREE.Mesh(new THREE.PlaneGeometry(700, 300), cloneMat(M.concrete, { color: new THREE.Color(0xc9c9c3) }));
-  apron.rotation.x = -Math.PI / 2; apron.position.set(0, 0.03, 190); apron.receiveShadow = true; root.add(apron);
+  root.add(apronSlab(900, 320, 60, 190));
+  root.add(apronSlab(700, 260, 260, 470));
+  root.add(runway(3660, 60, 200, -700, 0));
+  root.add(runway(3660, 60, 200, -1250, 0));
+  root.add(apronSlab(3500, 23, 200, -560));
+  for (const x of [-800, 0, 700, 1400]) root.add(apronSlab(23, 520, x, -300));
+  for (let i = 0; i < 5; i++) { const a = aircraft(0.9); a.rotation.y = -Math.PI / 2; a.position.set(120 + i * 70, 0, 420); root.add(a); }
   for (let i = 0; i < 6; i++) { const l = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 120), M.lineY); l.rotation.x = -Math.PI / 2; l.position.set(-150 + i * 60, 0.06, 170); root.add(l); }
   const ac2 = aircraft(0.9); ac2.position.set(-120, 0, 150); ac2.rotation.y = 0.3; root.add(ac2);
   const term = new THREE.Group(); term.position.set(260, 0, 330);
@@ -504,7 +550,7 @@ function buildHangar(fac, sc, design) {
     root, anchors, focus, fire, spray, sprkHeads: heads, det, monitors, monitorSpray, foamDisc, trucks, ph,
     overview: { pos: [120, 80, 160], target: [0, 8, 0] },
     env: { ...standardEnv('hills', 34), radius: 300, shadowSize: 220 },
-    terrain: { flat: 900, mountain: 160, biome: 'hills', seed: 13 },
+    terrain: { flat: 2600, mountain: 160, biome: 'hills', seed: 13 },
   };
 }
 

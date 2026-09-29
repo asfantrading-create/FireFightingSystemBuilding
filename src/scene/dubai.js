@@ -45,7 +45,7 @@ function burjFacade() {
   return new THREE.MeshStandardMaterial({ map, roughnessMap: rough, roughness: 1, metalness: 0.7, envMapIntensity: 1.6 });
 }
 
-function curtainWall(seed, tone) {
+export function curtainWall(seed, tone) {
   const r = rnd(seed);
   const tones = [['#6f8aa0', '#8fa9bd'], ['#4f6f86', '#7394ab'], ['#8a9aa8', '#aab8c3'], ['#5e8193', '#86a7b8'], ['#9aa3a8', '#bcc4c8']];
   const [a, b] = tones[tone % tones.length];
@@ -62,7 +62,7 @@ function curtainWall(seed, tone) {
   return new THREE.MeshStandardMaterial({ map, metalness: 0.55, roughness: 0.14, envMapIntensity: 1.4 });
 }
 
-function stoneWall(seed) {
+export function stoneWall(seed) {
   const r = rnd(seed);
   const base = ['#e3d5bb', '#d8c7a6', '#eadfcb', '#cdb892', '#f0e8da'][Math.floor(r() * 5)];
   const map = canvasTex(128, 128, (g, w, h) => {
@@ -76,7 +76,7 @@ function stoneWall(seed) {
 }
 
 // World-space UVs for boxes so facade textures tile per metre
-function boxWorldUV(g, w, h, d) {
+export function boxWorldUV(g, w, h, d) {
   const uv = g.attributes.uv, n = g.attributes.normal;
   for (let i = 0; i < uv.count; i++) {
     const ax = Math.abs(n.getX(i)), ay = Math.abs(n.getY(i));
@@ -87,7 +87,7 @@ function boxWorldUV(g, w, h, d) {
   }
   return g;
 }
-function tower(w, h, d, mat, x, z, rotY = 0) {
+export function tower(w, h, d, mat, x, z, rotY = 0) {
   const g = boxWorldUV(new THREE.BoxGeometry(w, h, d), w, h, d);
   const m = new THREE.Mesh(g, mat);
   m.position.set(x, h / 2, z); m.rotation.y = rotY; m.castShadow = true; m.receiveShadow = true;

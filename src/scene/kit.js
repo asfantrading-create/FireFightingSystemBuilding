@@ -1,13 +1,14 @@
 // Reusable procedural models & effects for the fire-protection digital twin.
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { pbr } from './world.js';
 
 export const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // ───────────── materials
 const std = (color, rough = 0.6, metal = 0, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, ...extra });
 export const M = {
-  concrete: std(0xcfcac0, 0.9), concreteDark: std(0x9d978c, 0.95), asphalt: std(0x3b3d40, 0.95),
+  concrete: pbr('Concrete034', 1, { color: 0xe4e0d8 }), concreteDark: pbr('Concrete034', 1, { color: 0xa8a39a }), asphalt: pbr('Asphalt026A', 1, { color: 0xb8b8b8 }),
   fireRed: std(0xc4161c, 0.38, 0.35), darkRed: std(0x8a1014, 0.5, 0.3), white: std(0xf1f1ee, 0.5, 0.05),
   steel: std(0xb9bec4, 0.35, 0.8), darkSteel: std(0x5a6068, 0.45, 0.7), galv: std(0xa8adb2, 0.4, 0.75),
   yellow: std(0xf2b705, 0.5, 0.2), green: std(0x2f8f46, 0.6), black: std(0x1b1d20, 0.6, 0.2),
@@ -91,7 +92,17 @@ function tex() {
 
 // ───────────── primitives
 export function box(w, h, d, mat, x = 0, y = 0, z = 0, { cast = true, receive = true } = {}) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  const geo = new THREE.BoxGeometry(w, h, d);
+  if (mat?.userData?.worldUV) {
+    // photographic textures tile every 4 m instead of stretching over the whole face
+    const uv = geo.attributes.uv, n = geo.attributes.normal;
+    for (let i = 0; i < uv.count; i++) {
+      const ax = Math.abs(n.getX(i)), ay = Math.abs(n.getY(i));
+      const [a, b] = ay > 0.5 ? [w, d] : ax > 0.5 ? [d, h] : [w, h];
+      uv.setXY(i, uv.getX(i) * a / 4, uv.getY(i) * b / 4);
+    }
+  }
+  const m = new THREE.Mesh(geo, mat);
   m.position.set(x, y + h / 2, z);
   m.castShadow = cast; m.receiveShadow = receive;
   return m;
@@ -291,9 +302,15 @@ export function fireTruck() {
   return g;
 }
 
+export function scaleUV(g, su, sv) {
+  const uv = g.attributes.uv;
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * su, uv.getY(i) * sv);
+  return g;
+}
+
 export function road(len, w, x, z, rotY = 0, dashed = true) {
   const g = new THREE.Group();
-  const r = new THREE.Mesh(new THREE.PlaneGeometry(len, w), M.asphalt);
+  const r = new THREE.Mesh(scaleUV(new THREE.PlaneGeometry(len, w), len / 10, w / 10), M.asphalt);
   r.rotation.x = -Math.PI / 2; r.position.y = 0.05; r.receiveShadow = true; g.add(r);
   if (dashed) {
     const n = Math.floor(len / 8);
@@ -308,7 +325,7 @@ export function road(len, w, x, z, rotY = 0, dashed = true) {
 export function parking(cols, rows, x, z, rotY = 0, fill = 0.7) {
   const g = new THREE.Group();
   const w = cols * 2.7, d = rows * 11;
-  const p = new THREE.Mesh(new THREE.PlaneGeometry(w + 4, d + 2), M.asphalt);
+  const p = new THREE.Mesh(scaleUV(new THREE.PlaneGeometry(w + 4, d + 2), (w + 4) / 10, (d + 2) / 10), M.asphalt);
   p.rotation.x = -Math.PI / 2; p.position.y = 0.04; p.receiveShadow = true; g.add(p);
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {

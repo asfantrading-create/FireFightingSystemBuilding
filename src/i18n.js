@@ -21,6 +21,7 @@ const S = {
   quality: ['Quality', 'الجودة'], high: ['High', 'عالية'], low: ['Low', 'منخفضة'],
   orbit: ['Orbit', 'دوران'],
   screenshot: ['Screenshot', 'لقطة شاشة'],
+  navHint: ['🖱 Left: move · Right: rotate · Wheel: zoom · W A S D: walk · Q/E: turn · R/F: up/down', '🖱 الأيسر: تحريك · الأيمن: تدوير · العجلة: تكبير · W A S D: تجوّل · Q/E: التفاف · R/F: أعلى/أسفل'],
   kpis: ['KEY PERFORMANCE INDICATORS', 'مؤشرات الأداء الرئيسية'],
   alarms: ['ALARMS & EVENTS', 'الإنذارات والأحداث'],
   allNormal: ['All systems normal', 'جميع الأنظمة طبيعية'],

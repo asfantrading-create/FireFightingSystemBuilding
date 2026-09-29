@@ -87,7 +87,7 @@ main { flex: 1; min-height: 0; position: relative; }
 .label-layer > div { left: 0; top: 0; }
 .tw-anchor { pointer-events: none; }
 .tw-label {
-  pointer-events: auto; transition: margin-top .25s;
+  pointer-events: auto;
   display: flex; gap: 7px; align-items: center; background: var(--label-bg); color: #fff; border-radius: 10px;
   padding: 5px 11px 5px 9px; font-size: 12px; line-height: 1.2; cursor: pointer; white-space: nowrap;
   border: 1px solid rgba(255,255,255,.12); box-shadow: 0 2px 8px rgba(0,0,0,.25);
@@ -240,3 +240,15 @@ textarea.lic { width: 100%; height: 90px; font-family: var(--mono); font-size: .
 @media (max-width: 1700px) { .tabs .ic { display: none; } .ref-badge { display: none; } .lang button { padding: 7px 8px; } .topbar { gap: 8px; } }
 @media (max-width: 1450px) { .brand > div:last-child { display: none; } .side { width: 330px; } .tools .tbtn { min-width: 32px; padding: 6px 7px; } }
 @media (max-width: 1250px) { .tabs button { font-size: .88em; padding: 6px 6px; } .lic-badge { display: none; } }
+
+.editor h4 { margin: 14px 0 8px; font-size: .9em; color: var(--accent); }
+.form-grid.g3 { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.editor label.changed input, .editor label.changed select { border-color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, var(--panel)); }
+.ed-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.ed-actions .btn + .btn { margin-inline-start: 0; }
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 6px; }
+.chk { padding: 7px 10px; border-radius: 8px; background: var(--panel2); border: 1px solid var(--line); font-size: .9em; }
+.chk.bad { border-color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, var(--panel)); }
+.editor .form-grid label { justify-content: flex-end; }
+.nav-hint { position: absolute; top: 232px; inset-inline-end: 14px; max-width: 250px; font-size: .75em; color: var(--muted);
+  background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; z-index: 5; line-height: 1.5; }

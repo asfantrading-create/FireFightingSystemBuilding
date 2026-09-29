@@ -21,10 +21,12 @@ export function tileTex(name, repeat = 1, color = false) {
 }
 /** PBR material from an ambientCG set (Color / NormalGL / Roughness). */
 export function pbr(set, repeat = 1, extra = {}) {
-  return new THREE.MeshStandardMaterial({
+  const m = new THREE.MeshStandardMaterial({
     map: tileTex(`${set}_Color`, repeat, true), normalMap: tileTex(`${set}_NormalGL`, repeat),
     roughnessMap: tileTex(`${set}_Roughness`, repeat), roughness: 1, metalness: 0, ...extra,
   });
+  m.userData.worldUV = true;
+  return m;
 }
 
 /** Tileable procedural water normal map (for three's Water shader). */
@@ -63,6 +65,20 @@ function noise(x, y) {
   const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
   return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
 }
+/** Terrain height function shared by the mesh and by object placement (buildings on hills). */
+export function terrainHeight({ flat = 500, mountain = 350, seed = 1, sea = null } = {}) {
+  return (x, z) => {
+    const r = Math.hypot(x, z);
+    const ridge = Math.max(0, (r - flat) / (flat * 1.5));
+    const mask = Math.min(1, ridge * ridge);
+    let n = fbm(x / 900 + seed * 13.1, z / 900 + seed * 7.7, 6);
+    n = Math.pow(Math.max(0, n - 0.25) * 1.6, 1.6);
+    let h = mask * n * mountain + (fbm(x / 60, z / 60, 3) - 0.5) * 0.5 * (1 - mask * 0.5);
+    if (sea && sea(x, z)) h = Math.min(h, -2 - fbm(x / 200, z / 200) * 4);
+    return h;
+  };
+}
+
 export function fbm(x, y, oct = 5) {
   let v = 0, a = 0.5, f = 1;
   for (let i = 0; i < oct; i++) { v += a * noise(x * f, y * f); f *= 2.03; a *= 0.5; }
@@ -95,7 +111,24 @@ export class World {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(45, 1, 0.5, 30000);
     this.camera.position.set(300, 200, 300);
-    this.controls = new OrbitControls(this.camera, this.labelRenderer.domElement);
+    // Mouse: LEFT = move around the site (pan on the ground plane), RIGHT = rotate/orbit, WHEEL = zoom.
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+    this.controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_ROTATE };
+    this.controls.screenSpacePanning = false;
+    this.controls.zoomToCursor = true;
+    this.controls.minDistance = 3;
+    this.controls.maxDistance = 6000;
+    this.renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
+    this.renderer.domElement.tabIndex = 0;
+    this.keys = new Set();
+    window.addEventListener('keydown', (e) => {
+      if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+      const k = e.key.toLowerCase();
+      if (['w', 'a', 's', 'd', 'q', 'e', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'r', 'f'].includes(k)) { this.keys.add(k); if (k.startsWith('arrow')) e.preventDefault(); }
+    });
+    window.addEventListener('keyup', (e) => this.keys.delete(e.key.toLowerCase()));
+    window.addEventListener('blur', () => this.keys.clear());
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.08;
     this.controls.maxPolarAngle = Math.PI * 0.495;
@@ -219,16 +252,10 @@ export class World {
     const rock = new Float32Array(pos.count);
     const cl = [new THREE.Color(b.low), new THREE.Color(b.mid), new THREE.Color(b.high), new THREE.Color(b.peak)];
     const c = new THREE.Color();
+    const hf = terrainHeight({ flat, mountain, seed, sea });
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i), z = pos.getZ(i);
-      const r = Math.hypot(x, z);
-      let h = 0;
-      const ridge = Math.max(0, (r - flat) / (flat * 1.5));
-      const mask = Math.min(1, ridge * ridge);
-      let n = fbm(x / 900 + seed * 13.1, z / 900 + seed * 7.7, 6);
-      n = Math.pow(Math.max(0, n - 0.25) * 1.6, 1.6);
-      h = mask * n * mountain + (fbm(x / 60, z / 60, 3) - 0.5) * 0.5 * (1 - mask * 0.5);
-      if (sea && sea(x, z)) h = Math.min(h, -2 - fbm(x / 200, z / 200) * 4);
+      const h = hf(x, z);
       pos.setY(i, h);
       const t = Math.min(1, Math.max(0, h / (mountain * 0.8)));
       const k = t * 3, idx = Math.min(2, Math.floor(k));
@@ -375,6 +402,7 @@ export class World {
       this.controls.target.lerpVectors(a.q0, a.q1, k);
       if (a.t >= 1) this.anim = null;
     }
+    if (this.keys.size) this.walk(dt);
     this.controls.update();
     for (const h of this.frameHooks) h(dt);
     for (const w of this.waters || []) { const o = w.material.normalMap.offset; o.x += dt * 0.004; o.y += dt * 0.0025; }
@@ -383,29 +411,60 @@ export class World {
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
     this._declutterT = (this._declutterT || 0) + dt;
-    if (this._declutterT > 0.25) { this._declutterT = 0; this.declutter(); }
+    if (this._declutterT > 0.1) { this._declutterT = 0; this.declutter(); }
   }
 
-  /** Greedy vertical de-overlap of the component labels (keeps them readable when anchors cluster). */
+  /** Keyboard navigation: W/S forward-back, A/D strafe, Q/E turn, R/F up-down (speed scales with distance). */
+  walk(dt) {
+    const c = this.controls, cam = this.camera, k = this.keys;
+    const dist = cam.position.distanceTo(c.target);
+    const sp = Math.max(8, dist * 0.8) * dt;
+    const fwd = new THREE.Vector3().subVectors(c.target, cam.position).setY(0).normalize();
+    const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0));
+    const mv = new THREE.Vector3();
+    if (k.has('w') || k.has('arrowup')) mv.add(fwd);
+    if (k.has('s') || k.has('arrowdown')) mv.sub(fwd);
+    if (k.has('d')) mv.add(right);
+    if (k.has('a')) mv.sub(right);
+    if (k.has('r')) mv.y += 1;
+    if (k.has('f')) mv.y -= 1;
+    if (mv.lengthSq()) { mv.normalize().multiplyScalar(sp); cam.position.add(mv); c.target.add(mv); this.anim = null; }
+    const turn = (k.has('q') || k.has('arrowleft') ? 1 : 0) - (k.has('e') || k.has('arrowright') ? 1 : 0);
+    if (turn) {
+      const off = new THREE.Vector3().subVectors(cam.position, c.target).applyAxisAngle(new THREE.Vector3(0, 1, 0), turn * dt * 0.9);
+      cam.position.copy(c.target).add(off); this.anim = null;
+    }
+  }
+
+  /**
+   * Stable label de-overlap: labels keep a fixed priority order, positions come from projecting the
+   * 3D anchors (not from the DOM, so offsets never feed back), and offsets are applied with a
+   * transform on the inner element. Recomputed only when the camera moves.
+   */
   declutter() {
-    const items = this.labels.filter((l) => l.obj.visible && l.obj.element.style.display !== 'none').map((l) => {
-      const r = l.el.getBoundingClientRect();
-      const off = l.off || 0;
-      return { l, x: r.left, y: r.top - off, w: r.width, h: r.height };
-    }).sort((a, b) => b.y - a.y);
+    const cam = this.camera;
+    const key = cam.matrixWorld.elements.map((v) => v.toFixed(2)).join(',') + this.labels.length + this.container.clientWidth;
+    if (key === this._dcKey) return;
+    this._dcKey = key;
+    const W = this.container.clientWidth, H = this.container.clientHeight;
+    const v = new THREE.Vector3();
     const placed = [];
-    for (const it of items) {
-      let y = it.y;
-      let moved = true, guard = 0;
-      while (moved && guard++ < 20) {
+    for (const l of this.labels) {
+      if (!l.obj.visible) continue;
+      v.copy(l.obj.position).project(cam);
+      if (v.z > 1) continue;
+      l.w ||= l.el.offsetWidth; l.h ||= l.el.offsetHeight;
+      const x = (v.x * 0.5 + 0.5) * W - l.w / 2, y0 = (-v.y * 0.5 + 0.5) * H - l.h / 2;
+      let y = y0, guard = 0, moved = true;
+      while (moved && guard++ < 25) {
         moved = false;
         for (const p of placed) {
-          if (it.x < p.x + p.w + 4 && it.x + it.w + 4 > p.x && y < p.y + p.h + 3 && y + it.h + 3 > p.y) { y = p.y - it.h - 4; moved = true; }
+          if (x < p.x + p.w + 4 && x + l.w + 4 > p.x && y < p.y + p.h + 3 && y + l.h + 3 > p.y) { y = p.y - l.h - 4; moved = true; }
         }
       }
-      placed.push({ x: it.x, y, w: it.w, h: it.h });
-      const off = y - it.y;
-      if (Math.abs(off - (it.l.off || 0)) > 0.5) { it.l.off = off; it.l.el.style.marginTop = `${off}px`; }
+      placed.push({ x, y, w: l.w, h: l.h });
+      const off = Math.round(y - y0);
+      if (off !== (l.off || 0)) { l.off = off; l.el.style.transform = off ? `translateY(${off}px)` : ''; }
     }
   }
 }

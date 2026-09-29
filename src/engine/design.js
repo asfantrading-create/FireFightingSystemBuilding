@@ -51,13 +51,13 @@ const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
  * @param {number} demandP      bar required at the pump discharge
  * @param {number} suctionP     bar available at pump suction (flooded suction head)
  */
-export function designPumps(demandFlow, demandP, suctionP = 0.3, smallestOutletFlow = 200) {
+export function designPumps(demandFlow, demandP, suctionP = 0.3, smallestOutletFlow = 200, override = {}) {
   // Above the largest listed size, split the duty between identical pumps in parallel
-  const count = Math.max(1, Math.ceil(demandFlow / GPM / 5000));
-  const ratedGpm = selectPump(demandFlow / count);
+  const count = override.count || Math.max(1, Math.ceil(demandFlow / GPM / 5000));
+  const ratedGpm = override.ratedGpm || selectPump(demandFlow / count);
   const rated = ratedGpm * GPM;
-  // Rated pressure: required net pressure + 5 % margin, rounded up to 0.5 bar
-  const ratedP = Math.ceil(((demandP - suctionP) * 1.05) / 0.5) * 0.5;
+  // Rated pressure: required net pressure + 5 % margin, rounded up to 0.5 bar (or the user's choice)
+  const ratedP = override.ratedP || Math.ceil(((demandP - suctionP) * 1.05) / 0.5) * 0.5;
   const churnP = ratedP * 1.2;             // NFPA 20: churn ≤ 140 % of rated
   const at150 = churnP - (churnP - ratedP) * 2.25; // quadratic curve → pressure at 150 % flow
   const jockeyStop = churnP + suctionP;

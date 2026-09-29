@@ -42,3 +42,36 @@ test('power failure starts diesel', () => {
   const tl = runScenario(fac, sc, d, { ambient: 38, faults: { powerFail: true } });
   assert.ok(tl.events.some((e) => e.key === 'dieselRunning'));
 });
+
+import { applyEdits, designWithEdits } from '../src/engine/edits.js';
+
+test('user edits change the design and flag non-compliance', () => {
+  const fac = FACILITIES[0], sc = fac.scenarios[0];
+  const edits = { 'sys.spacing': 4.8, 'sys.K': 115, 'fire.qMax': 5000 };
+  const eff = applyEdits(fac, sc, edits);
+  assert.equal(eff.fac.system.spacing, 4.8);
+  assert.equal(eff.sc.fire.qMax, 5000);
+  assert.equal(fac.system.spacing, 4.0, 'reference facility untouched');
+  const d = designWithEdits(scenarioSystem(eff.fac, eff.sc), edits);
+  assert.ok(d.checks.some((c) => !c.ok && /Spacing/.test(c.en)));
+  const tl = runScenario(eff.fac, eff.sc, d, { ambient: 24, faults: {} });
+  assert.ok(tl.summary.tAct !== null);
+});
+
+test('pump and tank overrides are honoured', () => {
+  const fac = FACILITIES[1], sc = fac.scenarios[0];
+  const edits = { 'pump.gpm': 2500, 'pump.P': 7, tank: 700 };
+  const eff = applyEdits(fac, sc, edits);
+  const d = designWithEdits(scenarioSystem(eff.fac, eff.sc), edits);
+  assert.equal(d.pumps.ratedGpm, 2500);
+  assert.equal(d.pumps.ratedP, 7);
+  assert.equal(d.tank, 700);
+});
+
+test('clean agent room edit recomputes FM-200 quantity', () => {
+  const fac = FACILITIES[2], sc = fac.scenarios[0];
+  const edits = { 'sys.room.l': 10, 'sys.room.w': 8, 'sys.room.h': 3 };
+  const eff = applyEdits(fac, sc, edits);
+  const d = designWithEdits(scenarioSystem(eff.fac, eff.sc), edits);
+  assert.ok(Math.abs(d.W - 131.7) < 0.3, `W=${d.W}`);
+});
