@@ -104,6 +104,21 @@ export const LESSONS = [
           { en: 'Letters differ between systems: NFPA Class K (cooking oils) = EN 2 / AS Class F. Some handbooks use "Class E" for electrical fires, not for cooking oil, so always check which system a drawing or label follows.', ar: 'تختلف الحروف بين الأنظمة: الفئة K في NFPA (زيوت الطبخ) تعادل الفئة F في EN 2 والمعيار الأسترالي. وتستخدم بعض الكتيبات «الفئة E» للحرائق الكهربائية لا لزيوت الطبخ، لذا تحقّق دائماً من النظام الذي يتبعه المخطط أو الملصق.' },
           { en: 'The course recommends keeping an ABC extinguisher at home; commercial kitchens need Class K protection.', ar: 'توصي الدورة بالاحتفاظ بطفاية ABC في المنزل، وتحتاج المطابخ التجارية إلى حماية من الفئة K.' }
         ]
+      },
+      {
+        video: 'yZxJw9A-KoU',
+        h: { en: 'How fast a fire develops, and why water', ar: 'سرعة تطور الحريق، ولماذا الماء' },
+        p: {
+          en: 'In the lecture\'s full-scale test fire, smoke filled the room in under 2½ minutes and the contents of a shop were destroyed in under 5 minutes; the smaller the room, the faster the destruction. Most fire victims die from smoke inhalation rather than heat, so the fire engineer must work with the HVAC engineer on smoke extraction and stair pressurization. The goals of fire protection, in order of importance: protect life, protect property and contents, and keep the operation running. Water is the traditional agent because it is cheap and available, has a high specific heat and a very high latent heat of vaporisation.',
+          ar: 'في حريق الاختبار بالحجم الحقيقي الذي تعرضه المحاضرة امتلأت الغرفة بالدخان في أقل من دقيقتين ونصف، ودُمّرت محتويات متجر في أقل من 5 دقائق؛ وكلما صغرت الغرفة كان التدمير أسرع. ويموت معظم ضحايا الحرائق باستنشاق الدخان لا بالحرارة، لذا يجب أن يعمل مهندس الحريق مع مهندس التكييف على شفط الدخان وضغط السلالم. وأهداف الحماية من الحريق بحسب الأهمية: حماية الأرواح، ثم حماية الممتلكات والمحتويات، ثم استمرارية التشغيل. والماء هو الوسيلة التقليدية لأنه رخيص ومتوفر، وله حرارة نوعية عالية وحرارة كامنة للتبخر عالية جداً.'
+        },
+        formula: 'Specific heat (kJ/kg·K): water 4.2 | alcohol ≈ 2.5 | aluminium 0.9 | glass ≈ 0.7 | copper 0.4\nLatent heat of vaporisation of water ≈ 2257 kJ/kg\n1 kg of water heated from 20 °C to 100 °C and evaporated absorbs ≈ 4.2 × 80 + 2257 ≈ 2593 kJ',
+        bullets: [
+          { en: 'Three components of protection: passive (architect/civil: fire-rated walls, e.g. 2 h), active (mechanical: suppression; electrical: detection and alarm), and education/response (civil defence and trained occupants).', ar: 'ثلاثة مكونات للحماية: السلبية (المعماري/المدني: جدران مقاومة للحريق مثلاً ساعتين)، والفعّالة (الميكانيكي: الإخماد؛ والكهربائي: الكشف والإنذار)، والتوعية/الاستجابة (الدفاع المدني والشاغلون المدرَّبون).' },
+          { en: 'Most flaming fires need about 14–16% oxygen or more; gas systems that bring it below about 14% break the triangle.', ar: 'تحتاج معظم الحرائق اللهبية إلى نحو 14–16% أكسجين أو أكثر، وأنظمة الغاز التي تخفضه إلى ما دون 14% تقريباً تكسر المثلث.' },
+          { en: 'Removing the fuel is the hardest method in practice — realistic mainly for gas or oil pipelines, by closing a valve.', ar: 'إزالة الوقود هي الطريقة الأصعب عملياً — وهي واقعية أساساً لخطوط الغاز أو النفط بإغلاق صمام.' },
+          { en: 'Class letters compared: solids A (all codes); flammable liquids B (all); flammable gases C in EN/AS but B in NFPA; metals D (all); electrical E in AS (no class in EN) but C in NFPA; cooking oils F in EN/AS, K in NFPA.', ar: 'مقارنة حروف الفئات: المواد الصلبة A (في كل الأكواد)؛ والسوائل القابلة للاشتعال B (في الكل)؛ والغازات القابلة للاشتعال C في الأوروبي والأسترالي لكنها B في NFPA؛ والمعادن D (في الكل)؛ والكهربائية E في الأسترالي (ولا فئة لها في الأوروبي) لكنها C في NFPA؛ وزيوت الطبخ F في الأوروبي والأسترالي وK في NFPA.' }
+        ]
       }
     ],
     refs: ['NFPA 10 (2022) Ch. 5 – Classification of fires', 'EN 2:1992+A1:2004 – Classification of fires', 'SFPE Handbook – t-squared fires', 'NFPA 72 (2022) Annex B – Engineering guide for detector spacing']
@@ -237,6 +252,22 @@ export const LESSONS = [
           { en: 'NFPA 13 does not permit gridded dry-pipe systems (trapped air delays water); the course advises loops and grids for wet systems only. In deluge systems all sprinklers flow together, so a loop gives no hydraulic advantage.', ar: 'لا يسمح NFPA 13 بالأنظمة الجافة الشبكية (فالهواء المحتبس يؤخر وصول المياه)، وتنصح الدورة باستخدام الحلقات والشبكات للأنظمة الرطبة فقط. وفي أنظمة الغمر تتدفق كل الرشاشات معاً، فلا تعطي الحلقة ميزة هيدروليكية.' },
           { en: 'Site practice shown in the course: take branch lines off the top of the cross main through a short vertical nipple, so scale and sediment settle in the main instead of blocking the small branch pipe.', ar: 'ممارسة موقعية تعرضها الدورة: تُؤخذ الخطوط الفرعية من أعلى الخط الرئيسي العرضي عبر وصلة رأسية قصيرة، لكي تترسب القشور والرواسب في الخط الرئيسي بدلاً من أن تسد الأنبوب الفرعي الصغير.' }
         ]
+      },
+      {
+        video: 'GUmI_lH9cAc',
+        h: { en: 'Floor control riser assembly in detail', ar: 'مجموعة التحكم في الطابق على الرايزر بالتفصيل' },
+        p: {
+          en: 'On a combined standpipe/sprinkler riser each floor take-off carries a control assembly. Not every item is needed on every project, but each has a purpose:',
+          ar: 'على الرايزر المشترك بين الأنابيب القائمة والرشاشات يحمل كل مأخذ طابق مجموعة تحكم. ولا يلزم كل عنصر في كل مشروع، لكن لكل منها غرض:'
+        },
+        bullets: [
+          { en: 'Floor control valve (signal butterfly or OS&Y): accessible, electrically supervised or locked open, signed; a separate riser control valve lets one riser be isolated without shutting others.', ar: 'صمام التحكم في الطابق (فراشة بإشارة أو OS&Y): سهل الوصول، ومراقَب كهربائياً أو مقفل مفتوحاً، وعليه لافتة؛ ويتيح صمام تحكم مستقل للرايزر عزل رايزر دون إيقاف غيره.' },
+          { en: 'Water-flow switch (paddle type) sends the alarm; a check valve on the floor branch reduces false flow alarms on floors where no sprinkler operated.', ar: 'مفتاح تدفق المياه (من النوع الريشي) يرسل الإنذار؛ وصمام عدم رجوع على فرع الطابق يقلل إنذارات التدفق الكاذبة في الطوابق التي لم يعمل فيها أي رشاش.' },
+          { en: 'Pressure gauge at each floor control valve; PRV where pressure would exceed the 175 psi (12.1 bar) rating of sprinklers, pipe and fittings.', ar: 'مقياس ضغط عند كل صمام تحكم في الطابق؛ وصمام تخفيض ضغط حيث قد يتجاوز الضغط تصنيف 175 رطل/بوصة² (12.1 بار) للرشاشات والأنابيب والتجهيزات.' },
+          { en: 'Inspector\'s test connection with sight glass: downstream of the flow switch, simulates one sprinkler, discharges outside or to a drain able to take the flow.', ar: 'وصلة اختبار المفتش مع زجاجة رؤية: بعد مفتاح التدفق، تحاكي رشاشاً واحداً، وتصرّف إلى الخارج أو إلى مصرف يستوعب التدفق.' },
+          { en: 'Main drain size by riser size: up to 2" → ¾"; 2½"–3½" → 1¼"; 4" and larger → 2". Auxiliary drains: ¾" valve for 5–50 gal trapped, 1" above 50 gal. The drain riser must be one size larger than the largest drain feeding it.', ar: 'قطر الصرف الرئيسي حسب قطر الرايزر: حتى 2 بوصة ← ¾ بوصة؛ و2½–3½ بوصة ← 1¼ بوصة؛ و4 بوصات فأكبر ← 2 بوصة. وصمامات الصرف المساعدة: ¾ بوصة لحجم محتبس 5–50 جالوناً، و1 بوصة لأكثر من 50 جالوناً. ويجب أن يكون رايزر الصرف أكبر بقطر واحد من أكبر صرف يصب فيه.' },
+          { en: 'Pre-action release types: non-interlock (detector OR sprinkler), single interlock (detector), double interlock (detector AND sprinkler).', ar: 'أنواع إطلاق النظام سابق التشغيل: غير المتشابك (كاشف أو رشاش)، والتشابك الأحادي (كاشف)، والتشابك المزدوج (كاشف ورشاش معاً).' }
+        ]
       }
     ],
     refs: ['NFPA 13 (2022) Ch. 8 – System types', 'NFPA 14 (2024) – Standpipes', 'NFPA 20 (2022) – Fire pumps', 'NFPA 24 (2022) – Private fire service mains', 'SBC 801 / UAE FLSC Ch. 9']
@@ -337,7 +368,7 @@ export const LESSONS = [
         },
         bullets: [
           { en: 'Pendent: hangs below the pipe with a flat deflector, spraying downward; used below false ceilings. Recessed pendent adds a chrome escutcheon for a neater finish.', ar: 'المتدلي: يتدلى أسفل الأنبوب بعاكس مسطح ويرش للأسفل؛ ويُستخدم أسفل الأسقف المستعارة. ويضيف المتدلي الغائر حلقة تغطية مطلية بالكروم لتشطيب أنيق.' },
-          { en: 'Concealed pendent: only a flat cover plate shows; the plate is held by a fusible solder that releases first, then the bulb operates. Never paint the cover plate — order it in the ceiling colour from the factory.', ar: 'المتدلي المخفي: لا يظهر منه إلا غطاء مسطح مثبت بلحام قابل للانصهار يسقط أولاً ثم تعمل الأمبولة. لا يُطلى الغطاء أبداً — بل يُطلب من المصنع بلون السقف.' },
+          { en: 'Concealed pendent: only a flat cover plate shows; the plate is held by a fusible solder that releases first (typically about 20 °F / 11 °C below the sprinkler rating), the deflector drops into position, then the bulb operates. Never paint the cover plate — order it in the ceiling colour from the factory.', ar: 'المتدلي المخفي: لا يظهر منه إلا غطاء مسطح مثبت بلحام قابل للانصهار يسقط أولاً (عادةً عند نحو 11 °م / 20 °ف دون تصنيف الرشاش)، فينزل العاكس إلى موضعه ثم تعمل الأمبولة. لا يُطلى الغطاء أبداً — بل يُطلب من المصنع بلون السقف.' },
           { en: 'Upright: sits above the pipe with a curved (umbrella) deflector that throws water down and slightly up; used without a false ceiling (car parks, stores, plant rooms) and in combustible ceiling voids. Pendents below plus uprights above protect both sides of a false ceiling.', ar: 'القائم: يُركَّب أعلى الأنبوب بعاكس منحنٍ (كالمظلة) يقذف المياه للأسفل وقليلاً للأعلى؛ ويُستخدم حيث لا يوجد سقف مستعار (المواقف والمخازن وغرف المعدات) وفي فراغات الأسقف القابلة للاحتراق. والمتدلي من الأسفل مع القائم من الأعلى يحميان جانبي السقف المستعار.' },
           { en: 'Sidewall: mounted on the wall with the pipe concealed, throwing a quarter-sphere pattern away from the wall; for small rooms, corridors, stairs and ramps. Light and ordinary hazard only — not extra hazard.', ar: 'الجانبي: يُركَّب على الجدار مع إخفاء الأنبوب، ويقذف نمطاً على شكل ربع كرة بعيداً عن الجدار؛ للغرف الصغيرة والممرات والسلالم والمنحدرات. للخطورة الخفيفة والعادية فقط — لا للخطورة العالية.' },
           { en: 'Open spray sprinkler: no heat element, permanently open like a nozzle; used on deluge systems (pendent or upright).', ar: 'رشاش الرش المفتوح: دون عنصر حراري، مفتوح دائماً كالفوهة؛ ويُستخدم في أنظمة الغمر (متدلٍّ أو قائم).' },
@@ -501,6 +532,29 @@ export const LESSONS = [
           { en: '7. Size each pipe by counting the sprinklers it feeds and reading the pipe schedule table — sizing follows the code (probability of operation), not the peak demand of all sprinklers (except deluge).', ar: '7. حدّد قطر كل أنبوب بعدّ الرشاشات التي يغذيها وقراءة جدول الأنابيب — فالتحديد يتبع الكود (احتمال التشغيل) لا الطلب الأقصى لكل الرشاشات (باستثناء نظام الغمر).' }
         ],
         formula: 'Example: light hazard room 18 m × 12 m, S_max = L_max = 4.6 m\nBranch lines: 12 / 4.6 = 2.6 → 3 lines, L = 12 / 3 = 4.0 m (2.0 m to walls)\nPer line: 18 / 4.6 = 3.9 → 4 sprinklers, S = 18 / 4 = 4.5 m (2.25 m to walls)\nA = 4.5 × 4.0 = 18.0 m² ≤ 18.6 m² ✓ → 3 × 4 = 12 sprinklers\nSite practice on small projects: 3 m spacing, 1.5 m to walls (≈ 9 m² each) — conservative but simple'
+      },
+      {
+        video: 'NsueQwecxw4',
+        h: { en: 'Sprinklers above and below a ceiling', ar: 'الرشاشات أعلى السقف المستعار وأسفله' },
+        p: {
+          en: 'Where a combustible ceiling void needs protection, each branch feeds an upright above and a pendent below the ceiling. Because the two do not both open in the same fire area, NFPA 13 has separate, more generous tables for sprinklers above and below a ceiling. Compare them with the ordinary (below-ceiling-only) tables: the small sizes carry more sprinklers, and the difference between light and ordinary hazard starts at 2½".',
+          ar: 'حيث يحتاج فراغ السقف القابل للاحتراق إلى حماية، يغذي كل خط فرعي رشاشاً قائماً أعلى السقف ورشاشاً متدلياً أسفله. ولأن الاثنين لا يعملان معاً في منطقة الحريق نفسها، يضع NFPA 13 جداول مستقلة أكثر سخاءً للرشاشات أعلى السقف وأسفله. قارنها بالجداول العادية (أسفل السقف فقط): فالأقطار الصغيرة تحمل رشاشات أكثر، ويبدأ الفرق بين الخطورة الخفيفة والعادية من قطر 2½ بوصة.'
+        },
+        formula: 'Above & below ceiling (count the larger number on either side):\nLight hazard:    1" = 2 | 1¼" = 4 | 1½" = 7 | 2" = 15 | 2½" = 50\nOrdinary hazard: 1" = 2 | 1¼" = 4 | 1½" = 7 | 2" = 15 | 2½" = 30 | 3" = 60\nBelow ceiling only (standard tables):\nLight:    1" = 2 | 1¼" = 3 | 1½" = 5 | 2" = 10 | 2½" = 30 | 3" = 60 | 3½" = 100\nOrdinary: 1" = 2 | 1¼" = 3 | 1½" = 5 | 2" = 10 | 2½" = 20 | 3" = 40 | 3½" = 65 | 4" = 100 | 5" = 160 | 6" = 275',
+        bullets: [
+          { en: 'The pipe schedule method is for light and ordinary hazard only; extra hazard must be hydraulically calculated.', ar: 'طريقة جدول الأنابيب للخطورة الخفيفة والعادية فقط، أما الخطورة العالية فيجب حسابها هيدروليكياً.' },
+          { en: 'Where pendents below a ceiling are fed from the top of the branch line, a return bend (U-shaped drop) keeps sediment out of the drop.', ar: 'حيث تُغذّى الرشاشات المتدلية أسفل السقف من أعلى الخط الفرعي، يمنع المنحنى الراجع (الوصلة على شكل U) دخول الرواسب إلى الوصلة النازلة.' },
+          { en: 'Correction: the video quotes 850–1000 gpm for ordinary hazard at the base of the riser; NFPA 13 Table 19.2.2.1 gives 850–1500 gpm (60–90 min).', ar: 'تصحيح: يذكر الفيديو 850–1000 جالون/دقيقة للخطورة العادية عند قاعدة الرايزر، بينما يعطي جدول NFPA 13 رقم 19.2.2.1 قيمة 850–1500 جالون/دقيقة (60–90 دقيقة).' }
+        ]
+      },
+      {
+        video: 'GUmI_lH9cAc',
+        h: { en: 'Worked example: light hazard office 90 ft × 60 ft', ar: 'مثال محلول: مكتب خطورة خفيفة 90 × 60 قدماً' },
+        p: {
+          en: 'A tree system for a light hazard office (27.4 m × 18.3 m): maximum 200 ft² per sprinkler and 15 ft spacing, at most half the spacing to walls and at least 6 ft between sprinklers. Pipe sizes are chosen by counting the sprinklers downstream, starting from the far end of the main.',
+          ar: 'نظام شجري لمكتب خطورة خفيفة (27.4 × 18.3 م): أقصى تغطية 200 قدم² لكل رشاش وتباعد 15 قدماً، وبعد عن الجدران لا يتجاوز نصف التباعد، وما لا يقل عن 6 أقدام بين الرشاشات. وتُختار أقطار الأنابيب بعدّ الرشاشات التي تليها، بدءاً من الطرف البعيد للخط الرئيسي.'
+        },
+        formula: 'Branches with ≤ 2 sprinklers → 1"\nMain segment feeding 4 → 1½" (1¼" max 3) | feeding 8 → 2" (max 10)\nRest of main (11 to 30 sprinklers) → 2½"\nWater supply: 500 gpm × 30 min = 15,000 gal (≈ 57 m³) minimum tank (light hazard, lower bound)'
       }
     ],
     refs: ['NFPA 13 (2022) §19.2.2 & Table 19.2.2.1 – Pipe schedule water supply', 'NFPA 13 (2022) §28.5 – Pipe schedules (Tables 28.5.2.2.1, 28.5.3.4)', 'NFPA 13 (2022) §4.4 – Protection area limitations']
@@ -562,6 +616,21 @@ export const LESSONS = [
           ar: 'يُرسم مصدر المياه على ورق بياني شبه لوغاريتمي N^1.85، حيث يصبح سلوك هازن–ويليامز خطاً مستقيماً: الضغط الساكن عند تدفق صفري، والضغط المتبقي عند تدفق الاختبار (من اختبار تدفق الحنفية أو منحنى المضخة). ويجب أن تقع نقطة طلب النظام (تدفق الرشاشات عند قاعدة الرايزر مضافاً إليه بدل الخراطيم) تحت خط الإمداد. ويشترط كثير من الاستشاريين وجهات الدفاع المدني في الخليج هامش أمان (عادةً 10% أو 5–10 رطل/بوصة²).'
         },
         formula: 'Supply at flow Q: P = Ps − (Ps − Pr)·(Q/Qr)^1.85'
+      },
+      {
+        video: 'Y7iMQxipEAs',
+        h: { en: 'Spreadsheet walk-through: dining room, 8 sprinklers', ar: 'شرح جدول الحساب: صالة طعام بثمانية رشاشات' },
+        p: {
+          en: 'The MEP course builds an Excel sheet with one row per pipe section (node to node): nozzle ID, small q (sprinkler flow), capital Q (total flow), nominal and internal diameter, fittings, straight length, equivalent length, total length, Pt (total pressure), Pe (elevation), Pf (friction). Light hazard dining room: density 0.10 gpm/ft², 155 ft² per sprinkler, K = 5.3 (from the supplier\'s data sheet), galvanized steel C = 120. Sprinklers are spaced with the S/L rule: room width 35.95 ft ÷ 8 half-spaces = 4.5 ft to the wall, 8.99 ft between sprinklers.',
+          ar: 'يبني مقرر MEP جدول Excel بصف لكل مقطع أنبوب (من عقدة إلى عقدة): رقم الفوهة، وq الصغيرة (تدفق الرشاش)، وQ الكبيرة (التدفق الكلي)، والقطر الاسمي والداخلي، والتجهيزات، والطول المستقيم، والطول المكافئ، والطول الكلي، وPt (الضغط الكلي)، وPe (الارتفاع)، وPf (الاحتكاك). صالة طعام بخطورة خفيفة: كثافة 0.10 جالون/دقيقة/قدم²، و155 قدم² لكل رشاش، وK = 5.3 (من نشرة المورّد الفنية)، وفولاذ مجلفن C = 120. وتُوزَّع الرشاشات بقاعدة S/L: عرض الصالة 35.95 قدم ÷ 8 أنصاف تباعد = 4.5 قدم إلى الجدار، و8.99 قدم بين الرشاشات.'
+        },
+        formula: 'Node 1 (most remote): q = 0.10 × 155 = 15.5 gpm → P = (15.5/5.3)² = 8.56 psi (≥ 7 psi ✓)\n1" pipe, ID 1.049 in, 8.99 ft → Pf ≈ 0.7 psi → P2 ≈ 9.27 psi\nNode 2: q = 5.3 × √9.27 = 16.1 gpm → Q = 31.6 gpm (1¼", ID 1.380 in)\nNode 3: P ≈ 9.98 psi → q = 16.7 gpm → Q = 48.4 gpm\nNode 4 + tee (1¼" tee = 6 ft eq.): q = 18.0 gpm → Q = 66.4 gpm\nRiser nipple 3 ft: Pe = 3 × 0.433 = 1.3 psi (not 3 × 2.31 = 6.93 psi)\nCross main 2" (ID 2.067 in), 2" tee = 10 ft, 2" elbow = 5 ft\nSecond branch joins: Q_adj = Q_low × √(P_high / P_low) = 66.4 × √(9.04/7.94) = 70.9 gpm\nQ total = 66.4 + 70.9 = 137.3 gpm (≈ 520 L/min) at ≈ 3 bar',
+        bullets: [
+          { en: 'Always use the actual internal diameter and the equivalent-length table for C = 120 (1¼" tee 6 ft, 2" tee 10 ft, 2" elbow 5 ft).', ar: 'استخدم دائماً القطر الداخلي الفعلي وجدول الأطوال المكافئة عند C = 120 (تي 1¼ بوصة = 6 أقدام، وتي 2 بوصة = 10 أقدام، وكوع 2 بوصة = 5 أقدام).' },
+          { en: 'Balancing: where two paths meet at a node, the lower-pressure path\'s flow is raised with Q_adj = Q·√(P_high/P_low) so both reach the same pressure.', ar: 'الموازنة: حيث يلتقي مساران عند عقدة يُرفع تدفق المسار الأقل ضغطاً بالعلاقة Q_adj = Q·√(P_high/P_low) ليصل الاثنان إلى الضغط نفسه.' },
+          { en: 'Correction to the video: elevation pressure is 0.433 psi per ft (1 psi = 2.31 ft of water), so a 3 ft riser nipple is 1.3 psi; going from a branch line down to a lower cross main the pressure required at the main is higher (add it, do not subtract it).', ar: 'تصحيح لما ورد في الفيديو: ضغط الارتفاع 0.433 رطل/بوصة² لكل قدم (1 رطل/بوصة² = 2.31 قدم ماء)، فوصلة الرايزر بطول 3 أقدام تعادل 1.3 رطل/بوصة²؛ وعند الانتقال من الخط الفرعي نزولاً إلى خط رئيسي أدنى يكون الضغط المطلوب عند الخط الرئيسي أعلى (يُضاف ولا يُطرح).' },
+          { en: 'NFPA 13 C-values: black/galvanized steel 120 (wet), copper and stainless steel 150 — the video\'s 140 is conservative.', ar: 'قيم C في NFPA 13: الفولاذ الأسود/المجلفن 120 (الأنظمة الرطبة)، والنحاس والفولاذ المقاوم للصدأ 150 — وقيمة 140 في الفيديو متحفظة.' }
+        ]
       }
     ],
     refs: ['NFPA 13 (2022) Ch. 28 – Plans and calculations (§28.2.2 Hazen–Williams)', 'NFPA 13 (2022) Table 28.2.3.1.1 – Equivalent pipe lengths', 'NFPA 13 (2022) Table 28.2.4.8.1 – C values', 'NFPA 13 (2022) §19.3.3 – Density/area method']
@@ -662,6 +731,31 @@ export const LESSONS = [
           { en: 'Some national codes (e.g., India\'s NBC) express fire-water storage as hours of pump capacity (e.g., 1 h of main pump flow); NFPA uses demand × duration.', ar: 'تعبّر بعض الأكواد الوطنية (مثل الكود الوطني الهندي NBC) عن مخزون مياه الحريق بعدد ساعات من سعة المضخة (مثلاً ساعة من تدفق المضخة الرئيسية)، بينما يستخدم NFPA الطلب × المدة.' },
           { en: 'Distribution piping is typically black or galvanized steel, painted red; buried pipe gets a protective wrapping/coating.', ar: 'تكون أنابيب التوزيع عادةً من الفولاذ الأسود أو المجلفن وتُطلى باللون الأحمر، ويُغلَّف الأنبوب المدفون بطبقة حماية.' }
         ]
+      },
+      {
+        video: 'yZxJw9A-KoU',
+        h: { en: 'Tank, suction and control accessories', ar: 'ملحقات الخزان والسحب والتحكم' },
+        p: {
+          en: 'A water-based system needs four elements: a reliable water source with pumps, a pipe network, initiating and control devices, and discharge devices. Sources can be ground tanks, elevated (roof) tanks giving positive suction, or a river or lake. Around the tank and pumps you will find:',
+          ar: 'يحتاج النظام المائي إلى أربعة عناصر: مصدر مياه موثوق مع مضخات، وشبكة أنابيب، وأجهزة بدء وتحكم، وأجهزة تصريف. وقد تكون المصادر خزانات أرضية، أو خزانات مرتفعة (على السطح) تعطي سحباً موجباً، أو نهراً أو بحيرة. وحول الخزان والمضخات تجد:'
+        },
+        bullets: [
+          { en: 'Fill pipe with float valve; overflow pipe to drain (so a failed float valve cannot flood the pump room); drain pipe to empty the tank for maintenance.', ar: 'أنبوب تعبئة مع صمام عوامة؛ وأنبوب فائض إلى الصرف (كي لا يُغرق تعطل صمام العوامة غرفة المضخات)؛ وأنبوب تصريف لتفريغ الخزان للصيانة.' },
+          { en: 'Anti-vortex plate at the suction outlet to stop air being drawn in (which would cause cavitation); supervised OS&Y gate valve on each suction line.', ar: 'لوح مانع للدوامة عند فتحة السحب لمنع سحب الهواء (المسبب للتكهف)؛ وصمام بوابة OS&Y مراقَب على كل خط سحب.' },
+          { en: 'Three pumps: main electric on normal power; standby — electric on a generator, or diesel; jockey (pressure maintenance) that only makes up leakage and is not counted for fire fighting.', ar: 'ثلاث مضخات: رئيسية كهربائية على التغذية العادية؛ واحتياطية — كهربائية على مولد أو بالديزل؛ ومضخة جوكي (للمحافظة على الضغط) تعوّض التسرب فقط ولا تُحسب لمكافحة الحريق.' },
+          { en: 'Three pressure switches (jockey, main, standby) start the pumps in sequence as pressure falls; if the main pump fails to start, the standby starts on a further drop.', ar: 'ثلاثة مفاتيح ضغط (للجوكي والرئيسية والاحتياطية) تشغّل المضخات بالتتابع مع انخفاض الضغط؛ وإذا فشلت الرئيسية في البدء تبدأ الاحتياطية عند انخفاض إضافي.' },
+          { en: 'Test line: gate valve and flow meter returning to the tank or pump suction, so the pump flow can be measured without wasting water.', ar: 'خط الاختبار: صمام بوابة ومقياس تدفق يعودان إلى الخزان أو سحب المضخة، لقياس تدفق المضخة دون هدر المياه.' },
+          { en: 'Relief valve vs pressure-reducing valve: the relief valve dumps excess pressure (to drain, tank or suction) to protect the system; the PRV lowers the outlet pressure to what the device needs (e.g. 175 psi / 12.1 bar maximum at sprinklers and 2½" outlets in tall buildings).', ar: 'صمام التنفيس مقابل صمام تخفيض الضغط: يصرّف صمام التنفيس الضغط الزائد (إلى الصرف أو الخزان أو السحب) لحماية النظام، بينما يخفض صمام تخفيض الضغط ضغط المخرج إلى ما يحتاجه الجهاز (مثلاً 175 رطل/بوصة² / 12.1 بار كحد أقصى عند الرشاشات ومخارج 2½ بوصة في المباني العالية).' },
+          { en: 'Fittings in the network: tees and crosses (reducing), threaded or grooved reducers, mechanical tees/crosses, grooved couplings and flange adaptors, 90°/45°/22.5° elbows, eccentric reducers, flanges, plus hangers and supports — all UL/FM listed.', ar: 'التجهيزات في الشبكة: تيهات وصلبان (مخفّضة)، ومخفّضات ملولبة أو محززة، وتيهات وصلبان ميكانيكية، ووصلات محززة ومحولات شفّات، وأكواع 90° و45° و22.5°، ومخفّضات لامركزية، وشفّات، إضافة إلى المعلّقات والدعامات — وجميعها معتمدة من UL/FM.' }
+        ]
+      },
+      {
+        video: 'GUmI_lH9cAc',
+        h: { en: 'End-suction vs split-case pumps', ar: 'مضخات السحب الطرفي مقابل المضخات منقسمة الغلاف' },
+        p: {
+          en: 'End-suction pumps take water in horizontally through the end and discharge vertically; they are single-suction and either close-coupled (impeller on the motor shaft: no alignment, smaller footprint) or flexible-coupled (can be misaligned after maintenance). Typical HVAC range up to about 4000 gpm and 150 ft head. Split-case pumps have suction and discharge in line, perpendicular to the shaft, on a common base plate; double-suction impellers reduce hydraulic imbalance, the split casing gives full access to the impeller, and they reach about 25,000 gpm and 500 ft head — the usual choice for large fire pumps.',
+          ar: 'تسحب مضخات السحب الطرفي المياه أفقياً من طرفها وتطردها رأسياً؛ وهي أحادية السحب، إما متصلة مباشرة (الدافع على عمود المحرك: لا تحتاج إلى محاذاة ومساحتها أصغر) أو بوصلة مرنة (قد تختل محاذاتها بعد الصيانة). ويصل مداها النموذجي في التكييف إلى نحو 4000 جالون/دقيقة وضاغط 150 قدماً. أما المضخات منقسمة الغلاف فمدخلها ومخرجها على خط واحد متعامد مع العمود وعلى قاعدة مشتركة؛ ويقلل الدافع مزدوج السحب عدم الاتزان الهيدروليكي، ويتيح الغلاف المنقسم الوصول الكامل إلى الدافع، ويصل مداها إلى نحو 25,000 جالون/دقيقة وضاغط 500 قدم — وهي الخيار المعتاد لمضخات الحريق الكبيرة.'
+        }
       }
     ],
     refs: ['NFPA 20 (2022) §4.8 – Standard pump sizes', 'NFPA 20 (2022) §6.2 – Horizontal pump performance (140%/65%)', 'NFPA 20 (2022) §4.14 – Suction pipe and fittings', 'NFPA 20 (2022) Annex A.14.2.7 – Pressure setpoints', 'NFPA 25 (2023) Ch. 8 – Fire pumps']
@@ -738,6 +832,22 @@ export const LESSONS = [
           { en: 'Hose rack: collapsible (canvas/lined) hose folded in a zig-zag on a rack so it pulls out quickly, connected to a valve with a branch nozzle; rubber hose cannot be folded this way.', ar: 'حامل الخرطوم: خرطوم قابل للطي (قماشي/مبطّن) مطوي بشكل متعرج على حامل ليُسحب بسرعة، موصول بصمام مع فوهة؛ ولا يمكن طي الخرطوم المطاطي بهذه الطريقة.' },
           { en: 'Fire hose cabinet (FHC): houses the reel or rack, the valve and often an extinguisher; zone control valves belong to sprinkler systems, not to standpipes.', ar: 'كبينة خرطوم الحريق: تضم البكرة أو الحامل والصمام وغالباً طفاية؛ أما صمامات التحكم في المناطق فتخص أنظمة الرشاشات لا الأنابيب القائمة.' },
           { en: 'External hydrants (pillar or underground) on the site ring main are covered by NFPA 24.', ar: 'الحنفيات الخارجية (العمودية أو الأرضية) على الشبكة الحلقية للموقع يغطيها NFPA 24.' }
+        ]
+      },
+      {
+        video: 'GUmI_lH9cAc',
+        h: { en: 'Sizing the standpipe pump: flow and head', ar: 'تحديد مضخة الأنابيب القائمة: التدفق والضاغط' },
+        p: {
+          en: 'Pump flow comes from the standpipe class and the number of risers; pump head = static head to the highest, most remote outlet + required residual pressure + friction losses. Each standpipe is calculated with 250 gpm (946 L/min) at each of its two hydraulically most remote hose connections.',
+          ar: 'يُحسب تدفق المضخة من فئة الأنبوب القائم وعدد الرايزرات، ويُحسب ضاغط المضخة = الضاغط الساكن حتى أعلى وأبعد مخرج + الضغط المتبقي المطلوب + فواقد الاحتكاك. ويُحسب كل أنبوب قائم بتدفق 250 جالون/دقيقة (946 لتر/دقيقة) عند كل من أبعد وصلتي خرطوم هيدروليكياً.'
+        },
+        formula: 'Flow example: 6 Class III risers → 500 + 5 × 250 = 1750 gpm → capped (1250 gpm non-sprinklered; 1000 gpm fully sprinklered)\nHead example (Class I, top outlet 20 m above pump, steel C = 120):\n  Static: 20 m × 3.281 × 0.433 = 28.4 psi\n  Residual: 100 psi\n  Friction 6" (ID 6.065 in), 500 gpm, 60 m + gate 3 ft + check 32 ft + 3 elbows × 14 ft ≈ 274 ft → 2.7 psi\n  Friction 6", 250 gpm, 4 m + 1 elbow ≈ 27 ft → 0.07 psi\n  Pump head ≈ 28.4 + 100 + 2.7 + 0.07 ≈ 131 psi (≈ 9.0 bar)',
+        bullets: [
+          { en: 'Class II systems: 100 gpm (379 L/min) regardless of the number of risers, 65 psi at the most remote outlet.', ar: 'أنظمة الفئة II: 100 جالون/دقيقة (379 لتر/دقيقة) بغض النظر عن عدد الرايزرات، و65 رطل/بوصة² عند أبعد مخرج.' },
+          { en: 'The video applies the 1250 gpm cap to every building; NFPA 14 caps the total at 1000 gpm when the building is fully sprinklered.', ar: 'يطبّق الفيديو الحد الأقصى 1250 جالون/دقيقة على كل المباني، بينما يحدّ NFPA 14 الإجمالي بـ 1000 جالون/دقيقة عندما يكون المبنى مرشوشاً بالكامل.' },
+          { en: 'Minimum standpipe size is 4" (100 mm) for Class I/III and 6" (150 mm) for combined sprinkler/standpipe risers unless hydraulically justified; the video\'s pipe-sizing table comes from NFPA 14 (2003) — current editions rely on hydraulic calculation.', ar: 'أدنى قطر للأنبوب القائم 4 بوصات (100 مم) للفئتين I وIII، و6 بوصات (150 مم) للرايزرات المشتركة بين الرشاشات والخراطيم ما لم يُبرَّر هيدروليكياً؛ وجدول تحديد الأقطار في الفيديو مأخوذ من NFPA 14 (إصدار 2003)، بينما تعتمد الإصدارات الحالية على الحساب الهيدروليكي.' },
+          { en: 'The FDC is required for standpipes (NFPA 14) and sprinkler systems (NFPA 13). It lets the brigade overcome a closed supply valve, an inadequate supply, or a change of occupancy to a higher hazard.', ar: 'وصلة الدفاع المدني مطلوبة للأنابيب القائمة (NFPA 14) ولأنظمة الرشاشات (NFPA 13)، وتمكّن الدفاع المدني من تجاوز صمام تغذية مغلق، أو تغذية غير كافية، أو تغيّر الإشغال إلى خطورة أعلى.' },
+          { en: 'A typical cabinet: 1" hose reel for trained occupants on top, 2½" landing valve with hose and nozzle for fire fighters below.', ar: 'كبينة نموذجية: بكرة خرطوم 1 بوصة للشاغلين المدرَّبين في الأعلى، وصمام طابق 2½ بوصة مع خرطوم وفوهة لرجال الإطفاء في الأسفل.' }
         ]
       }
     ],
@@ -833,8 +943,8 @@ export const LESSONS = [
       {
         h: { en: 'Design concentration and safety', ar: 'التركيز التصميمي والسلامة' },
         p: {
-          en: 'Minimum design concentration = extinguishing concentration × safety factor (1.2 for Class A and C, 1.3 for Class B). For FM-200 a typical Class A design is about 7% (listed range ≈ 6.25–7%), Class B (heptane) ≈ 8.7%. For normally occupied spaces the concentration should not exceed the NOAEL of 9% (LOAEL 10.5%).',
-          ar: 'التركيز التصميمي الأدنى = تركيز الإطفاء × معامل الأمان (1.2 للفئتين A وC، و1.3 للفئة B). ولغاز FM-200 يكون التصميم النموذجي للفئة A نحو 7% (المدى المعتمد نحو 6.25–7%)، وللفئة B (الهيبتان) نحو 8.7%. وفي الأماكن المشغولة عادةً يجب ألا يتجاوز التركيز مستوى NOAEL البالغ 9% (ومستوى LOAEL 10.5%).'
+          en: 'Minimum design concentration = extinguishing concentration × safety factor (1.2 for Class A, 1.3 for Class B; for Class C energized equipment, recent editions of NFPA 2001 require at least 1.35 × the Class A extinguishing concentration). For FM-200 a typical Class A design is about 7% (listed range ≈ 6.25–7%), Class B (heptane) ≈ 8.7%. For normally occupied spaces the concentration should not exceed the NOAEL of 9% (LOAEL 10.5%).',
+          ar: 'التركيز التصميمي الأدنى = تركيز الإطفاء × معامل الأمان (1.2 للفئة A، و1.3 للفئة B؛ أما الفئة C للمعدات المكهربة فتشترط الإصدارات الحديثة من NFPA 2001 ألا يقل التركيز عن 1.35 × تركيز الإطفاء للفئة A). ولغاز FM-200 يكون التصميم النموذجي للفئة A نحو 7% (المدى المعتمد نحو 6.25–7%)، وللفئة B (الهيبتان) نحو 8.7%. وفي الأماكن المشغولة عادةً يجب ألا يتجاوز التركيز مستوى NOAEL البالغ 9% (ومستوى LOAEL 10.5%).'
         }
       },
       {
@@ -878,6 +988,41 @@ export const LESSONS = [
           en: 'Novec 1230 (FK-5-1-12): a fluoroketone liquid stored in cylinders, Class A design ≈ 4.5–5.3%, NOAEL 10% (large safety margin), very low global warming potential, S = 0.0664 + 0.000274·T. Inert gases (IG-541 Inergen, IG-55, IG-01 argon, IG-100 nitrogen) reduce oxygen to about 12–14% at design concentrations of roughly 35–50%, discharge in 60 s (up to 120 s for Class A/C), need many high-pressure cylinders and larger vent areas, but have zero ozone depletion and GWP. HFCs such as FM-200 face phase-down under the Kigali Amendment.',
           ar: 'نوفك 1230 (FK-5-1-12): سائل من الفلوروكيتونات يُخزَّن في أسطوانات، وتركيزه التصميمي للفئة A نحو 4.5–5.3%، وNOAEL له 10% (هامش أمان كبير)، وله احترار عالمي منخفض جداً، و S = 0.0664 + 0.000274·T. أما الغازات الخاملة (IG-541 إنرجن، وIG-55، وIG-01 الأرغون، وIG-100 النيتروجين) فتخفض الأكسجين إلى نحو 12–14% بتركيزات تصميمية تقارب 35–50%، وتُصرَّف خلال 60 ثانية (حتى 120 ثانية للفئتين A وC)، وتحتاج إلى أسطوانات كثيرة عالية الضغط وفتحات تنفيس أكبر، لكن تأثيرها على الأوزون والاحترار العالمي صفري. وتخضع مركبات HFC مثل FM-200 للتخفيض التدريجي بموجب تعديل كيغالي.'
         }
+      },
+      {
+        video: 'mbIollEju5w',
+        h: { en: 'FM-200 system components and operating sequence', ar: 'مكونات نظام FM-200 وتسلسل تشغيله' },
+        p: {
+          en: 'A typical server-room installation: agent cylinders with actuators, an extinguishing (releasing) control panel, alarm bell/sounder, distribution piping and discharge nozzles, and smoke detectors arranged in zones. On fire the detectors signal the extinguishing panel, the alarm rings, the ventilation (interlocked with the fire system) is shut down, and then the panel energizes the actuator to discharge the agent into the protected room.',
+          ar: 'تركيب نموذجي لغرفة خوادم: أسطوانات الغاز مع مشغّلاتها، ولوحة التحكم في الإطفاء (الإطلاق)، وجرس/صفارة إنذار، وشبكة أنابيب توزيع وفوهات تصريف، وكواشف دخان موزعة على مناطق. وعند الحريق ترسل الكواشف إشارة إلى لوحة الإطفاء، فيدق الإنذار، ويُوقف نظام التهوية (المرتبط بنظام الحريق)، ثم تنشّط اللوحة المشغّل لإطلاق الغاز داخل الغرفة المحمية.'
+        },
+        bullets: [
+          { en: 'HVAC shutdown and damper closure must happen before discharge, otherwise the agent is blown out and the concentration is lost.', ar: 'يجب إيقاف التكييف وإغلاق المخمدات قبل الإطلاق، وإلا طُرد الغاز وفُقد التركيز.' },
+          { en: 'The video assumes one smoke detector per 250 ft² (23 m²). This is a design/vendor practice, not an NFPA 72 rule (nominal 30 ft / 9.1 m spacing); clean-agent rooms are usually cross-zoned with closer spacing because of high airflow — follow the listing and the AHJ.', ar: 'يفترض الفيديو كاشف دخان لكل 250 قدم² (23 م²). وهذه ممارسة تصميمية لدى الموردين وليست قاعدة في NFPA 72 (التباعد الاسمي 30 قدماً / 9.1 م)؛ وتُصمَّم غرف الغاز النظيف عادةً بتقاطع المناطق وتباعد أقرب بسبب تدفق الهواء العالي — اتبع الاعتماد ومتطلبات الجهة المختصة.' }
+        ]
+      },
+      {
+        video: 'mbIollEju5w',
+        h: { en: 'Excel-style calculation in IP units, step by step', ar: 'الحساب بطريقة جدول Excel بالوحدات الإمبراطورية خطوة بخطوة' },
+        p: {
+          en: 'The spreadsheet follows NFPA 2001 with W in lb, V in ft³ and T in °F. Example from the video: IT server room 35 ft × 28 ft × 13 ft, minimum room temperature 70 °F, Class C hazard.',
+          ar: 'يتبع جدول الحساب NFPA 2001 بحيث تكون W بالرطل وV بالقدم المكعب وT بالفهرنهايت. مثال الفيديو: غرفة خوادم 35 × 28 × 13 قدماً، وأدنى حرارة للغرفة 70 °ف، وخطورة من الفئة C.'
+        },
+        formula: 'Step 1  V = 35 × 28 × 13 = 12,740 ft³  (net volume)\nStep 2  S = 1.885 + 0.0046·T = 1.885 + 0.0046 × 70 = 2.207 ft³/lb\nStep 3  V/S = 12,740 / 2.207 = 5772.5 lb\nStep 4  choose C, then W = (V/S)·C/(100 − C)\n  C = 7.0 %  → W = 5772.5 × 7/93      ≈ 434 lb (197 kg)\n  C = 8.64 % → W = 5772.5 × 8.64/91.36 ≈ 546 lb (video spreadsheet)\n  C = 10.8 % → W = 5772.5 × 10.8/89.2  ≈ 699 lb (video software: 9 % × 1.2)\nSI check: V = 360.8 m³, T = 21.1 °C → S = 0.1377 m³/kg → W(7 %) ≈ 197 kg',
+        bullets: [
+          { en: 'Always use the minimum anticipated room temperature for S; the net volume excludes solid structures but includes open ceiling/floor voids that are part of the enclosure.', ar: 'استخدم دائماً أدنى حرارة متوقعة للغرفة لحساب S، ويستثني الحجم الصافي العناصر الإنشائية المصمتة لكنه يشمل فراغات السقف والأرضية المفتوحة التي هي جزء من الحيز.' },
+          { en: 'Caution: the video applies the safety factor to values it calls "design concentrations" (A 6.7 %, B 8.97 %, C 7.2 %), which double-counts it. The safety factor multiplies the listed EXTINGUISHING concentration; a Class A/C design of about 7 % is typical for FM-200.', ar: 'تنبيه: يطبّق الفيديو معامل الأمان على قيم يسميها «تركيزات تصميمية» (A ‏6.7%، وB ‏8.97%، وC ‏7.2%)، فيُحتسب المعامل مرتين. فمعامل الأمان يُضرب في تركيز الإطفاء المعتمد، ويكون التصميم النموذجي للفئتين A وC بغاز FM-200 نحو 7%.' },
+          { en: 'Check the result against people safety: 8.64 % is below the NOAEL (9 %), but the software\'s 10.8 % exceeds the LOAEL (10.5 %) and is not acceptable in a normally occupied room. The video\'s claim that concentrations range "7–15 %" or "minimum 9 %" is not an NFPA rule.', ar: 'تحقّق من النتيجة مقابل سلامة الأشخاص: 8.64% أقل من NOAEL (9%)، أما 10.8% في البرنامج فتتجاوز LOAEL (10.5%) وغير مقبولة في غرفة مشغولة عادةً. وقول الفيديو إن التركيز يتراوح «من 7 إلى 15%» أو «9% كحد أدنى» ليس قاعدة في NFPA.' }
+        ]
+      },
+      {
+        video: 'mbIollEju5w',
+        h: { en: 'Nozzle count and cylinder selection', ar: 'عدد الفوهات واختيار الأسطوانات' },
+        p: {
+          en: 'Number of nozzles = protected floor area ÷ listed coverage per nozzle (round up), also respecting the nozzle\'s maximum height and distance to walls. Nozzle types: 90° corner (one port), 180° sidewall (two ports) and 360° radial (four to eight ports); port counts and coverage differ between manufacturers. After the agent mass is known, cylinders are chosen from the supplier\'s catalogue so the fill density stays within the listed limit.',
+          ar: 'عدد الفوهات = مساحة الأرضية المحمية ÷ التغطية المعتمدة لكل فوهة (مع التقريب لأعلى)، مع مراعاة أقصى ارتفاع للفوهة وبعدها عن الجدران. وأنواع الفوهات: ركنية 90° (منفذ واحد)، وجانبية 180° (منفذان)، وشعاعية 360° (من أربعة إلى ثمانية منافذ)، ويختلف عدد المنافذ والتغطية من مصنع لآخر. وبعد معرفة كتلة الغاز تُختار الأسطوانات من كتالوج المورّد بحيث تبقى كثافة التعبئة ضمن الحد المعتمد.'
+        },
+        formula: 'Area = 35 × 28 = 980 ft² (91 m²)\nVideo sheet coverage (illustrative): 90° corner 32 × 32 ft = 1024 ft² (95 m²);\n  180° sidewall 64 × 32 ft = 2048 ft² (190 m²); 360° radial 64 × 64 ft = 4096 ft² (381 m²)\nNozzles = 980 / 1024 = 0.96 → 1 nozzle\nAlways replace these with the manufacturer\'s listed values before issuing a design.'
       }
     ],
     refs: ['NFPA 2001 (2022) §5.4 – Design concentration and safety factors', 'NFPA 2001 (2022) §5.5 – Total flooding quantity (Eq. 5.5.1)', 'NFPA 2001 (2022) §1.5 – Safe use / NOAEL', 'NFPA 2001 (2022) §5.7.1 – Discharge time', 'NFPA 2001 (2022) Annex C – Enclosure integrity']
@@ -947,6 +1092,294 @@ export const LESSONS = [
       }
     ],
     refs: ['NFPA 11 (2021) §5.2.5 – Fixed-roof tanks, Table 5.2.5.2.2', 'NFPA 11 (2021) §5.3 – Open-top floating roof tanks', 'NFPA 15 (2022) – Water spray fixed systems', 'NFPA 409 (2022) – Aircraft hangars', 'NFPA 750 (2023) – Water mist', 'NFPA 25 (2023) Tables 5.1.1.2, 8.1.1.2, 13.1.1.2']
+  },
+
+  // ---------------------------------------------------------------- 12
+  {
+    id: 'design-workflow',
+    icon: '🗂️',
+    video: 'K3SudP-9Xe0',
+    title: { en: 'Fire-Fighting Design Workflow and Codes', ar: 'مسار تصميم أنظمة مكافحة الحريق والأكواد' },
+    summary: {
+      en: 'How a fire-fighting design is produced on a real project: codes and approvals, the NFPA documents, system classification, the step-by-step workflow, drawings, practical rules and stair pressurization.',
+      ar: 'كيف يُنجز تصميم أنظمة مكافحة الحريق في مشروع حقيقي: الأكواد والاعتمادات، ووثائق NFPA، وتصنيف الأنظمة، ومسار العمل خطوة بخطوة، والمخططات، والقواعد العملية، وضغط السلالم.'
+    },
+    sections: [
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Fire safety vs fire-fighting system design', ar: 'السلامة من الحريق مقابل تصميم أنظمة مكافحة الحريق' },
+        p: {
+          en: 'Fire-fighting system design is a building-services (mainly mechanical) discipline, different from HSE fire safety. It is system design, not component design: the engineer selects and arranges listed components (pumps, valves, sprinklers) to form a working system, rather than designing the components themselves. Electrical and civil engineers are also involved: electrical for detection and alarm wiring, civil for tanks and fire-rated construction.',
+          ar: 'تصميم أنظمة مكافحة الحريق تخصص من تخصصات خدمات المباني (ميكانيكي أساساً)، ويختلف عن السلامة من الحريق في مجال الصحة والسلامة والبيئة. وهو تصميم أنظمة لا تصميم مكونات: إذ يختار المهندس المكونات المعتمدة (المضخات والصمامات والرشاشات) ويرتبها لتكوين نظام يعمل، ولا يصمم المكونات نفسها. ويشارك أيضاً المهندس الكهربائي في تمديدات الكشف والإنذار، والمهندس المدني في الخزانات والإنشاء المقاوم للحريق.'
+        }
+      },
+      {
+        video: 'yZxJw9A-KoU',
+        h: { en: 'Codes, standards, approvals and the AHJ', ar: 'الأكواد والمعايير والاعتمادات والجهة المختصة' },
+        p: {
+          en: 'NFPA (National Fire Protection Association) publishes standards written by manufacturers, insurance engineers and consultants. A standard becomes a code (mandatory) when the local authority adopts it for your project. The Authority Having Jurisdiction (AHJ) — usually the civil defence — approves the design, may accept alternatives, and inspects on site. Designs follow the local code (e.g., NBC in India, UAE Fire & Life Safety Code, Egyptian Fire Code, SBC 801) which usually refers to NFPA; numbers may differ locally but the concepts are the same.',
+          ar: 'تصدر الجمعية الوطنية للحماية من الحريق (NFPA) معايير يكتبها المصنعون ومهندسو شركات التأمين والاستشاريون. ويصبح المعيار كوداً (إلزامياً) عندما تعتمده الجهة المحلية لمشروعك. وتعتمد الجهة المختصة (AHJ) — وهي عادةً الدفاع المدني — التصميمَ، وقد تقبل بدائل، وتفتش في الموقع. وتتبع التصاميم الكود المحلي (مثل NBC في الهند، وكود الإمارات للحريق وسلامة الأرواح، والكود المصري للحريق، وSBC 801) الذي يحيل عادةً إلى NFPA؛ وقد تختلف الأرقام محلياً لكن المفاهيم واحدة.'
+        },
+        bullets: [
+          { en: '"Shall" = mandatory; "should" = recommendation; "approved" = acceptable to the AHJ; "listed" = included in a list by a testing organisation (UL, FM).', ar: '«يجب» (shall) = إلزامي؛ و«ينبغي» (should) = توصية؛ و«معتمَد» (approved) = مقبول لدى الجهة المختصة؛ و«مُدرَج» (listed) = مُدرج في قائمة جهة اختبار (UL أو FM).' },
+          { en: 'Equipment approvals: UL (Underwriters Laboratories) and FM Approvals (US, used across the Gulf); LPCB (UK) and VdS (Germany) in Europe. Pumps, valves and sprinklers cannot simply be bought from any vendor — check the mark and demand certificates, as counterfeit seals exist.', ar: 'اعتماد المعدات: UL ‏(مختبرات أندررايترز) وFM ‏(أمريكيتان وتُستخدمان في أرجاء الخليج)؛ وLPCB ‏(بريطانيا) وVdS ‏(ألمانيا) في أوروبا. ولا يمكن شراء المضخات والصمامات والرشاشات من أي مورّد ببساطة — تحقّق من العلامة واطلب الشهادات، فهناك أختام مزوّرة.' },
+          { en: 'IBC Chapter 3 (use and occupancy classification) and Chapter 9 (fire protection systems) — or NFPA 101 / the local code — decide WHICH systems a building needs; NFPA 13/14/20 etc. decide HOW to design them.', ar: 'يحدد الفصل 3 من كود البناء الدولي IBC (تصنيف الاستخدام والإشغال) والفصل 9 (أنظمة الحماية من الحريق) — أو NFPA 101 / الكود المحلي — أيَّ الأنظمة يحتاجها المبنى، بينما تحدد NFPA 13 و14 و20 وغيرها كيفية تصميمها.' },
+          { en: 'Quote section and table numbers in design reports, and note the edition: table numbers changed between the 2013 and 2019 editions of NFPA 13 although values such as 225 ft² and 15 ft did not.', ar: 'اذكر أرقام البنود والجداول في تقارير التصميم مع رقم الإصدار: فقد تغيرت أرقام الجداول بين إصداري 2013 و2019 من NFPA 13 رغم بقاء قيم مثل 225 قدم² و15 قدماً.' }
+        ]
+      },
+      {
+        video: 'yZxJw9A-KoU',
+        h: { en: 'The NFPA documents you will use', ar: 'وثائق NFPA التي ستستخدمها' },
+        p: {
+          en: 'Building fire protection draws on a set of NFPA standards; British (BS, formerly FOC rules) and national codes are also used in parts of the Gulf.',
+          ar: 'تعتمد الحماية من الحريق في المباني على مجموعة من معايير NFPA، كما تُستخدم المعايير البريطانية (BS، وقواعد FOC سابقاً) والأكواد الوطنية في أجزاء من الخليج.'
+        },
+        formula: 'NFPA 1 Fire Code | NFPA 10 Portable extinguishers | NFPA 11 Foam\nNFPA 12 CO₂ systems | NFPA 13 Sprinklers | NFPA 14 Standpipes and hose\nNFPA 15 Water spray | NFPA 16 Foam-water sprinklers and spray\nNFPA 20 Fire pumps | NFPA 22 Water tanks | NFPA 24 Private fire mains and hydrants\nNFPA 25 Inspection, testing and maintenance | NFPA 72 Fire alarm\nNFPA 92 Smoke control (stair pressurization) | NFPA 101 Life Safety Code\nNFPA 220 Types of building construction | NFPA 409 Aircraft hangars\nNFPA 418 Heliports | NFPA 750 Water mist | NFPA 2001 Clean agents',
+        bullets: [
+          { en: 'Corrections to the transcripts: NFPA 25 covers inspection, testing and maintenance (installation rules are in NFPA 13/14/20); tanks are NFPA 22 while NFPA 24 covers private mains and hydrants; NFPA 220 classifies construction types and is not a hydrant design standard.', ar: 'تصحيحات لما ورد في النصوص: يغطي NFPA 25 الفحص والاختبار والصيانة (أما قواعد التركيب ففي NFPA 13 و14 و20)؛ والخزانات في NFPA 22 بينما يغطي NFPA 24 الشبكات الخاصة والحنفيات؛ ويصنّف NFPA 220 أنواع الإنشاء وليس معياراً لتصميم الحنفيات.' }
+        ]
+      },
+      {
+        video: 'yZxJw9A-KoU',
+        h: { en: 'Classification of fire-fighting systems', ar: 'تصنيف أنظمة مكافحة الحريق' },
+        p: {
+          en: 'Systems are first split into automatic (no human intervention) and manual (a person must operate them), then by agent.',
+          ar: 'تُقسَّم الأنظمة أولاً إلى تلقائية (دون تدخل بشري) ويدوية (يجب أن يشغّلها شخص)، ثم حسب وسيلة الإطفاء.'
+        },
+        formula: 'AUTOMATIC\n  Water-based → closed-head sprinklers: wet, dry, pre-action, combined dry/pre-action\n              → open-head: deluge, water curtain, water spray, water mist\n  Foam → low, medium, high expansion\n  Gas → clean agent (halocarbon, inert gas), CO₂, aerosol\nMANUAL\n  Water-based → fire hose cabinets (Class I/II/III), hydrants, monitors\n  Extinguishers → water, foam, wet chemical, dry powder, CO₂, clean agent'
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Design workflow on a project', ar: 'مسار التصميم في المشروع' },
+        p: {
+          en: 'The course follows the same sequence on every project, from the architectural drawings to the pump selection.',
+          ar: 'تتبع الدورة التسلسل نفسه في كل مشروع، من المخططات المعمارية حتى اختيار المضخة.'
+        },
+        bullets: [
+          { en: '1. Building survey: read the architectural layout; list each space, its use, combustible contents and quantity.', ar: '1. المسح المعماري: اقرأ المخطط المعماري وسجّل كل فراغ واستخدامه ومحتوياته القابلة للاحتراق وكميتها.' },
+          { en: '2. Occupancy and building type (IBC Ch. 3 / NFPA 101 / local code); high-rise when the highest occupied floor is more than 75 ft (23 m) above fire-department access.', ar: '2. الإشغال ونوع المبنى (الفصل 3 من IBC / NFPA 101 / الكود المحلي)؛ ويُعد المبنى عالياً عندما يزيد ارتفاع أعلى طابق مشغول على 75 قدماً (23 م) فوق منسوب وصول الدفاع المدني.' },
+          { en: '3. Decide which systems are required (IBC Ch. 9): sprinklers, standpipes/hose reels, extinguishers, clean agent, alarm, smoke control; issue a concept report with code references for AHJ approval.', ar: '3. حدّد الأنظمة المطلوبة (الفصل 9 من IBC): الرشاشات، والأنابيب القائمة/بكرات الخراطيم، والطفايات، والغاز النظيف، والإنذار، والتحكم في الدخان؛ وأصدر تقريراً مبدئياً مع مراجع الكود لاعتماده من الجهة المختصة.' },
+          { en: '4. Classify the hazard of each space and lay out sprinklers (S × L, wall distances, obstructions) on the drawings.', ar: '4. صنّف خطورة كل فراغ ووزّع الرشاشات (S × L، والأبعاد عن الجدران، والعوائق) على المخططات.' },
+          { en: '5. Locate risers in the architect\'s shafts, zone control valves per floor, fire hose cabinets and landing valves in or near the stairs, FDC/breaching inlet at the street.', ar: '5. حدّد مواقع الرايزرات في الشافتات المعمارية، وصمامات التحكم في المناطق لكل طابق، وكبائن الخراطيم وصمامات الطوابق داخل السلالم أو بقربها، ووصلة الدفاع المدني عند الشارع.' },
+          { en: '6. Size pipes (pipe schedule up to 5000 ft² or hydraulic calculation, manually or with software such as Elite), then size the pump (flow and head) and the tank (demand × duration).', ar: '6. حدّد أقطار الأنابيب (جدول الأنابيب حتى 5000 قدم² أو الحساب الهيدروليكي يدوياً أو ببرنامج مثل Elite)، ثم حدّد المضخة (التدفق والضاغط) والخزان (الطلب × المدة).' },
+          { en: '7. Riser diagram, details, schedules and legends; shop drawings by the contractor; installation, flushing, hydrostatic testing, commissioning and AHJ inspection.', ar: '7. مخطط الرايزرات والتفاصيل والجداول ومفاتيح الرموز؛ ثم المخططات التنفيذية من المقاول؛ فالتركيب والغسيل والاختبار الهيدروستاتيكي والتشغيل التجريبي وتفتيش الجهة المختصة.' }
+        ]
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Reading drawings, legends and site equipment', ar: 'قراءة المخططات ومفاتيح الرموز ومعدات الموقع' },
+        p: {
+          en: 'Legends vary by consultant and country, so read the legend sheet first. In the course example (a UAE consultant) different arrow symbols mark a ceiling-mounted automatic CO₂ extinguisher, 5 kg CO₂, 4.5 kg dry powder, 9 L water and 2 kg dry powder extinguishers. Sprinkler and standpipe mains are drawn in different colours/layers; a line that passes through a zone control valve belongs to the sprinkler system. On plans a riser appears as a circle, the cross main enters the floor from it and branch lines carry the sprinklers.',
+          ar: 'تختلف مفاتيح الرموز حسب الاستشاري والبلد، لذا اقرأ لوحة الرموز أولاً. ففي مثال الدورة (استشاري في الإمارات) تدل رموز أسهم مختلفة على طفاية CO₂ تلقائية معلقة بالسقف، وطفاية CO₂ ‏5 كجم، ومسحوق جاف 4.5 كجم، وماء 9 لترات، ومسحوق جاف 2 كجم. وتُرسم خطوط الرشاشات والأنابيب القائمة بألوان/طبقات مختلفة، والخط الذي يمر عبر صمام تحكم في المنطقة يتبع نظام الرشاشات. ويظهر الرايزر في المساقط كدائرة يخرج منها الخط الرئيسي العرضي إلى الطابق، وتحمل الخطوط الفرعية الرشاشات.'
+        },
+        bullets: [
+          { en: 'All fire-fighting equipment and piping is painted red: the most visible, high-contrast colour, easy to identify in smoke and low light.', ar: 'تُطلى جميع معدات وأنابيب مكافحة الحريق باللون الأحمر: فهو الأوضح والأعلى تبايناً، ويسهل تمييزه في الدخان والإضاءة المنخفضة.' },
+          { en: 'OS&Y (outside screw and yoke) gate valve: the rising stem shows at a glance whether the valve is open (stem out) or closed (stem in); fitted with a supervisory (tamper) switch.', ar: 'صمام البوابة OS&Y ‏(اللولب الخارجي والحامل): يبيّن العمود الصاعد بنظرة واحدة إن كان الصمام مفتوحاً (العمود خارج) أو مغلقاً (العمود داخل)؛ ويُزوَّد بمفتاح إشراف (عبث).' },
+          { en: 'Fire blanket: wraps a small fire (e.g. a pan) to cut off oxygen; used in villas and kitchens.', ar: 'بطانية الحريق: تلف حريقاً صغيراً (كمقلاة) لقطع الأكسجين؛ وتُستخدم في الفلل والمطابخ.' },
+          { en: 'Tank: the fire engineer sets capacity and connections (puddle flanges, suction, overflow); the civil engineer designs the structure (underground concrete, ground-level, precast or fabricated).', ar: 'الخزان: يحدد مهندس الحريق السعة والوصلات (الشفّات المدفونة والسحب والفائض)، ويصمم المهندس المدني الإنشاء (خرساني تحت الأرض، أو على مستوى الأرض، أو مسبق الصب، أو مصنّع).' }
+        ]
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Practical rules vs code optimisation', ar: 'القواعد العملية مقابل التحسين وفق الكود' },
+        p: {
+          en: 'On small and medium projects many designers simply use about 3 m (10 ft) between sprinklers and 1.5 m to walls (roughly 9 m² / 100 ft² each), which is safer than even the extra-hazard limits; a few extra sprinklers cost little. On large and high-rise projects the code limits (e.g., 15 ft / 4.6 m and 225 ft² for light hazard) are used carefully — saving 5–10% of sprinklers per floor multiplied by 30 floors is significant — while keeping a small margin (e.g., 12–13 ft instead of 15 ft). Oversizing is accepted; undersizing is not. Many regions also design the water storage for longer than the NFPA minimum durations (e.g., 2 h).',
+          ar: 'في المشاريع الصغيرة والمتوسطة يستخدم كثير من المصممين ببساطة نحو 3 أمتار (10 أقدام) بين الرشاشات و1.5 م عن الجدران (نحو 9 م² / 100 قدم² لكل رشاش)، وهو أكثر أماناً حتى من حدود الخطورة العالية، وكلفة بضعة رشاشات إضافية ضئيلة. أما في المشاريع الكبيرة والمباني العالية فتُستخدم حدود الكود بعناية (مثل 15 قدماً / 4.6 م و225 قدم² للخطورة الخفيفة) — فتوفير 5–10% من الرشاشات في كل طابق مضروباً في 30 طابقاً مقدار كبير — مع الإبقاء على هامش بسيط (مثل 12–13 قدماً بدلاً من 15). والتكبير مقبول والتصغير مرفوض. وتصمم مناطق كثيرة مخزون المياه لمدة أطول من الحد الأدنى في NFPA (مثل ساعتين).'
+        },
+        bullets: [
+          { en: 'The course mentions an additional zone control valve when a floor exceeds about 280 sprinklers; this is a regional practice. NFPA 13 instead limits the area per system riser (52,000 ft² / 4831 m² for light and ordinary hazard, 40,000 ft² / 3716 m² for hydraulically calculated extra hazard).', ar: 'تذكر الدورة إضافة صمام تحكم في المنطقة عندما يتجاوز الطابق نحو 280 رشاشاً، وهذه ممارسة إقليمية. أما NFPA 13 فيحد المساحة لكل رايزر نظام (52,000 قدم² / 4831 م² للخطورة الخفيفة والعادية، و40,000 قدم² / 3716 م² للخطورة العالية المحسوبة هيدروليكياً).' }
+        ]
+      },
+      {
+        video: 'Y7iMQxipEAs',
+        h: { en: 'Stairwell pressurization (smoke control)', ar: 'ضغط السلالم (التحكم في الدخان)' },
+        p: {
+          en: 'Because smoke kills most fire victims, escape stairs are kept at a higher pressure than the floors so smoke cannot leak in through the doors. The fan supply is the sum of leakage through the walls, floors and closed doors (Q = 2610·A·√ΔP, with A from leakage-ratio tables) plus the flow needed through open doors (Q = A·V). Limits: a minimum pressure difference (NFPA 92: 0.05 in w.g. / 12.4 Pa in sprinklered buildings, more without sprinklers), a maximum set by the door-opening force of 30 lbf (133 N), and IBC smokeproof enclosures use 0.10–0.35 in w.g. (25–87 Pa).',
+          ar: 'لأن الدخان يقتل معظم ضحايا الحرائق، تُبقى سلالم الهروب بضغط أعلى من الطوابق كي لا يتسرب الدخان عبر الأبواب. ومعدل تغذية المروحة هو مجموع التسرب عبر الجدران والأرضيات والأبواب المغلقة (Q = 2610·A·√ΔP، وتُؤخذ A من جداول نسب التسرب) مضافاً إليه التدفق اللازم عبر الأبواب المفتوحة (Q = A·V). والحدود: فرق ضغط أدنى (NFPA 92: ‏0.05 بوصة ماء / 12.4 باسكال في المباني المرشوشة، وأكثر دون رشاشات)، وحد أقصى تفرضه قوة فتح الباب البالغة 30 رطلاً (133 نيوتن)، ويستخدم IBC للدرج المحمي من الدخان 0.10–0.35 بوصة ماء (25–87 باسكال).'
+        },
+        formula: 'Q [cfm] = 2610 · A [ft²] · ΔP [in w.g.]^½\nExample (per floor): walls 2500 ft² × 0.11×10⁻³ = 0.275 ft²; floor 1344 ft² × 0.52×10⁻⁴ = 0.070 ft²\n  doors: 33 ft crack × 0.006 = 0.20 ft² + 2 × (20 × 0.006) = 0.24 ft² → A ≈ 0.78 ft²\n  Q = 2610 × 0.78 × √0.35 ≈ 1200 cfm per floor → 5 floors ≈ 6000 cfm\n  + open doors: Q = A_door × V (video limits V to 200 fpm)',
+        bullets: [
+          { en: 'The video quotes a minimum of 0.18 in w.g. (the NFPA 92 value for a non-sprinklered building with a high ceiling) and a maximum of 0.37 in w.g.; check the governing code for your project.', ar: 'يذكر الفيديو حداً أدنى 0.18 بوصة ماء (وهي قيمة NFPA 92 لمبنى غير مرشوش ذي سقف مرتفع) وحداً أقصى 0.37 بوصة ماء؛ تحقّق من الكود الحاكم لمشروعك.' }
+        ]
+      }
+    ],
+    refs: ['IBC (2021) Ch. 3 – Use and occupancy; Ch. 9 – Fire protection and life safety systems', 'NFPA 13 (2022) §4.4 – System protection area limitations', 'NFPA 92 (2021) §4.4 – Pressure differences', 'NFPA 101 (2021) §7.2.1.4.5 – Door opening force', 'UL / FM Approvals / LPCB / VdS listings']
+  },
+
+  // ---------------------------------------------------------------- 13
+  {
+    id: 'fire-extinguishers',
+    icon: '🧯',
+    video: 'K3SudP-9Xe0',
+    title: { en: 'Portable Fire Extinguishers (NFPA 10)', ar: 'طفايات الحريق المحمولة (NFPA 10)' },
+    summary: {
+      en: 'Extinguisher types and how each works, checking them, PASS operation, NFPA 10 hazard levels and ratings, and the sizing/placement procedure with a full worked example.',
+      ar: 'أنواع الطفايات وكيف تعمل كل منها، وفحصها، وطريقة الاستخدام PASS، ومستويات الخطورة والتصنيفات في NFPA 10، وإجراءات تحديد العدد والتوزيع مع مثال محلول كامل.'
+    },
+    sections: [
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Extinguisher types and how they work', ar: 'أنواع الطفايات وكيف تعمل' },
+        p: {
+          en: 'A portable extinguisher is a manual first-aid device. Select it by the fuel class present; where several classes are present (homes, kitchens, electrical rooms) a multipurpose ABC unit is the practical choice because there is no time to identify the fire.',
+          ar: 'الطفاية المحمولة وسيلة يدوية للمكافحة الأولية، وتُختار حسب فئة الوقود الموجودة؛ وحيث توجد عدة فئات (المنازل والمطابخ والغرف الكهربائية) تكون الطفاية متعددة الأغراض ABC هي الخيار العملي، إذ لا يتوفر وقت لتحديد نوع الحريق.'
+        },
+        bullets: [
+          { en: 'APW (air-pressurized water): plain water expelled by compressed air through a hose; cools (removes heat); Class A only — never on B, C, D or K.', ar: 'APW ‏(ماء مضغوط بالهواء): ماء عادي يُدفع بالهواء المضغوط عبر خرطوم؛ يبرّد (يزيل الحرارة)؛ للفئة A فقط — ولا يُستخدم أبداً على B أو C أو D أو K.' },
+          { en: 'CO₂: liquefied gas discharged through a horn that lets it expand and cover the fire; displaces oxygen and also cools; Classes B and C; common sizes 2–6 kg (2.5 kg small electrical rooms, 4–6 kg larger); leaves no residue; may be re-used until empty.', ar: 'ثاني أكسيد الكربون: غاز مسال يُطلق عبر بوق يسمح بتمدده وتغطية الحريق؛ يزيح الأكسجين ويبرّد أيضاً؛ للفئتين B وC؛ وأحجامه الشائعة 2–6 كجم (2.5 كجم للغرف الكهربائية الصغيرة و4–6 كجم للأكبر)؛ لا يترك بقايا، ويمكن إعادة استخدامه حتى يفرغ.' },
+          { en: 'Dry chemical (ABC or BC): mainly monoammonium phosphate for ABC, expelled by dry nitrogen (air contains moisture that would cake the powder). It smothers by coating the fuel AND interrupts the chain reaction — the most effective and most common type (typically 2–9 kg / 5–20 lb, wheeled units for larger).', ar: 'المسحوق الكيميائي الجاف (ABC أو BC): أساسه فوسفات أحادي الأمونيوم للنوع ABC، ويُدفع بالنيتروجين الجاف (لأن رطوبة الهواء تُكتّل المسحوق). يخنق الحريق بتغليف الوقود ويقطع التفاعل المتسلسل معاً — وهو الأكثر فعالية وشيوعاً (عادةً 2–9 كجم / 5–20 رطلاً، ووحدات بعجلات للأحجام الأكبر).' },
+          { en: 'Foam (AFFF) for Classes A and B; wet chemical (potassium acetate/citrate solution) for Class K cooking oils — the transcript calls it a "potassium powder", but Class K units are wet chemical; clean-agent (halocarbon) units for sensitive electrical equipment.', ar: 'الرغوة (AFFF) للفئتين A وB؛ والكيميائي الرطب (محلول أسيتات/سترات البوتاسيوم) لزيوت الطبخ من الفئة K — ويسميه النص «مسحوق بوتاسيوم» لكن طفايات الفئة K كيميائية رطبة؛ وطفايات الغاز النظيف (الهالوكربون) للمعدات الكهربائية الحساسة.' },
+          { en: 'Automatic ceiling-mounted units (dry powder or CO₂) with a glass bulb release protect locked rooms such as electrical rooms accessible only to the utility; they work independently of the alarm system.', ar: 'الوحدات التلقائية المعلقة بالسقف (مسحوق جاف أو CO₂) ذات الإطلاق بالأمبولة الزجاجية تحمي الغرف المقفلة مثل الغرف الكهربائية التي لا يدخلها إلا مزوّد الخدمة، وتعمل مستقلة عن نظام الإنذار.' }
+        ]
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Checking an extinguisher', ar: 'فحص الطفاية' },
+        p: {
+          en: 'Stored-pressure extinguishers (water, powder, foam) have a gauge: red zone = empty/under-pressure, green = charged, the other side = over-charged. CO₂ extinguishers have no gauge because the liquefied gas keeps the same vapour pressure until almost empty — they are checked by weighing against the full weight stamped on the cylinder. A dry powder unit that has been partly discharged loses its nitrogen pressure and must be recharged even if powder remains.',
+          ar: 'للطفايات ذات الضغط المخزّن (الماء والمسحوق والرغوة) مقياس: المنطقة الحمراء = فارغة/ضغط منخفض، والخضراء = مشحونة، والجهة الأخرى = ضغط زائد. أما طفايات CO₂ فلا مقياس لها لأن الغاز المسال يحافظ على ضغط البخار نفسه حتى تكاد تفرغ — فتُفحص بالوزن مقارنةً بالوزن الممتلئ المختوم على الأسطوانة. والطفاية المسحوقية التي أُطلق جزء منها تفقد ضغط النيتروجين ويجب إعادة شحنها حتى لو بقي فيها مسحوق.'
+        },
+        bullets: [
+          { en: 'NFPA 10: inspection at least monthly (in place, pin and seal intact, gauge in the green, no damage); annual maintenance by a certified technician; hydrostatic test every 5 years for water, CO₂ and wet chemical, every 12 years for dry chemical.', ar: 'حسب NFPA 10: فحص شهري على الأقل (في مكانها، والمسمار والختم سليمان، والمقياس في الأخضر، ودون تلف)؛ وصيانة سنوية بفني معتمد؛ واختبار هيدروستاتيكي كل 5 سنوات لطفايات الماء وCO₂ والكيميائي الرطب، وكل 12 سنة للمسحوق الكيميائي الجاف.' },
+          { en: 'Mounting: top at most 5 ft (1.53 m) above the floor for units up to 40 lb (18 kg), at most 3.5 ft (1.07 m) for heavier units; bottom at least 4 in (100 mm) above the floor; visible and unobstructed.', ar: 'التركيب: لا يزيد ارتفاع قمة الطفاية على 5 أقدام (1.53 م) فوق الأرض للطفايات حتى 40 رطلاً (18 كجم)، و3.5 قدم (1.07 م) للأثقل؛ ولا يقل ارتفاع قاعدتها عن 4 بوصات (100 مم) فوق الأرض؛ وتكون ظاهرة وغير معاقة.' }
+        ]
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Using an extinguisher: PASS', ar: 'استخدام الطفاية: طريقة PASS' },
+        p: {
+          en: 'Everyone, not only engineers, should know PASS. Before you start, stand between the fire and your escape route (door): if you cannot control the fire you can leave and close the door behind you.',
+          ar: 'يجب على الجميع، لا المهندسين فقط، معرفة طريقة PASS. وقبل البدء قف بين الحريق ومسار هروبك (الباب): فإن لم تتمكن من السيطرة على الحريق غادرت وأغلقت الباب خلفك.'
+        },
+        bullets: [
+          { en: 'P – Pull the safety pin (break the tamper seal). Squeezing hard without removing the pin can bend the handle of a low-quality unit — a common panic mistake.', ar: 'P – اسحب مسمار الأمان (واكسر ختم العبث). والضغط بقوة دون نزع المسمار قد يثني مقبض الطفاية رديئة الجودة — وهو خطأ شائع عند الذعر.' },
+          { en: 'A – Aim the nozzle or horn at the base of the fire.', ar: 'A – وجّه الفوهة أو البوق نحو قاعدة الحريق.' },
+          { en: 'S – Squeeze the handle.', ar: 'S – اضغط المقبض.' },
+          { en: 'S – Sweep from side to side across the base until the fire is out; then watch for several minutes, because hot fuel can re-ignite.', ar: 'S – حرّك النفثة يميناً ويساراً على القاعدة حتى ينطفئ الحريق؛ ثم راقب عدة دقائق لأن الوقود الساخن قد يعيد الاشتعال.' }
+        ]
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'NFPA 10 hazard levels and ratings', ar: 'مستويات الخطورة والتصنيفات في NFPA 10' },
+        p: {
+          en: 'NFPA 10 has its own hazard levels (different from the NFPA 13 sprinkler hazards), assessed room by room. The numeral in a rating shows relative capacity: 1-A equals the extinguishing capability of 1.25 US gal (4.7 L) of water, so a 2.5 gal water extinguisher is 2-A; the Class B numeral is roughly the square feet of flammable-liquid fire a non-expert can extinguish.',
+          ar: 'لـ NFPA 10 مستويات خطورة خاصة به (تختلف عن خطورة الرشاشات في NFPA 13)، وتُقيَّم غرفة بغرفة. ويدل الرقم في التصنيف على السعة النسبية: فـ 1-A تعادل قدرة إطفاء 1.25 جالون أمريكي (4.7 لتر) من الماء، لذا فطفاية ماء سعة 2.5 جالون تصنيفها 2-A؛ ورقم الفئة B يقارب مساحة حريق السائل القابل للاشتعال بالقدم المربع التي يستطيع غير المتخصص إطفاءها.'
+        },
+        bullets: [
+          { en: 'Light (low) hazard: low quantity and combustibility of Class A materials; Class B liquids under 1 gal (3.8 L) in any room — offices, classrooms, churches/mosques, hotel rooms.', ar: 'الخطورة الخفيفة (المنخفضة): كمية وقابلية احتراق منخفضة لمواد الفئة A؛ وسوائل الفئة B أقل من جالون واحد (3.8 لتر) في أي غرفة — المكاتب والفصول ودور العبادة وغرف الفنادق.' },
+          { en: 'Ordinary (moderate) hazard: moderate Class A; Class B 1–5 gal (3.8–18.9 L) — shops, light manufacturing, storage, parking.', ar: 'الخطورة العادية (المتوسطة): فئة A متوسطة؛ وفئة B من 1 إلى 5 جالونات (3.8–18.9 لتر) — المحلات والتصنيع الخفيف والتخزين والمواقف.' },
+          { en: 'Extra (high) hazard: high Class A or more than 5 gal (18.9 L) of Class B — workshops, spray areas, commercial cooking, flammable liquid handling.', ar: 'الخطورة العالية (المرتفعة): فئة A عالية أو أكثر من 5 جالونات (18.9 لتر) من الفئة B — الورش ومناطق الرش والطبخ التجاري ومناولة السوائل القابلة للاشتعال.' }
+        ]
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Class A sizing and placement (Table 6.2.1.1)', ar: 'تحديد عدد وتوزيع طفايات الفئة A (الجدول 6.2.1.1)' },
+        p: {
+          en: 'Two rules must both be met: the AREA rule (floor area covered per unit of A, with an absolute maximum per extinguisher) and the TRAVEL DISTANCE rule (actual walking path, not a straight radius, to the nearest extinguisher). If one rule fails, add extinguishers. Class B uses shorter travel distances.',
+          ar: 'يجب تحقيق قاعدتين معاً: قاعدة المساحة (المساحة المغطاة لكل وحدة A مع حد أقصى مطلق لكل طفاية) وقاعدة مسافة الانتقال (مسار المشي الفعلي، لا نصف قطر مستقيم، إلى أقرب طفاية). وإذا لم تتحقق إحداهما تُضاف طفايات. وتستخدم الفئة B مسافات انتقال أقصر.'
+        },
+        formula: '                         Light      Ordinary    Extra\nMin. rating single unit   2-A        2-A         4-A\nMax. area per unit of A   3000 ft²   1500 ft²    1000 ft²\n                          (279 m²)   (139 m²)    (93 m²)\nMax. area per extinguisher 11,250 ft² (1045 m²) for all hazards\nMax. travel distance       75 ft (22.9 m) for all hazards\nClass B: light 5-B at 30 ft / 10-B at 50 ft; ordinary 10-B / 20-B; extra 40-B / 80-B (30 ft = 9.1 m, 50 ft = 15.2 m)'
+      },
+      {
+        video: 'K3SudP-9Xe0',
+        h: { en: 'Worked example: 450 ft × 150 ft building', ar: 'مثال محلول: مبنى 450 × 150 قدماً' },
+        p: {
+          en: 'The NFPA 10 Annex E example (137 m × 46 m). First try the fewest, largest units, then check travel distance on the drawing by drawing 75 ft paths from each unit.',
+          ar: 'مثال الملحق E من NFPA 10 ‏(137 × 46 م). جرّب أولاً أقل عدد من الطفايات الأكبر، ثم تحقّق من مسافة الانتقال على المخطط برسم مسارات 75 قدماً من كل طفاية.'
+        },
+        formula: 'Area = 450 × 150 = 67,500 ft² (6271 m²)\nOption 1 – largest coverage: 67,500 / 11,250 = 6 units\n  light: 4-A each (11,250/3000 = 3.75 → 4-A); ordinary: 10-A (7.5 → 10-A); extra: 20-A (11.25 → 20-A)\n  6 units on the perimeter walls leave areas beyond 75 ft travel → FAILS travel distance\nOption 2 – smaller units, more of them:\n  light 2-A (6000 ft² each): 67,500 / 6000 = 11.25 → 12 units\n  ordinary 2-A (3000 ft²): 22.5 → 23 units; extra 4-A (4000 ft²): 16.9 → 17 units\n  mounted on columns, the 75 ft circles overlap → travel distance satisfied ✓'
+      }
+    ],
+    refs: ['NFPA 10 (2018/2022) §5.3 – Extinguisher classification; §5.4 – Hazard classifications', 'NFPA 10 Table 6.2.1.1 – Class A size and placement', 'NFPA 10 Table 6.3.1.1 – Class B size and placement', 'NFPA 10 Annex E – Distribution examples (Table E.3.5)', 'NFPA 10 Ch. 7 – Inspection, maintenance and recharging; Table 8.3.1 – Hydrostatic test intervals']
+  },
+
+  // ---------------------------------------------------------------- 14
+  {
+    id: 'hse-emergency',
+    icon: '🦺',
+    video: 'ukFfYJNFWsY',
+    title: { en: 'HSE Fire Systems and Emergency Response', ar: 'أنظمة الحريق في الصحة والسلامة والبيئة والاستجابة للطوارئ' },
+    summary: {
+      en: 'Health, safety and environment around fire systems: PPE and protocols, how fire operation systems are organised, operating and maintaining them, the five-step emergency response, a hose drill and training exercises.',
+      ar: 'الصحة والسلامة والبيئة المتعلقة بأنظمة الحريق: معدات الوقاية الشخصية والإجراءات، وتنظيم أنظمة تشغيل الحريق، وتشغيلها وصيانتها، والاستجابة للطوارئ في خمس خطوات، وتمرين الخرطوم، وتمارين التدريب.'
+    },
+    sections: [
+      {
+        video: 'ukFfYJNFWsY',
+        h: { en: 'HSE framework for fire fighting', ar: 'إطار الصحة والسلامة والبيئة في مكافحة الحريق' },
+        p: {
+          en: 'HSE for fire systems has three pillars: safety protocols (training on personal protective equipment and emergency procedures), environmental considerations (evaluating and reducing the impact of fire-fighting operations, such as contaminated fire water run-off, foam concentrates and agent releases), and health monitoring (continuous health surveillance and exposure monitoring for fire fighters and responders).',
+          ar: 'للصحة والسلامة والبيئة في أنظمة الحريق ثلاث ركائز: إجراءات السلامة (التدريب على معدات الوقاية الشخصية وإجراءات الطوارئ)، والاعتبارات البيئية (تقييم أثر عمليات المكافحة والحد منه، مثل جريان مياه الإطفاء الملوثة ومركزات الرغوة وإطلاق الغازات)، والمراقبة الصحية (المتابعة الصحية المستمرة ورصد التعرض لرجال الإطفاء وفرق الاستجابة).'
+        },
+        bullets: [
+          { en: 'Key equipment categories: extinguishers, hoses, nozzles and personal protective gear — each with safety and performance requirements set by standards bodies.', ar: 'الفئات الرئيسية للمعدات: الطفايات والخراطيم والفوهات ومعدات الوقاية الشخصية — ولكل منها متطلبات سلامة وأداء تضعها هيئات المعايير.' },
+          { en: 'Correct configuration, testing and upkeep keep equipment ready and effective.', ar: 'الإعداد الصحيح والاختبار والصيانة تُبقي المعدات جاهزة وفعّالة.' }
+        ]
+      },
+      {
+        video: 'ukFfYJNFWsY',
+        h: { en: 'Principles of fire operation systems', ar: 'مبادئ أنظمة تشغيل الحريق' },
+        p: {
+          en: 'A fire operation system is built from core components — sensors (detectors), alarms, control panels and communication systems — that perform four functions: detect, alert, suppress and monitor.',
+          ar: 'يتكون نظام تشغيل الحريق من مكونات أساسية — الحساسات (الكواشف) والإنذارات ولوحات التحكم وأنظمة الاتصال — تؤدي أربع وظائف: الكشف والتنبيه والإخماد والمراقبة.'
+        },
+        bullets: [
+          { en: 'Redundancy and fail-safe: backup power (panel batteries, generator, diesel fire pump), alternative communication channels, fail-safe mechanisms (e.g. doors released and dampers closed on power loss).', ar: 'التكرار الاحتياطي والأمان عند العطل: طاقة احتياطية (بطاريات اللوحة والمولد ومضخة الديزل)، وقنوات اتصال بديلة، وآليات آمنة عند العطل (مثل تحرير الأبواب وإغلاق المخمدات عند انقطاع الكهرباء).' },
+          { en: 'Interoperability: integration with other building systems for a coordinated response — HVAC shutdown, smoke fans and stair pressurization, lift recall, access control release, BMS.', ar: 'التكامل: الربط مع أنظمة المبنى الأخرى لاستجابة منسقة — إيقاف التكييف، ومراوح الدخان وضغط السلالم، واستدعاء المصاعد، وتحرير التحكم في الدخول، ونظام إدارة المبنى.' }
+        ]
+      },
+      {
+        video: 'ukFfYJNFWsY',
+        h: { en: 'Operating protocols and maintenance', ar: 'بروتوكولات التشغيل والصيانة' },
+        p: {
+          en: 'Clear written protocols define how systems are activated in an emergency, how the fire control panel is operated step by step, how systems are monitored and maintained, and how the site communicates with fire fighters and paramedics.',
+          ar: 'تحدد بروتوكولات مكتوبة وواضحة كيفية تفعيل الأنظمة في الطوارئ، وتشغيل لوحة التحكم في الحريق خطوة بخطوة، ومراقبة الأنظمة وصيانتها، وتواصل الموقع مع رجال الإطفاء والمسعفين.'
+        },
+        bullets: [
+          { en: 'Typical panel steps: read the zone/device on the display → acknowledge and silence the buzzer (not the evacuation alarm) → send someone to investigate → if a real fire, call the fire brigade and evacuate → reset only after the cause is found and cleared → record the event in the log book.', ar: 'الخطوات النموذجية للوحة: اقرأ المنطقة/الجهاز على الشاشة ← أقرّ بالإنذار وأسكت صفارة اللوحة (لا إنذار الإخلاء) ← أرسل من يتحقق ← إن كان حريقاً حقيقياً فاتصل بالدفاع المدني وأخلِ المبنى ← لا تُعِد الضبط إلا بعد معرفة السبب وإزالته ← سجّل الحدث في سجل الأحداث.' },
+          { en: 'Routine checks: inspect equipment daily (panel normal, valves open, extinguishers in place, exits clear); scheduled maintenance per the manufacturer and NFPA 25/72/10; follow standard checklists for complete inspections.', ar: 'الفحوص الدورية: افحص المعدات يومياً (اللوحة في الوضع الطبيعي، والصمامات مفتوحة، والطفايات في مكانها، والمخارج خالية)؛ وصيانة مجدولة وفق المصنع وNFPA 25 و72 و10؛ واتبع قوائم فحص قياسية للفحوص الشاملة.' },
+          { en: 'Meet the arriving fire brigade at the panel or the fire department connection with drawings, keys and information about the incident and any missing persons.', ar: 'استقبل فرق الدفاع المدني عند اللوحة أو عند وصلة الدفاع المدني ومعك المخططات والمفاتيح والمعلومات عن الحادث وأي أشخاص مفقودين.' }
+        ]
+      },
+      {
+        video: 'ukFfYJNFWsY',
+        h: { en: 'Emergency response procedure', ar: 'إجراءات الاستجابة للطوارئ' },
+        p: {
+          en: 'The course teaches five steps for fire, medical or other emergencies:',
+          ar: 'تعلّم الدورة خمس خطوات لحالات الحريق أو الطوارئ الطبية أو غيرها:'
+        },
+        bullets: [
+          { en: '1. Assess the situation: quickly evaluate the emergency, identify the risks and decide the right response.', ar: '1. تقييم الموقف: قيّم الطارئ بسرعة، وحدّد المخاطر، وقرّر الاستجابة المناسبة.' },
+          { en: '2. Activate emergency protocols: start the established procedures (manual call point, alarm, emergency call).', ar: '2. تفعيل بروتوكولات الطوارئ: ابدأ الإجراءات المعتمدة (نقطة النداء اليدوية، والإنذار، والاتصال بالطوارئ).' },
+          { en: '3. Coordinate with authorities: communicate with fire fighters, police and other first responders for a unified effort.', ar: '3. التنسيق مع الجهات المختصة: تواصل مع رجال الإطفاء والشرطة وفرق الاستجابة الأولى الأخرى لجهد موحّد.' },
+          { en: '4. Manage evacuation: direct people to the designated safe areas (assembly points) and account for everyone.', ar: '4. إدارة الإخلاء: وجّه الأشخاص إلى المناطق الآمنة المحددة (نقاط التجمع) وتحقّق من وجود الجميع.' },
+          { en: '5. Provide first aid: give basic care to the injured until professional help arrives.', ar: '5. تقديم الإسعافات الأولية: قدّم الرعاية الأساسية للمصابين حتى وصول المساعدة المتخصصة.' }
+        ]
+      },
+      {
+        video: 'zFMxvWsOZpU',
+        h: { en: 'Site training: hose drill from a landing valve', ar: 'تدريب موقعي: تمرين الخرطوم من صمام الطابق' },
+        p: {
+          en: 'The site-training video walks staff through the building installation: the fire tank filled from the municipal supply before the domestic tank (so the fire reserve stays full), the pump room with main, jockey and diesel pumps, red 68 °C sprinklers in the basements that open automatically and sound the alarm, a 30 m hose reel in a break-glass cabinet, and landing valves near every stair. It then runs a hose drill:',
+          ar: 'يأخذ فيديو التدريب الموقعي العاملين في جولة على منظومة المبنى: خزان الحريق الذي يُملأ من الشبكة العامة قبل الخزان المنزلي (ليبقى احتياطي الحريق ممتلئاً)، وغرفة المضخات بمضخاتها الرئيسية والجوكي والديزل، والرشاشات الحمراء 68 °م في الأقبية التي تفتح تلقائياً وتطلق الإنذار، وبكرة خرطوم بطول 30 م في كبينة ذات زجاج قابل للكسر، وصمامات الطوابق قرب كل درج. ثم يجري تمرين الخرطوم:'
+        },
+        bullets: [
+          { en: '1. Open the cabinet (break the glass if the key is not available) and run out the delivery hose toward the fire without kinks.', ar: '1. افتح الكبينة (اكسر الزجاج إن لم يتوفر المفتاح) وافرد خرطوم التوصيل نحو الحريق دون التواءات.' },
+          { en: '2. Instantaneous couplings: push the male coupling into the female until it locks, then pull back to prove it is latched — at the landing valve and at the branch nozzle.', ar: '2. الوصلات الفورية: ادفع الوصلة الذكر داخل الأنثى حتى تُقفل، ثم اسحبها للخلف للتأكد من إحكامها — عند صمام الطابق وعند فوهة الخرطوم.' },
+          { en: '3. Two people on the nozzle: the front person directs the jet, the second holds the hose behind to absorb the reaction; then open the landing valve slowly.', ar: '3. شخصان على الفوهة: يوجّه الأمامي النفثة ويمسك الثاني الخرطوم من الخلف لامتصاص رد الفعل؛ ثم افتح صمام الطابق ببطء.' },
+          { en: '4. Network valves are normally left open (check the handle position); after use close the valve, drain and re-roll the hose, and report the use.', ar: '4. تُترك صمامات الشبكة مفتوحة عادةً (تحقّق من وضع المقبض)؛ وبعد الاستخدام أغلق الصمام وصرّف الخرطوم وأعد لفّه وأبلغ عن الاستخدام.' }
+        ]
+      },
+      {
+        video: 'ukFfYJNFWsY',
+        h: { en: 'Drills, simulations and case studies', ar: 'التمارين والمحاكاة ودراسات الحالة' },
+        p: {
+          en: 'Skills fade without practice. The course uses simulation exercises (hands-on training with simulated fire incidents and emergency procedures) and case-study reviews of real fire-fighting operations to draw lessons learned. This Digital Twin can be used the same way: trigger a scenario, follow the alarm and pump sequence, and review what each system did.',
+          ar: 'تتلاشى المهارات دون ممارسة. وتستخدم الدورة تمارين المحاكاة (تدريب عملي على حوادث حريق مُحاكاة وإجراءات الطوارئ) ومراجعة دراسات حالة لعمليات مكافحة حقيقية لاستخلاص الدروس. ويمكن استخدام هذا التوأم الرقمي بالطريقة نفسها: شغّل سيناريو، وتابع تسلسل الإنذار والمضخات، وراجع ما فعله كل نظام.'
+        }
+      }
+    ],
+    refs: ['NFPA 72 (2022) Ch. 10 & 14 – Fundamentals; inspection, testing and maintenance', 'NFPA 101 (2021) Ch. 4 & 7 – Means of egress, emergency action plans', 'NFPA 600 / NFPA 1081 – Industrial fire brigades', 'NFPA 1962 – Fire hose care, use and inspection', 'OSHA 29 CFR 1910.38 / 1910.157 – Emergency action plans; portable extinguishers']
   }
 ];
 
