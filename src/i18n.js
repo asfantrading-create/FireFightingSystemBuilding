@@ -10,6 +10,7 @@ const S = {
   tabDash: ['Dashboard', 'لوحة المؤشرات'],
   tabData: ['Design Data', 'بيانات التصميم'],
   tabLearn: ['Learn', 'تعلّم'],
+  tabTrain: ['Training', 'التدريب العملي'],
   tabQuiz: ['Quiz', 'اختبار'],
   tabClass: ['Classroom', 'الصف الدراسي'],
   tabReports: ['Reports', 'التقارير'],

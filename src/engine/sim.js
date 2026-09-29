@@ -38,7 +38,7 @@ function makeTimeline(duration) {
 }
 
 /** Pump-set hydraulic model shared by all water-based systems. */
-class PumpSet {
+export class PumpSet {
   constructor(pumps, faults, tankM3, ev) {
     this.p = pumps;
     this.faults = faults;

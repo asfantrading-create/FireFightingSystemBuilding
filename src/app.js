@@ -6,6 +6,7 @@ import { runScenario, sampleAt, scenarioSystem } from './engine/sim.js';
 import { t, tr, setLang, getLang } from './i18n.js';
 import { kpis, metricValue, componentDetails, mmss, fmt } from './ui/metrics.js';
 import * as Pages from './ui/pages.js';
+import { SCENES, Trainer } from './training/index.js';
 import { initLicense, licenseAllowsUse, openLicenseModal } from './ui/license.js';
 
 const $ = (id) => document.getElementById(id);
@@ -56,7 +57,36 @@ const editKey = () => `${state.refFac.id}/${state.refFac.scenarios[state.scIdx].
 function currentEdits() { return state.edits[editKey()] || {}; }
 function saveEdits() { try { localStorage.setItem('ftw.edits', JSON.stringify(state.edits)); } catch { /* ignore */ } }
 
+let trainer;
+function startTraining(i) {
+  state.playing = false;
+  setPage('twin');
+  document.getElementById('page-twin').classList.add('training');
+  state.training = true;
+  trainer.start(SCENES[i]);
+}
+function exitTraining(reload = true) {
+  if (!state.training) return;
+  trainer.stop();
+  state.training = false;
+  document.getElementById('page-twin').classList.remove('training');
+  if (reload) loadFacility(state.refFac, state.scIdx, true);
+}
+
+function renderTrainingPage() {
+  const L = (en, ar) => (getLang() === 'ar' ? ar : en);
+  const esc = (x) => String(x).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+  $('trainInner').innerHTML = `<h1>${t('tabTrain')}</h1><p class="lead">${L('Interactive 3D training scenes based on the course videos: explore every component, then perform the procedure step by step on live physics. Results are saved to the Classroom.',
+    'مشاهد تدريبية تفاعلية ثلاثية الأبعاد مبنية على فيديوهات الدورة: استكشف كل مكوّن ثم نفّذ الإجراء خطوة بخطوة على فيزياء حية. تُحفظ النتائج في الصف الدراسي.')}</p>
+    <div class="train-grid">${SCENES.map((sc, i) => `<div class="card train-card"><div class="ic">${sc.icon}</div><h4>${esc(tr(sc.title))}</h4>
+      <p class="muted" style="font-size:.9em">${esc(tr(sc.summary))}</p>
+      <button class="btn primary" data-scene="${i}">▶ ${L('Start', 'ابدأ')}</button>
+      ${sc.video ? `<a class="vid" href="https://www.youtube.com/watch?v=${sc.video}" target="_blank" rel="noopener" style="margin-inline-start:8px">▶ ${L('Source video', 'الفيديو المصدر')}</a>` : ''}</div>`).join('')}</div>`;
+  document.querySelectorAll('[data-scene]').forEach((b) => { b.onclick = () => startTraining(+b.dataset.scene); });
+}
+
 function loadFacility(fac, scIdx = 0, keepFaults = false) {
+  if (state.training) exitTraining(false);
   state.refFac = fac; state.scIdx = scIdx;
   const eff = applyEdits(fac, fac.scenarios[scIdx], currentEdits());
   state.fac = eff.fac; state.sc = eff.sc;
@@ -236,6 +266,7 @@ function setPage(p) {
   state.page = p;
   document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('active', b.dataset.page === p));
   document.querySelectorAll('.page').forEach((s) => s.classList.toggle('active', s.id === `page-${p}`));
+  if (p === 'train') renderTrainingPage();
   Pages.show(p, ctx(), { openModal, closeModal, goTwin, startChallenge, screenshot: () => world.screenshot(), getEdits: currentEdits, setEdits });
 }
 
@@ -364,6 +395,7 @@ async function main() {
     if (world.site) world.site.update(sampleAt(state.tl, state.time), state.tl, state.time);
     updateUi();
   });
+  trainer = new Trainer(world, { panel: $('trainCard'), onExit: () => exitTraining(true), record: (r) => Pages.recordResult(r) });
   wire();
   refreshToggles();
   loadFacility(FACILITIES[0], 0);
@@ -371,7 +403,7 @@ async function main() {
     if (!licenseAllowsUse()) openLicenseModal(openModal, closeModal);
     return st;
   });
-  window.__ftw = { state, world, setPage, loadFacility: (i, s = 0) => loadFacility(FACILITIES[i], s), selectComponent, togglePlay, rerun };
+  window.__ftw = { state, world, startTraining, trainer: () => trainer, setPage, loadFacility: (i, s = 0) => loadFacility(FACILITIES[i], s), selectComponent, togglePlay, rerun };
 }
 
 main();
