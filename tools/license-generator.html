@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>License Generator · مولّد التراخيص – Fire Protection Digital Twin</title>
+<style>
+  :root { --bg:#f4f6f9; --panel:#fff; --line:#dbe2ea; --text:#0f172a; --muted:#5b6b7f; --accent:#c4161c; --ok:#0f9d8a; --warn:#b45309; --crit:#dc2626; }
+  * { box-sizing:border-box; } body { margin:0; background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,'Noto Sans Arabic',Tahoma,sans-serif; font-size:14px; }
+  header { background:var(--panel); border-bottom:1px solid var(--line); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  header .brand { display:flex; align-items:center; gap:10px; }
+  h1 { font-size:18px; margin:0; } h2 { font-size:15px; margin:0 0 10px; }
+  main { max-width:1150px; margin:20px auto; padding:0 16px; display:grid; gap:16px; grid-template-columns:1fr 1fr; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .wide { grid-column:1 / -1; }
+  label { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  input, select, textarea { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font:inherit; background:#fff; color:var(--text); }
+  textarea { font-family:Consolas,monospace; font-size:12px; min-height:110px; direction:ltr; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:9px 14px; font:inherit; font-weight:600; cursor:pointer; margin-top:12px; }
+  button.secondary { background:#fff; color:var(--text); border:1px solid var(--line); }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; } .row > * { flex:1; }
+  .out { font-family:Consolas,monospace; font-size:12px; word-break:break-all; background:#f8fafc; border:1px dashed var(--line); border-radius:8px; padding:10px; direction:ltr; text-align:left; min-height:60px; }
+  .muted { color:var(--muted); font-size:12px; } .ok { color:var(--ok); } .bad { color:var(--crit); }
+  .lang { border:1px solid var(--line); border-radius:8px; overflow:hidden; display:inline-flex; } .lang button { margin:0; border-radius:0; background:#fff; color:var(--text); padding:6px 10px; } .lang button.active { background:#fdecec; color:var(--accent); }
+  .types { display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; margin-top:6px; } .types label { display:flex; align-items:center; gap:8px; margin:0; font-size:13px; color:var(--text); cursor:pointer; } .types input { width:auto; } .types label.all { grid-column:1 / -1; font-weight:600; border-bottom:1px solid var(--line); padding-bottom:6px; margin-bottom:2px; }
+  .chk { display:flex; align-items:center; gap:8px; cursor:pointer; margin-top:10px; color:var(--text); font-size:13px; } .chk input { width:auto; }
+  table { width:100%; border-collapse:collapse; font-size:12px; } th, td { padding:6px; border-bottom:1px solid var(--line); text-align:start; } th { color:var(--muted); }
+  @media (max-width:800px) { main { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span style="font-size:26px">🔥</span><h1 data-i18n="title">مولّد تراخيص التوأم الرقمي لأنظمة مكافحة الحريق</h1></div>
+  <div class="lang"><button id="lang-ar" class="active" onclick="setLang('ar')">العربية</button><button id="lang-en" onclick="setLang('en')">English</button></div>
+</header>
+<main>
+  <section class="card">
+    <h2 data-i18n="privTitle">1 · المفتاح الخاص (سري – لا يُرسل للعميل أبداً)</h2>
+    <p class="muted" data-i18n="privHint">ألصق محتوى الملف private.jwk.json أو حمّله. يبقى المفتاح في متصفحك فقط ولا يُرسل لأي مكان.</p>
+    <textarea id="priv" placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","d":"..."}'></textarea>
+    <div class="row"><input type="file" id="privFile" accept=".json" /><button class="secondary" onclick="rememberPriv()" data-i18n="remember">حفظ في هذا المتصفح</button></div>
+    <h2 style="margin-top:18px" data-i18n="custTitle">2 · بيانات العميل والترخيص</h2>
+    <label data-i18n="name">اسم العميل</label><input id="name" placeholder="مثال: م. أحمد علي" />
+    <label data-i18n="org">الجهة / الجامعة / الشركة (اختياري)</label><input id="org" placeholder="مثال: جامعة العلوم والتكنولوجيا – قسم الهندسة المدنية" />
+    <label data-i18n="email">البريد الإلكتروني (اختياري)</label><input id="email" type="email" style="direction:ltr" />
+    <label data-i18n="type">نوع الاشتراك</label>
+    <select id="plan" onchange="planChanged()"><option value="yearly" data-i18n="yearly">اشتراك سنوي (12 شهراً)</option><option value="monthly" data-i18n="monthly">اشتراك شهري (شهر واحد)</option><option value="custom" data-i18n="custom">تاريخ انتهاء مخصص</option></select>
+    <div id="expRow"><label data-i18n="expires">تاريخ انتهاء الاشتراك</label><input id="expires" type="date" style="direction:ltr" /><p class="muted" id="expHint"></p></div>
+    <div class="row"><div><label data-i18n="seats">عدد المقاعد / الأجهزة</label><input id="seats" type="number" min="1" value="1" style="direction:ltr" /></div>
+      <div><label data-i18n="machine">ربط بجهاز محدد (اختياري)</label><input id="machine" placeholder="XXXX-XXXX-XXXX-XXXX" style="direction:ltr" /></div></div>
+    <p class="muted" data-i18n="machineHint">معرّف الجهاز يظهر للعميل في نافذة الترخيص (🔑). اتركه فارغاً لترخيص غير مربوط بجهاز.</p>
+    <details id="staffBox" style="margin-top:14px"><summary class="muted" style="cursor:pointer" data-i18n="staffTitle">🔒 خيارات داخلية (لموظفي الشركة فقط)</summary>
+      <label class="chk" style="color:var(--crit)"><input type="checkbox" id="staff" onchange="planChanged()" /> <span data-i18n="staff">ترخيص موظف بلا تاريخ انتهاء – للموظفين فقط، لا يُصدر للعملاء أبداً</span></label>
+      <p class="muted" data-i18n="staffHint">يظهر في البرنامج باسم «ترخيص موظفي الشركة».</p>
+    </details>
+    <label data-i18n="notes">ملاحظات (اختياري)</label><input id="notes" />
+  </section>
+  <section class="card">
+    <h2 data-i18n="facTitle">3 · المنشآت المشمولة بالترخيص</h2>
+    <p class="muted" data-i18n="facHint">اختر «جميع المنشآت» أو حدد ما دفع العميل ثمنه فقط؛ المنشآت الأخرى تظهر مقفلة 🔒 في البرنامج.</p>
+    <div id="types" class="types"></div>
+    <h2 style="margin-top:18px" data-i18n="featTitle">الميزات</h2>
+    <label class="chk"><input type="checkbox" id="training" checked /> <span data-i18n="training">المشاهد التدريبية العملية (9 مشاهد: غرفة المضخات، اختبار التدفق، الصمام الجاف، صمام الطابق، الطفايات، الخرطوم، أنواع الرشاشات، ضغط الدرج، FM-200)</span></label>
+    <h2 style="margin-top:18px" data-i18n="roleTitle">دور الترخيص</h2>
+    <label class="chk"><input type="checkbox" id="supervisor" /> <span data-i18n="supervisor">ترخيص مشرف (مدرّس / مدرّب): يرى نتائج جميع الطلاب في الصف الدراسي ويصدّرها ويمسحها</span></label>
+    <p class="muted" data-i18n="roleHint">اترك الخيار فارغاً لتراخيص الطلاب والمستخدمين العاديين.</p>
+    <button onclick="generate()" style="width:100%;font-size:15px" data-i18n="generate">توليد مفتاح الترخيص</button>
+    <h2 style="margin-top:18px" data-i18n="keyTitle">4 · مفتاح الترخيص – أرسله للعميل</h2>
+    <div class="out" id="out"><span class="muted" data-i18n="empty">لم يُولَّد مفتاح بعد.</span></div>
+    <div class="row"><button class="secondary" onclick="copyKey()" data-i18n="copy">نسخ</button><button class="secondary" onclick="downloadKey()" data-i18n="download">تنزيل ملف .lic</button></div>
+    <p class="muted" id="summary"></p>
+  </section>
+  <section class="card">
+    <h2 data-i18n="verifyTitle">التحقق من مفتاح</h2>
+    <textarea id="verifyIn" placeholder="FTW1-..."></textarea>
+    <label data-i18n="pubLabel">المفتاح العام (اختياري – يُستخدم المفتاح المدمج إن تُرك فارغاً)</label>
+    <textarea id="pub" style="min-height:60px"></textarea>
+    <button class="secondary" onclick="verifyKey()" data-i18n="verify">تحقق</button>
+    <div id="verifyOut" class="muted" style="margin-top:8px"></div>
+  </section>
+  <section class="card">
+    <h2 data-i18n="ledgerTitle">سجل التراخيص الصادرة (في هذا المتصفح)</h2>
+    <div style="max-height:320px;overflow:auto"><table><thead><tr><th data-i18n="thDate">التاريخ</th><th data-i18n="thName">العميل</th><th data-i18n="thPlan">الخطة</th><th data-i18n="thExp">ينتهي</th><th data-i18n="thMachine">الجهاز</th></tr></thead><tbody id="ledger"></tbody></table></div>
+    <div class="row"><button class="secondary" onclick="exportLedger()" data-i18n="exportCsv">تصدير CSV</button></div>
+  </section>
+</main>
+<script>
+const EMBEDDED_PUB = {"kty":"EC","x":"jhxveRO_t2rSO3hsR8fJ3Q9Jq9fbL1ngDFCFDlaudzk","y":"wqMg4VZWFIPcOvWp16rZ7i5JgRyMWKXQbqJoeu9BjkE","crv":"P-256"};
+const FACILITIES = [['HIGH_RISE','برج شاهق – برج خليفة (دبي)','High-rise – Burj Khalifa (Dubai)'],['WAREHOUSE','مستودع ESFR – العقبة','ESFR warehouse – Aqaba'],['DATA_CENTER','مركز بيانات FM-200 – عمّان','FM-200 data centre – Amman'],['TANK_FARM','خزانات نفط بالرغوة – العقبة','Foam tank farm – Aqaba'],['HANGAR','حظيرة طائرات – مطار الملكة علياء','Aircraft hangar – QAIA'],['CUSTOM','إنشاء منشأة يدوياً','Create facility manually']];
+const I18N = {
+  ar: { title:'مولّد تراخيص التوأم الرقمي لأنظمة مكافحة الحريق', privTitle:'1 · المفتاح الخاص (سري – لا يُرسل للعميل أبداً)', privHint:'ألصق محتوى الملف private.jwk.json أو حمّله. يبقى المفتاح في متصفحك فقط ولا يُرسل لأي مكان.', remember:'حفظ في هذا المتصفح', custTitle:'2 · بيانات العميل والترخيص', name:'اسم العميل', org:'الجهة / الجامعة / الشركة (اختياري)', email:'البريد الإلكتروني (اختياري)', type:'نوع الاشتراك', yearly:'اشتراك سنوي (12 شهراً)', monthly:'اشتراك شهري (شهر واحد)', custom:'تاريخ انتهاء مخصص', expires:'تاريخ انتهاء الاشتراك', seats:'عدد المقاعد / الأجهزة', machine:'ربط بجهاز محدد (اختياري)', machineHint:'معرّف الجهاز يظهر للعميل في نافذة الترخيص (🔑). اتركه فارغاً لترخيص غير مربوط بجهاز.', autoHint:'يُحسب تاريخ الانتهاء تلقائياً من تاريخ اليوم.', customHint:'أدخل أي تاريخ انتهاء (مثلاً نهاية الفصل الدراسي).', staffTitle:'🔒 خيارات داخلية (لموظفي الشركة فقط)', staff:'ترخيص موظف بلا تاريخ انتهاء – للموظفين فقط، لا يُصدر للعملاء أبداً', staffHint:'يظهر في البرنامج باسم «ترخيص موظفي الشركة».', notes:'ملاحظات (اختياري)', facTitle:'3 · المنشآت المشمولة بالترخيص', facHint:'اختر «جميع المنشآت» أو حدد ما دفع العميل ثمنه فقط؛ المنشآت الأخرى تظهر مقفلة 🔒 في البرنامج.', allFac:'جميع المنشآت (6)', featTitle:'الميزات', training:'المشاهد التدريبية العملية (9 مشاهد: غرفة المضخات، اختبار التدفق، الصمام الجاف، صمام الطابق، الطفايات، الخرطوم، أنواع الرشاشات، ضغط الدرج، FM-200)', roleTitle:'دور الترخيص', supervisor:'ترخيص مشرف (مدرّس / مدرّب): يرى نتائج جميع الطلاب في الصف الدراسي ويصدّرها ويمسحها', roleHint:'اترك الخيار فارغاً لتراخيص الطلاب والمستخدمين العاديين.', generate:'توليد مفتاح الترخيص', keyTitle:'4 · مفتاح الترخيص – أرسله للعميل', empty:'لم يُولَّد مفتاح بعد.', copy:'نسخ', download:'تنزيل ملف .lic', verifyTitle:'التحقق من مفتاح', pubLabel:'المفتاح العام (اختياري – يُستخدم المفتاح المدمج إن تُرك فارغاً)', verify:'تحقق', ledgerTitle:'سجل التراخيص الصادرة (في هذا المتصفح)', thDate:'التاريخ', thName:'العميل', thPlan:'الخطة', thExp:'ينتهي', thMachine:'الجهاز', exportCsv:'تصدير CSV', needPriv:'أدخل المفتاح الخاص أولاً', badPriv:'المفتاح الخاص غير صالح (يجب أن يكون JWK من نوع EC P-256 يحتوي على d)', needName:'أدخل اسم العميل', needDate:'أدخل تاريخ الانتهاء', needFuture:'يجب أن يكون تاريخ الانتهاء في المستقبل', needFac:'اختر منشأة واحدة على الأقل', confirmStaff:'ترخيص موظف بلا تاريخ انتهاء – لموظفي الشركة فقط وليس للعملاء. هل أنت متأكد؟', copied:'تم النسخ', saved:'تم الحفظ في هذا المتصفح', valid:'التوقيع صحيح ✓', invalid:'التوقيع غير صحيح ✗', staffName:'ترخيص موظف', planNames:{yearly:'سنوي',monthly:'شهري',custom:'مخصص',staff:'موظف'},
+    summary:(p)=>`${p.type==='staff'?'ترخيص موظف بلا تاريخ انتهاء (داخلي – ليس للعملاء)':({yearly:'اشتراك سنوي',monthly:'اشتراك شهري'}[p.plan]||'اشتراك')+' ينتهي في '+p.expires} لـ «${p.name}»${p.org?' – '+p.org:''} – صدر بتاريخ ${p.issued}${p.machine?' – مربوط بالجهاز '+p.machine:''} – ${p.seats} مقعد${p.facilities?' – المنشآت: '+p.facilities.join('، '):' – جميع المنشآت'}${p.training===false?' – بدون المشاهد التدريبية':''}${p.role?' – مشرف (مدرّس)':''}` },
+  en: { title:'Fire Protection Digital Twin – License Generator', privTitle:'1 · Private key (secret – never send it to customers)', privHint:'Paste the content of private.jwk.json or load the file. The key stays in your browser and is never uploaded.', remember:'Remember in this browser', custTitle:'2 · Customer & license details', name:'Customer name', org:'Organisation / university / company (optional)', email:'E-mail (optional)', type:'Subscription plan', yearly:'Yearly subscription (12 months)', monthly:'Monthly subscription (1 month)', custom:'Custom expiry date', expires:'Subscription expiry date', seats:'Seats / computers', machine:'Bind to one computer (optional)', machineHint:'The machine ID is shown to the customer in the license window (🔑). Leave empty for an unbound license.', autoHint:'The expiry date is computed from today.', customHint:'Enter any expiry date (e.g. the end of a semester).', staffTitle:'🔒 Internal options (company staff only)', staff:'Staff licence without expiry – employees only, never issued to customers', staffHint:'The program shows it as “Staff license”.', notes:'Notes (optional)', facTitle:'3 · Facilities included in the license', facHint:'Choose “All facilities” or tick only what the customer paid for; the others appear locked 🔒 in the program.', allFac:'All facilities (6)', featTitle:'Features', training:'Hands-on training scenes (9 scenes: pump room, flow test, dry-pipe valve, floor valve, extinguishers, hose drill, sprinkler types, stair pressurization, FM-200)', roleTitle:'License role', supervisor:'Supervisor license (teacher / trainer): sees, exports and clears the results of all students in the Classroom', roleHint:'Leave it unticked for student and ordinary user licenses.', generate:'Generate license key', keyTitle:'4 · License key – send this to the customer', empty:'No key generated yet.', copy:'Copy', download:'Download .lic file', verifyTitle:'Verify a key', pubLabel:'Public key (optional – the embedded key is used when empty)', verify:'Verify', ledgerTitle:'Issued licenses (this browser)', thDate:'Date', thName:'Customer', thPlan:'Plan', thExp:'Expires', thMachine:'Machine', exportCsv:'Export CSV', needPriv:'Enter the private key first', badPriv:'Invalid private key (must be an EC P-256 JWK containing d)', needName:'Enter the customer name', needDate:'Enter the expiry date', needFuture:'The expiry date must be in the future', needFac:'Select at least one facility', confirmStaff:'Staff licence without expiry – for company employees only, not for customers. Are you sure?', copied:'Copied', saved:'Saved in this browser', valid:'Signature valid ✓', invalid:'Signature INVALID ✗', staffName:'Staff', planNames:{yearly:'Yearly',monthly:'Monthly',custom:'Custom',staff:'Staff'},
+    summary:(p)=>`${p.type==='staff'?'Staff licence without expiry (internal – not for customers)':({yearly:'Yearly subscription',monthly:'Monthly subscription'}[p.plan]||'Subscription')+' until '+p.expires} for “${p.name}”${p.org?' – '+p.org:''} – issued ${p.issued}${p.machine?' – bound to machine '+p.machine:''} – ${p.seats} seat(s)${p.facilities?' – facilities: '+p.facilities.join(', '):' – all facilities'}${p.training===false?' – no training scenes':''}${p.role?' – supervisor (teacher)':''}` }
+};
+let lang = 'ar';
+const t = (k) => I18N[lang][k];
+function renderTypes() {
+  const box = document.getElementById('types');
+  const checked = new Set([...box.querySelectorAll('input[data-type]:checked')].map((i) => i.dataset.type));
+  const allWas = box.querySelector('#allTypes') ? document.getElementById('allTypes').checked : true;
+  box.innerHTML = `<label class="all"><input type="checkbox" id="allTypes" ${allWas ? 'checked' : ''} onchange="toggleAllTypes()" /> ${t('allFac')}</label>` +
+    FACILITIES.map(([id, ar, en]) => `<label><input type="checkbox" data-type="${id}" ${allWas || checked.has(id) ? 'checked' : ''} ${allWas ? 'disabled' : ''} /> ${lang === 'ar' ? ar : en} <span class="muted" dir="ltr">${id}</span></label>`).join('');
+}
+function toggleAllTypes() { const all = document.getElementById('allTypes').checked; document.querySelectorAll('#types input[data-type]').forEach((i) => { i.disabled = all; if (all) i.checked = true; }); }
+function selectedTypes() { if (document.getElementById('allTypes').checked) return null; const ts = [...document.querySelectorAll('#types input[data-type]:checked')].map((i) => i.dataset.type); return ts.length === FACILITIES.length ? null : ts; }
+function setLang(l) {
+  lang = l; renderTypes(); document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i18n]').forEach((el) => { const v = I18N[l][el.dataset.i18n]; if (typeof v === 'string') el.textContent = v; });
+  document.getElementById('lang-ar').classList.toggle('active', l === 'ar'); document.getElementById('lang-en').classList.toggle('active', l === 'en');
+  planChanged(); renderLedger();
+}
+const b64u = (bytes) => { let s = ''; new Uint8Array(bytes).forEach((b) => { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const unb64u = (s) => { const p = s.replace(/-/g, '+').replace(/_/g, '/'); const bin = atob(p + '='.repeat((4 - p.length % 4) % 4)); return Uint8Array.from(bin, (c) => c.charCodeAt(0)); };
+let lastKey = '', lastName = '';
+document.getElementById('privFile').addEventListener('change', (e) => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => (document.getElementById('priv').value = r.result); r.readAsText(f); });
+function rememberPriv() { try { localStorage.setItem('ftw.priv', document.getElementById('priv').value); alert(t('saved')); } catch (e) { alert(e.message); } }
+try { if (localStorage.getItem('ftw.priv')) document.getElementById('priv').value = localStorage.getItem('ftw.priv'); } catch (e) {}
+function addMonths(d, n) { const y = d.getFullYear(), m = d.getMonth() + n, day = d.getDate(); const last = new Date(y, m + 1, 0).getDate(); return new Date(y, m, Math.min(day, last)); }
+const isoDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function planChanged() {
+  const staff = document.getElementById('staff').checked; const plan = document.getElementById('plan').value; const exp = document.getElementById('expires');
+  document.getElementById('plan').disabled = staff;
+  document.getElementById('expRow').style.display = staff ? 'none' : '';
+  if (!staff && plan !== 'custom') { exp.value = isoDate(addMonths(new Date(), plan === 'monthly' ? 1 : 12)); exp.readOnly = true; } else exp.readOnly = false;
+  document.getElementById('expHint').textContent = staff ? '' : (plan === 'custom' ? t('customHint') : t('autoHint'));
+}
+async function generate() {
+  const privTxt = document.getElementById('priv').value.trim(); if (!privTxt) return alert(t('needPriv'));
+  const name = document.getElementById('name').value.trim(); if (!name) return alert(t('needName'));
+  const staff = document.getElementById('staff').checked; const planSel = document.getElementById('plan').value;
+  const expires = staff ? null : document.getElementById('expires').value;
+  if (!staff && !/^\d{4}-\d{2}-\d{2}$/.test(expires || '')) return alert(t('needDate'));
+  if (!staff && new Date(expires + 'T23:59:59') <= new Date()) return alert(t('needFuture'));
+  const facilities = selectedTypes(); if (Array.isArray(facilities) && facilities.length === 0) return alert(t('needFac'));
+  if (staff && !confirm(t('confirmStaff'))) return;
+  let key;
+  try { const jwk = JSON.parse(privTxt); if (!jwk.d) throw new Error('no d'); key = await crypto.subtle.importKey('jwk', { kty: jwk.kty, crv: jwk.crv, x: jwk.x, y: jwk.y, d: jwk.d }, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']); }
+  catch (e) { return alert(t('badPriv')); }
+  const payload = {
+    v: 1, id: crypto.randomUUID(), name, org: document.getElementById('org').value.trim() || undefined,
+    email: document.getElementById('email').value.trim() || undefined, type: staff ? 'staff' : 'subscription',
+    plan: staff ? undefined : planSel, issued: isoDate(new Date()), expires,
+    machine: document.getElementById('machine').value.trim().toUpperCase() || null,
+    seats: Math.max(1, +document.getElementById('seats').value || 1),
+    facilities: facilities || undefined, training: document.getElementById('training').checked ? undefined : false,
+    role: document.getElementById('supervisor').checked ? 'supervisor' : undefined,
+    notes: document.getElementById('notes').value.trim() || undefined,
+  };
+  const data = new TextEncoder().encode(JSON.stringify(payload));
+  const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key, data);
+  lastKey = `FTW1-${b64u(data)}.${b64u(sig)}`; lastName = name;
+  document.getElementById('out').textContent = lastKey;
+  document.getElementById('summary').textContent = t('summary')(payload);
+  try {
+    const led = JSON.parse(localStorage.getItem('ftw.ledger') || '[]');
+    led.unshift({ date: payload.issued, id: payload.id, name, org: payload.org || '', plan: staff ? 'staff' : planSel, expires: expires || '—', machine: payload.machine || '*', seats: payload.seats, key: lastKey });
+    localStorage.setItem('ftw.ledger', JSON.stringify(led.slice(0, 1000)));
+  } catch (e) {}
+  renderLedger();
+}
+function renderLedger() {
+  let led = []; try { led = JSON.parse(localStorage.getItem('ftw.ledger') || '[]'); } catch (e) {}
+  const esc = (s) => String(s).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+  document.getElementById('ledger').innerHTML = led.map((r) => `<tr><td dir="ltr">${esc(r.date)}</td><td>${esc(r.name)}${r.org ? '<br><span class="muted">' + esc(r.org) + '</span>' : ''}</td><td>${esc(t('planNames')[r.plan] || r.plan)}</td><td dir="ltr">${esc(r.expires)}</td><td dir="ltr">${esc(r.machine)}</td></tr>`).join('');
+}
+function exportLedger() {
+  let led = []; try { led = JSON.parse(localStorage.getItem('ftw.ledger') || '[]'); } catch (e) {}
+  const csv = ['date,id,name,org,plan,expires,machine,seats,key', ...led.map((r) => [r.date, r.id, r.name, r.org, r.plan, r.expires, r.machine, r.seats, r.key].map((x) => `"${String(x ?? '').replace(/"/g, '""')}"`).join(','))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })); a.download = 'issued_licenses.csv'; a.click();
+}
+function copyKey() { if (!lastKey) return; navigator.clipboard.writeText(lastKey).then(() => alert(t('copied'))); }
+function downloadKey() { if (!lastKey) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([lastKey + '\n'], { type: 'text/plain' })); a.download = `${lastName.replace(/[^\w؀-ۿ.-]+/g, '_')}.lic`; a.click(); }
+async function verifyKey() {
+  const raw = document.getElementById('verifyIn').value.replace(/\s+/g, ''); const out = document.getElementById('verifyOut');
+  try {
+    if (!raw.startsWith('FTW1-')) throw new Error('FTW1- prefix missing');
+    const body = raw.slice(5); const dot = body.indexOf('.');
+    const payloadBytes = unb64u(body.slice(0, dot)); const sig = unb64u(body.slice(dot + 1));
+    const pubTxt = document.getElementById('pub').value.trim(); const pubJwk = pubTxt ? JSON.parse(pubTxt) : EMBEDDED_PUB;
+    const key = await crypto.subtle.importKey('jwk', { kty: pubJwk.kty, crv: pubJwk.crv, x: pubJwk.x, y: pubJwk.y }, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+    const ok = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, sig, payloadBytes);
+    const payload = JSON.parse(new TextDecoder().decode(payloadBytes));
+    out.innerHTML = `<span class="${ok ? 'ok' : 'bad'}">${ok ? t('valid') : t('invalid')}</span><br>${ok ? t('summary')(payload) : ''}<br><span dir="ltr" style="font-family:Consolas,monospace">${JSON.stringify(payload).replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]))}</span>`;
+  } catch (e) { out.innerHTML = `<span class="bad">${t('invalid')} (${e.message})</span>`; }
+}
+renderTypes(); planChanged(); renderLedger();
+</script>
+</body>
+</html>

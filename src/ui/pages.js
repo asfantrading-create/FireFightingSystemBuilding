@@ -6,7 +6,7 @@ import { CITIES, OCCUPANCIES, FAULTS } from '../data/facilities.js';
 import { HAZARDS, toUS } from '../engine/design.js';
 import { FIELDS, SAMPLE_DT } from '../engine/sim.js';
 import { fmt, mmss, hrrStr } from './metrics.js';
-import { licenseStatus } from './license.js';
+import { licenseStatus, isSupervisor } from './license.js';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
@@ -451,7 +451,10 @@ export function recordResult(r) {
 }
 
 function renderClassroom() {
-  const res = results();
+  // Supervisor (teacher) licenses see everyone's results; other licenses only their own.
+  const sup = isSupervisor();
+  const me = localGet('ftw.student') || '—';
+  const res = sup ? results() : results().filter((r) => r.student === me);
   const byStudent = {};
   for (const r of res) { const s = (byStudent[r.student] ||= { n: 0, score: 0, total: 0, ch: 0, chOk: 0 }); s.n++; if (r.type === 'quiz') { s.score += r.score; s.total += r.total; } else { s.ch++; s.chOk += r.score; } }
   $('classInner').innerHTML = `<h1>${t('classTitle')}</h1><p class="lead">${L('Instructor tools: troubleshooting challenges with hidden faults, student results and exports.', 'أدوات المدرّب: تحديات تشخيص بأعطال مخفية، ونتائج الطلاب، والتصدير.')}</p>
@@ -466,12 +469,13 @@ function renderClassroom() {
         ${Object.entries(byStudent).map(([n, s]) => `<tr><td>${esc(n)}</td><td class="num">${s.total ? Math.round((100 * s.score) / s.total) + ' %' : '—'}</td><td class="num">${s.chOk}/${s.ch}</td></tr>`).join('') || `<tr><td colspan="3" class="muted">—</td></tr>`}</table></div>
     </div>
     <div class="card" style="margin-top:14px"><h3>📋 ${L('All results', 'كل النتائج')}</h3>
-      <div style="margin-bottom:10px"><button class="btn" id="cCsv">⬇ ${t('exportCsv')}</button><button class="btn" id="cClear">🗑 ${t('clear')}</button></div>
+      ${sup ? `<div style="margin-bottom:10px"><button class="btn" id="cCsv">⬇ ${t('exportCsv')}</button><button class="btn" id="cClear">🗑 ${t('clear')}</button></div>`
+        : `<p class="muted">🔒 ${L('Your license is a student/user license: you see only your own results. A supervisor (teacher) license shows, exports and clears the results of all students.', 'ترخيصك ترخيص طالب/مستخدم: ترى نتائجك فقط. ترخيص المشرف (المدرّس) يعرض نتائج جميع الطلاب ويصدّرها ويمسحها.')}</p>`}
       <table class="data"><tr><th>${t('time')}</th><th>${t('studentName')}</th><th>${t('group')}</th><th>${L('Type', 'النوع')}</th><th>${L('Topic', 'الموضوع')}</th><th>${t('score')}</th></tr>
       ${res.slice(-200).reverse().map((r) => `<tr><td>${new Date(r.date).toLocaleString()}</td><td>${esc(r.student)}</td><td>${esc(r.group)}</td><td>${esc(r.type)}</td><td>${esc(r.topic)}</td><td class="num">${r.score}/${r.total}</td></tr>`).join('')}</table></div>`;
   $('cStart').onclick = () => { localSet('ftw.student', $('cName').value.trim()); localSet('ftw.group', $('cGroup').value.trim()); helpers.startChallenge($('cName').value.trim()); };
-  $('cCsv').onclick = () => download('class_results.csv', ['date,student,group,type,topic,score,total', ...results().map((r) => [r.date, r.student, r.group, r.type, r.topic, r.score, r.total].map((x) => `"${String(x ?? '').replace(/"/g, '""')}"`).join(','))].join('\n'), 'text/csv');
-  $('cClear').onclick = () => { if (confirm(L('Delete all stored results?', 'حذف كل النتائج المخزنة؟'))) { localSet('ftw.results', '[]'); renderClassroom(); } };
+  if (sup) $('cCsv').onclick = () => download('class_results.csv', ['date,student,group,type,topic,score,total', ...results().map((r) => [r.date, r.student, r.group, r.type, r.topic, r.score, r.total].map((x) => `"${String(x ?? '').replace(/"/g, '""')}"`).join(','))].join('\n'), 'text/csv');
+  if (sup) $('cClear').onclick = () => { if (confirm(L('Delete all stored results?', 'حذف كل النتائج المخزنة؟'))) { localSet('ftw.results', '[]'); renderClassroom(); } };
 }
 
 // ───────────────────────── reports

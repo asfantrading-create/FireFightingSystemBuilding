@@ -7,7 +7,7 @@ import { t, tr, setLang, getLang } from './i18n.js';
 import { kpis, metricValue, componentDetails, mmss, fmt } from './ui/metrics.js';
 import * as Pages from './ui/pages.js';
 import { SCENES, Trainer } from './training/index.js';
-import { initLicense, licenseAllowsUse, openLicenseModal } from './ui/license.js';
+import { initLicense, licenseAllowsUse, openLicenseModal, facilityAllowed, trainingAllowed, onLicenseChange } from './ui/license.js';
 
 const $ = (id) => document.getElementById(id);
 const api = window.api ?? null;
@@ -49,7 +49,19 @@ function buildFacMenu() {
     state.customFac = customFacility(form);
     loadFacility(state.customFac, 0);
   }));
-  for (const f of FACILITIES) mk(state.fac?.id === f.id ? 'active' : '', f.color, f.id, tr(f.type), () => loadFacility(f, 0));
+  for (const f of FACILITIES) {
+    const ok = facilityAllowed(f.id);
+    mk(`${state.refFac?.id === f.id ? 'active' : ''} ${ok ? '' : 'locked'}`, f.color, `${ok ? '' : '🔒 '}${f.id}`, tr(f.type), () => (ok ? loadFacility(f, 0) : openLicenseModal(openModal, closeModal)));
+  }
+  if (!facilityAllowed('CUSTOM')) { const c = m.querySelector('.fac-item.create'); c.classList.add('locked'); c.onclick = () => { m.classList.add('hidden'); openLicenseModal(openModal, closeModal); }; }
+}
+
+/** After (re)activation: make sure the loaded facility is covered by the license. */
+function enforceLicense() {
+  const firstOk = FACILITIES.find((f) => facilityAllowed(f.id));
+  if (state.refFac && !facilityAllowed(state.refFac.id) && firstOk) loadFacility(firstOk, 0);
+  else buildFacMenu();
+  if (state.page === 'train') renderTrainingPage();
 }
 
 // ───────────────────────── facility / scenario
@@ -59,6 +71,7 @@ function saveEdits() { try { localStorage.setItem('ftw.edits', JSON.stringify(st
 
 let trainer;
 function startTraining(i) {
+  if (!trainingAllowed()) { openLicenseModal(openModal, closeModal); return; }
   state.playing = false;
   setPage('twin');
   document.getElementById('page-twin').classList.add('training');
@@ -80,7 +93,7 @@ function renderTrainingPage() {
     'مشاهد تدريبية تفاعلية ثلاثية الأبعاد مبنية على فيديوهات الدورة: استكشف كل مكوّن ثم نفّذ الإجراء خطوة بخطوة على فيزياء حية. تُحفظ النتائج في الصف الدراسي.')}</p>
     <div class="train-grid">${SCENES.map((sc, i) => `<div class="card train-card"><div class="ic">${sc.icon}</div><h4>${esc(tr(sc.title))}</h4>
       <p class="muted" style="font-size:.9em">${esc(tr(sc.summary))}</p>
-      <button class="btn primary" data-scene="${i}">▶ ${L('Start', 'ابدأ')}</button>
+      <button class="btn primary" data-scene="${i}">${trainingAllowed() ? `▶ ${L('Start', 'ابدأ')}` : `🔒 ${L('Not included in your license', 'غير مشمول في ترخيصك')}`}</button>
       ${sc.video ? `<a class="vid" href="https://www.youtube.com/watch?v=${sc.video}" target="_blank" rel="noopener" style="margin-inline-start:8px">▶ ${L('Source video', 'الفيديو المصدر')}</a>` : ''}</div>`).join('')}</div>`;
   document.querySelectorAll('[data-scene]').forEach((b) => { b.onclick = () => startTraining(+b.dataset.scene); });
 }
@@ -399,10 +412,12 @@ async function main() {
   wire();
   refreshToggles();
   loadFacility(FACILITIES[0], 0);
+  onLicenseChange(() => enforceLicense());
   await initLicense((st) => {
     if (!licenseAllowsUse()) openLicenseModal(openModal, closeModal);
     return st;
   });
+  enforceLicense();
   window.__ftw = { state, world, startTraining, trainer: () => trainer, setPage, loadFacility: (i, s = 0) => loadFacility(FACILITIES[i], s), selectComponent, togglePlay, rerun };
 }
 

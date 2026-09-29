@@ -7,6 +7,10 @@ const api = window.api ?? null;
 const $ = (id) => document.getElementById(id);
 
 export function licenseAllowsUse() { return status.state === 'licensed' || status.state === 'trial'; }
+/** Facility included in the license (null list = all facilities). */
+export const facilityAllowed = (id) => !Array.isArray(status.facilities) || status.facilities.includes(id);
+export const trainingAllowed = () => status.training !== false;
+export const isSupervisor = () => status.state === 'trial' || status.role === 'supervisor';
 export const licenseStatus = () => status;
 
 function renderBadge() {
@@ -17,8 +21,17 @@ function renderBadge() {
   else { b.classList.add('expired'); $('licText').textContent = t('expired'); }
 }
 
-const planName = (p) => (p === 'annual' ? t('annual') : p === 'monthly' ? t('monthly') : t('trialPlan'));
+const planName = (p) => {
+  const ar = getLang() === 'ar';
+  if (p === 'annual' || p === 'yearly') return t('annual');
+  if (p === 'monthly') return t('monthly');
+  if (p === 'staff') return ar ? 'ترخيص موظفي الشركة' : 'Staff license';
+  if (p === 'custom') return ar ? 'اشتراك' : 'Subscription';
+  return t('trialPlan');
+};
 
+let onChange = null;
+export function onLicenseChange(fn) { onChange = fn; }
 export async function initLicense(cb) {
   if (api?.licenseStatus) status = await api.licenseStatus();
   renderBadge();
@@ -38,23 +51,27 @@ export function openLicenseModal(openModal, closeModal) {
       <div>${t('licensedTo')}</div><div>${status.name ? `${esc(status.name)}${status.org ? ' — ' + esc(status.org) : ''}` : '—'}</div>
       <div>${t('expires')}</div><div>${exp}${status.daysLeft !== undefined ? ` (${status.daysLeft} ${t('daysLeft')})` : ''}</div>
       <div>${ar ? 'المقاعد' : 'Seats'}</div><div>${status.seats ?? 1}</div>
+      <div>${ar ? 'المنشآت' : 'Facilities'}</div><div>${Array.isArray(status.facilities) ? esc(status.facilities.join(', ')) : (ar ? 'الكل' : 'All')}</div>
+      <div>${ar ? 'الدور' : 'Role'}</div><div>${status.role === 'supervisor' ? (ar ? 'مشرف (مدرّس)' : 'Supervisor (teacher)') : status.state === 'trial' ? '—' : (ar ? 'مستخدم' : 'User')}${status.training === false ? (ar ? ' · بدون المشاهد التدريبية' : ' · no training scenes') : ''}</div>
       <div>${t('machineId')}</div><div class="mono">${esc(status.machineId ?? '—')} <button class="btn" id="cpMid" style="padding:2px 8px">⧉</button></div>
     </div>
     <p class="muted" style="font-size:.9em">${ar
       ? 'للحصول على اشتراك شهري أو سنوي أرسل معرّف الجهاز إلى info@asfanco.com أو واتساب ‎+962 77 614 0404 ثم الصق مفتاح الترخيص هنا.'
       : 'To buy a monthly or annual subscription, send your Machine ID to info@asfanco.com or WhatsApp +962 77 614 0404, then paste the license key below.'}</p>
     <label class="muted">${t('licKey')}</label>
-    <textarea class="lic" id="licKey" placeholder="FTW1.xxxxx.yyyyy"></textarea>
+    <textarea class="lic" id="licKey" placeholder="FTW1-xxxxx.yyyyy"></textarea>
+    <label class="btn" style="display:inline-block;margin:6px 0">📄 ${ar ? 'تحميل ملف ترخيص .lic' : 'Load a .lic license file'}<input type="file" id="licFile" accept=".lic,.txt" hidden /></label>
     <div id="licMsg" style="margin:8px 0"></div>
     <div><button class="btn primary" id="licAct">${t('activate')}</button>${blocked ? '' : `<button class="btn" id="licClose">${t('close')}</button>`}</div>`);
   $('cpMid').onclick = () => navigator.clipboard?.writeText(status.machineId ?? '');
+  $('licFile').onchange = async (e) => { const f = e.target.files[0]; if (f) $('licKey').value = (await f.text()).trim(); };
   if (!blocked) $('licClose').onclick = closeModal;
   $('licAct').onclick = async () => {
     const key = $('licKey').value.trim();
     if (!api?.activateLicense) { $('licMsg').innerHTML = `<span class="err">Activation is available in the desktop app.</span>`; return; }
     const r = await api.activateLicense(key);
     if (r.ok) {
-      status = r.status; renderBadge();
+      status = r.status; renderBadge(); onChange?.(status);
       $('licMsg').innerHTML = `<b style="color:var(--ok)">✓ ${t('licensed')} – ${planName(status.plan)}</b>`;
       setTimeout(closeModal, 900);
     } else $('licMsg').innerHTML = `<span class="err">✗ ${esc(r.error)}</span>`;

@@ -65,19 +65,19 @@ as build artifacts; pushing a tag like `v1.0.0` also attaches them to a GitHub R
 
 ## Licensing (monthly / annual subscriptions) — الترخيص
 
-* New installs run a **14-day trial**. After that the simulator is locked until a license key is activated (Help → License, or the key badge in the top bar).
-* Keys are **Ed25519-signed** offline: they cannot be forged or edited, can be bound to one computer (Machine ID) or be site-wide (`*`), and carry the plan, seats and expiry date. System-clock roll-back is detected.
+* New installs run a **14-day trial** (all features). Afterwards the app is locked until a license key is activated (🔑 badge → paste the key or load the `.lic` file).
+* Keys are **ECDSA P-256 / SHA-256** signed (`FTW1-<payload>.<signature>`), verified offline with the public key embedded in the app — they cannot be forged or edited. System-clock roll-back is detected.
+* A key can carry: customer & organisation, **yearly / monthly / custom expiry** (or an internal staff key without expiry), seats, **binding to one computer** (Machine ID), the **facilities included** (others appear 🔒), whether the **training scenes** are included, and the **supervisor (teacher) role** (sees/exports/clears all students' results in the Classroom).
 
+**Issuing keys — easiest:** open `tools/license-generator.html` in Chrome/Edge (works offline), load `keys/private.jwk.json`, fill in the customer, click *Generate*, then copy the key or download the `.lic` file for the customer. The page keeps a local ledger of issued keys (CSV export).
+
+Command line alternative:
 ```bash
-npm run license:init                 # ONCE: creates keys/private.pem (keep secret, back it up) + public key in the app
-npm run build:renderer && npm run dist:win   # rebuild so the app contains your public key
-
-# customer sends you the Machine ID shown in the License window:
-npm run license:issue -- --name "University of Jordan" --org "Fire Eng. Lab" --plan annual --seats 30 --machine ABCD-1234-EF56-7890
-npm run license:issue -- --name "ACME Engineering" --plan monthly            # not machine-bound
+npm run license:issue -- --name "University of Jordan" --org "Fire Eng. Lab" --plan yearly --seats 30 --supervisor --machine ABCD-1234-EF56-7890
+npm run license:issue -- --name "ACME" --plan monthly --facilities HIGH_RISE,WAREHOUSE --no-training
+npm run license:init -- --force   # new key pair (old keys stop working; rebuild the app)
 ```
-
-Every issued key is appended to `keys/issued/ledger.csv`. **Never commit `keys/`** (it is in `.gitignore`). If `keys/private.pem` is lost, run `npm run license:init -- --force`, rebuild, and re-issue keys.
+**Never commit or share `keys/private.jwk.json`** (`keys/` is git-ignored).
 
 ## Project layout
 

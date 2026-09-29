@@ -55,6 +55,7 @@ function createWindow() {
   // Automated smoke test: FTW_SMOKE=<png path> captures the window after start-up and exits
   if (process.env.FTW_SMOKE) {
     win.webContents.once('did-finish-load', () => setTimeout(async () => {
+      if (process.env.FTW_SMOKE_JS) { console.log('SMOKE_JS:', await win.webContents.executeJavaScript(process.env.FTW_SMOKE_JS)); await new Promise((r) => setTimeout(r, 1500)); }
       const img = await win.webContents.capturePage();
       fs.writeFileSync(process.env.FTW_SMOKE, img.toPNG());
       app.quit();

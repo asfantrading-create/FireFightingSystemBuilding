@@ -1,16 +1,19 @@
-// Offline subscription licensing.
-// A license key is  FTW1.<base64url(JSON payload)>.<base64url(Ed25519 signature)>
-// payload: { id, name, org, email, plan: 'monthly'|'annual', seats, issued, expires, machine: '<id>'|'*' }
-// Keys are signed with the vendor's private key (tools/license-tool.mjs) and verified here
-// with the embedded public key, so they cannot be forged or edited.
+// Offline subscription licensing (ECDSA P-256 / SHA-256, WebCrypto-compatible).
+// Key format:  FTW1-<base64url(JSON payload)>.<base64url(signature r||s)>
+// payload: { v, id, name, org, email, type: 'subscription'|'staff', plan: 'yearly'|'monthly'|undefined,
+//            issued: 'YYYY-MM-DD', expires: 'YYYY-MM-DD'|null (staff), machine: 'XXXX-…'|null, seats,
+//            facilities: [ids]|undefined (= all), training: bool (default true), role: 'supervisor'|undefined, notes }
+// Keys are produced by tools/license-generator.html (or tools/license-tool.mjs) with the vendor's
+// private key and verified here with the embedded public key — they cannot be forged or edited.
 const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { PUBLIC_KEY } = require('./license-public.js');
+const { PUBLIC_JWK } = require('./license-public.js');
 
 const TRIAL_DAYS = 14;
 const DAY = 86400000;
+const PUBLIC_KEY = crypto.createPublicKey({ key: PUBLIC_JWK, format: 'jwk' });
 
 function machineId() {
   const nets = os.networkInterfaces();
@@ -26,19 +29,23 @@ const b64u = {
   dec: (s) => Buffer.from(s.replace(/-/g, '+').replace(/_/g, '/'), 'base64'),
 };
 
+const expiryTime = (p) => (p.expires ? Date.parse(`${p.expires}T23:59:59`) : Infinity);
+
 function verifyKey(key, mid = machineId()) {
-  const parts = String(key || '').trim().split('.');
-  if (parts.length !== 3 || parts[0] !== 'FTW1') return { ok: false, error: 'Invalid license format' };
+  const raw = String(key || '').replace(/\s+/g, '');
+  if (!raw.startsWith('FTW1-') || !raw.includes('.')) return { ok: false, error: 'Invalid license format' };
+  const body = raw.slice(5), dot = body.indexOf('.');
   let payload;
   try {
-    const ok = crypto.verify(null, Buffer.from(`${parts[0]}.${parts[1]}`), PUBLIC_KEY, b64u.dec(parts[2]));
+    const data = b64u.dec(body.slice(0, dot)), sig = b64u.dec(body.slice(dot + 1));
+    const ok = crypto.verify('sha256', data, { key: PUBLIC_KEY, dsaEncoding: 'ieee-p1363' }, sig);
     if (!ok) return { ok: false, error: 'License signature is not valid' };
-    payload = JSON.parse(b64u.dec(parts[1]).toString('utf8'));
+    payload = JSON.parse(data.toString('utf8'));
   } catch (e) {
     return { ok: false, error: 'License could not be verified' };
   }
-  if (payload.machine && payload.machine !== '*' && payload.machine !== mid) return { ok: false, error: `License is bound to another computer (${payload.machine})` };
-  if (!payload.expires || Date.parse(payload.expires) < Date.now()) return { ok: false, error: 'License has expired', payload };
+  if (payload.machine && payload.machine !== '*' && payload.machine.toUpperCase() !== mid) return { ok: false, error: `License is bound to another computer (${payload.machine})` };
+  if (payload.type !== 'staff' && expiryTime(payload) < Date.now()) return { ok: false, error: 'License has expired', payload };
   return { ok: true, payload };
 }
 
@@ -59,21 +66,25 @@ class LicenseStore {
     this.save();
     if (this.data.key) {
       const v = verifyKey(this.data.key, mid);
+      const p = v.payload;
       if (v.ok) {
-        const p = v.payload;
-        return { state: 'licensed', plan: p.plan, name: p.name, org: p.org, seats: p.seats, expires: p.expires, daysLeft: Math.ceil((Date.parse(p.expires) - now) / DAY), machineId: mid, id: p.id };
+        return {
+          state: 'licensed', type: p.type, plan: p.type === 'staff' ? 'staff' : p.plan || 'custom', name: p.name, org: p.org, seats: p.seats,
+          expires: p.expires, daysLeft: p.expires ? Math.ceil((expiryTime(p) - now) / DAY) : undefined, machineId: mid, id: p.id,
+          facilities: p.facilities || null, training: p.training !== false, role: p.role || 'user',
+        };
       }
-      if (v.payload) return { state: 'expired', plan: v.payload.plan, name: v.payload.name, org: v.payload.org, expires: v.payload.expires, daysLeft: 0, machineId: mid };
+      if (p) return { state: 'expired', plan: p.plan, name: p.name, org: p.org, expires: p.expires, daysLeft: 0, machineId: mid };
     }
     const end = this.data.trialStart + TRIAL_DAYS * DAY;
     const left = Math.ceil((end - now) / DAY);
-    if (left > 0) return { state: 'trial', plan: 'trial', daysLeft: left, expires: new Date(end).toISOString(), machineId: mid };
+    if (left > 0) return { state: 'trial', plan: 'trial', daysLeft: left, expires: new Date(end).toISOString(), machineId: mid, facilities: null, training: true, role: 'supervisor' };
     return { state: 'expired', plan: 'trial', daysLeft: 0, expires: new Date(end).toISOString(), machineId: mid };
   }
   activate(key) {
     const v = verifyKey(key);
     if (!v.ok) return { ok: false, error: v.error };
-    this.data.key = key.trim();
+    this.data.key = String(key).replace(/\s+/g, '');
     this.save();
     return { ok: true, status: this.status() };
   }
