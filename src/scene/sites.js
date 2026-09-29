@@ -1,6 +1,7 @@
 // Facility scene builders. Each returns
 //   { root, anchors: {id: Vector3}, focus: {id: {pos, target}}, overview, env, terrain, update(sample, tl, t), animate(dt) }
 import * as THREE from 'three';
+import { buildBurjKhalifa, buildDowntown } from './dubai.js';
 import {
   M, V, box, cyl, pipe, cloneMat, facadeTexture, ribbedTexture, storageTank, pumpHouse, hydrant, fdc, valveStation,
   palm, tree, car, truck, fireTruck, road, parking, sprinklerArray, FireFX, SprayFX, FogFX, scatter, label3D,
@@ -110,121 +111,56 @@ function sprinklerSite(compDef, sc, fac) {
 
 function standardEnv(biome, sun = 48) { return { biome, sunElevation: sun, sunAzimuth: 215 }; }
 
-// ───────────────────────── Burj Khalifa
-function buildHighRise(fac, sc, design) {
+// ───────────────────────── Burj Khalifa (Downtown Dubai)
+function buildHighRise(fac, sc, design, world) {
   const root = new THREE.Group();
   const anchors = {}, focus = {};
   const sys = { ...fac.system, ...(sc.override || {}) };
-  const facade = facadeTexture({ cols: 16, rows: 24, bg: '#5d7485', win: '#9db6c7', frame: '#c9d1d8', lit: 0.04, band: true });
-  facade.repeat.set(3, 40);
-  const skin = new THREE.MeshStandardMaterial({ map: facade, metalness: 0.75, roughness: 0.22, envMapIntensity: 1.3, color: 0xdfe6ec });
-  // Y-shaped plan: three wings at 120°, staggered setbacks spiralling upward
-  const tower = new THREE.Group();
-  const fireY = sc.id === 'carpark' ? null : 86.8;
-  for (let i = 0; i < 3; i++) {
-    const ang = (i * 2 * Math.PI) / 3;
-    const wing = new THREE.Group(); wing.rotation.y = -ang;
-    let y = 0;
-    const tiers = 26;
-    for (let k = 0; k < tiers; k++) {
-      const th = k < 8 ? 26 : 22;
-      const Lw = Math.max(6, 58 * Math.pow(1 - (k + i / 3) / (tiers + 1), 0.95));
-      const Ww = Math.max(10, 30 - k * 0.55);
-      const addSeg = (y0, h) => {
-        const b = box(Lw, h, Ww, skin, 12 + Lw / 2, y0, 0);
-        b.material = skin; wing.add(b);
-        const cap = cyl(Ww / 2, h, skin, 12 + Lw, y0, 0, 24); wing.add(cap);
-      };
-      if (i === 0 && fireY !== null && y <= fireY && y + th > fireY + 4.2) {
-        addSeg(y, fireY - y);
-        addSeg(fireY + 4.2, y + th - fireY - 4.2);
-        // open (cut-away) fire floor: slab + columns only
-        wing.add(box(Lw, 0.3, Ww, M.concrete, 12 + Lw / 2, fireY, 0));
-      } else addSeg(y, th);
-      y += th;
-      if (y > 560) break;
-    }
-    tower.add(wing);
-  }
-  const core = cyl(15, 600, skin, 0, 0, 0, 6); tower.add(core);
-  const spireBase = cyl(9, 120, M.steel, 0, 600, 0, 16, 5); tower.add(spireBase);
-  const spire = cyl(5, 108, M.steel, 0, 720, 0, 12, 0.5); tower.add(spire);
-  root.add(tower);
-  // mechanical floors / transfer tanks marked by darker bands
-  for (let z = 1; z < 7; z++) {
-    const yb = z * 100;
-    const band = cyl(16.5, 4, M.darkSteel, 0, yb, 0, 6); root.add(band);
-  }
-  anchors.transfer = V(0, 104, 0);
-  focus.transfer = focusOf(V(0, 100, 0), 170);
-  // fire compartment
-  let comp = null;
+  const fireY = sc.id === 'carpark' ? undefined : 86.8;
+  const burj = buildBurjKhalifa({ fireY });
+  root.add(burj.group);
+  anchors.transfer = V(0, 112, 0);
+  focus.transfer = focusOf(V(0, 110, 0), 190, V(0.3, 0.35, 1));
+  let comp;
   if (sc.id === 'carpark') {
-    // podium car park structure east of the tower
-    const pod = new THREE.Group();
-    pod.position.set(95, 0, -40);
-    for (let l = 0; l < 3; l++) { if (l === 2) continue; pod.add(box(60, 0.4, 40, M.concrete, 30, l * 4, 20)); }
+    // multi-storey podium car park north-east of the tower
+    const pod = new THREE.Group(); pod.position.set(95, 0, -175);
+    for (const y of [0, 4, 12]) pod.add(box(60, 0.4, 40, M.concrete, 30, y, 20));
     for (let x = 0; x <= 60; x += 10) for (const z of [0, 40]) pod.add(box(0.7, 12, 0.7, M.concrete, x, 0, z));
-    pod.add(box(60, 0.4, 40, M.concrete, 30, 12, 20));
     root.add(pod);
-    comp = compartment(root, { ...sc.compartment, origin: V(113, 8.2, -28), sys, kind: 'carpark', walls: 'concrete' });
+    comp = compartment(root, { ...sc.compartment, origin: V(113, 8.2, -163), sys, kind: 'carpark', walls: 'concrete' });
   } else {
     comp = compartment(root, { ...sc.compartment, origin: V(20, fireY + 0.3, -8), sys, kind: 'office' });
   }
-  const fireCenter = comp.g.localToWorld(V(sc.fire.x, 1.5, sc.fire.z));
-  anchors.floor = fireCenter.clone().add(V(0, 4, 0));
-  focus.floor = { pos: [fireCenter.x + 26, fireCenter.y + 14, fireCenter.z + 30], target: [fireCenter.x, fireCenter.y, fireCenter.z] };
-  // riser visible through the cut-away
+  const fc = comp.g.localToWorld(V(sc.fire.x, 1.5, sc.fire.z));
+  anchors.floor = fc.clone().add(V(0, 4, 0));
+  focus.floor = { pos: [fc.x + 30, fc.y + 16, fc.z + 34], target: [fc.x, fc.y, fc.z] };
   const riserX = 21, riserZ = -8.6;
-  root.add(pipe([V(riserX, 0, riserZ), V(riserX, 100, riserZ)], 0.35, cloneMat(M.fireRed, { emissive: 0x440000 })));
-  anchors.riser = V(riserX, 60, riserZ);
-  focus.riser = focusOf(V(riserX, 60, riserZ), 110);
-  // podium, lobby & fire command centre
-  root.add(box(70, 12, 50, facade ? new THREE.MeshStandardMaterial({ map: facadeTexture({ cols: 10, rows: 3, band: true }), metalness: 0.5, roughness: 0.3 }) : M.concrete, -70, 0, 50));
-  anchors.facp = V(-45, 8, 76);
-  focus.facp = focusOf(V(-45, 6, 76), 60);
-  // Burj Lake & Dubai Mall
-  const lake = new THREE.Mesh(new THREE.CircleGeometry(170, 64), cloneMat(M.water, {}));
-  lake.rotation.x = -Math.PI / 2; lake.scale.set(1.6, 1, 1); lake.position.set(-40, 0.08, 260); root.add(lake);
-  const mallMat = new THREE.MeshStandardMaterial({ map: facadeTexture({ cols: 14, rows: 3, bg: '#b9a58a', win: '#8fa3b3', frame: '#e6dccb', band: true }), roughness: 0.7 });
-  root.add(box(260, 26, 140, mallMat, 150, 0, 330));
-  // fire water tanks & pump house (reference design at the service yard)
-  const tank1 = storageTank({ r: 7, h: 9, text: 'FIRE WATER' }); tank1.position.set(-150, 0, -90); root.add(tank1);
-  const tank2 = storageTank({ r: 7, h: 9, text: 'FIRE WATER' }); tank2.position.set(-132, 0, -90); root.add(tank2);
-  anchors.tank = V(-141, 14, -90); focus.tank = focusOf(V(-141, 5, -90), 60);
-  const ph = pumpHouse({ w: 16, d: 10, h: 5, count: design.pumps?.count ?? 1 }); ph.position.set(-110, 0, -70); root.add(ph);
-  anchors.pumps = V(-110, 7, -70); focus.pumps = { pos: [-96, 20, -48], target: [-110, 1, -70] };
-  // ring main + hydrants
-  const ring = [V(-102, 0.3, -64), V(-102, 0.3, -40), V(-30, 0.3, -40), V(60, 0.3, -40), V(60, 0.3, 40), V(-30, 0.3, 40), V(-30, 0.3, -40)];
+  root.add(pipe([V(riserX, 0, riserZ), V(riserX, 108, riserZ)], 0.35, cloneMat(M.fireRed, { emissive: 0x440000 })));
+  anchors.riser = V(riserX, 60, riserZ); focus.riser = focusOf(V(riserX, 60, riserZ), 120);
+  anchors.facp = V(0, 10, 78); focus.facp = focusOf(V(0, 5, 78), 70, V(0.2, 0.5, 1));
+  // fire-protection service yard (reference design) west of the tower
+  const tank1 = storageTank({ r: 7, h: 9, text: 'FIRE WATER' }); tank1.position.set(-165, 0, -95); root.add(tank1);
+  const tank2 = storageTank({ r: 7, h: 9, text: 'FIRE WATER' }); tank2.position.set(-147, 0, -95); root.add(tank2);
+  anchors.tank = V(-156, 14, -95); focus.tank = focusOf(V(-156, 5, -95), 60);
+  const ph = pumpHouse({ w: 16, d: 10, h: 5, count: design.pumps?.count ?? 1 }); ph.position.set(-125, 0, -72); root.add(ph);
+  anchors.pumps = V(-125, 7, -72); focus.pumps = { pos: [-111, 20, -50], target: [-125, 1, -72] };
+  const ring = [V(-117, 0.3, -66), V(-100, 0.3, -66), V(-100, 0.3, -100), V(100, 0.3, -100), V(100, 0.3, 70), V(-100, 0.3, 70), V(-100, 0.3, -66)];
   root.add(pipe(ring, 0.25));
-  for (const p of [V(-70, 0, -44), V(0, 0, -44), V(64, 0, 0), V(0, 0, 44), V(-34, 0, 0)]) { const hh = hydrant(); hh.position.copy(p); root.add(hh); }
-  anchors.hydrants = V(0, 5, -44); focus.hydrants = focusOf(V(0, 1, -44), 45);
-  const fd = fdc(); fd.position.set(-36, 0, 26); fd.rotation.y = Math.PI / 2; root.add(fd);
-  anchors.fdc = V(-36, 5, 26); focus.fdc = focusOf(V(-36, 1.5, 26), 22);
-  // city surroundings: towers, boulevard, palms
-  const rnd = mulberry(7);
-  for (let i = 0; i < 60; i++) {
-    const a = rnd() * Math.PI * 2, r = 330 + rnd() * 900;
-    const x = Math.cos(a) * r, z = Math.sin(a) * r;
-    if (x > -150 && x < 320 && z > 180 && z < 480) continue;
-    const h = 40 + rnd() * rnd() * 300, w = 25 + rnd() * 30;
-    const glassC = ['#4d6577', '#5f7483', '#6c7f8c', '#46596a'][i % 4];
-    const t = facadeTexture({ cols: 8, rows: 16, bg: glassC, win: glassC, frame: ['#c9ccc8', '#aeb4b9', '#d8d2c4'][i % 3], lit: 0.03, band: i % 2 === 0 });
-    t.repeat.set(2, Math.max(1, h / 30));
-    const b = box(w, h, w * (0.7 + rnd() * 0.6), new THREE.MeshStandardMaterial({ map: t, metalness: 0.5, roughness: 0.35 }), x, 0, z);
-    root.add(b);
-  }
-  root.add(road(1400, 22, 0, -150, 0)); root.add(road(1400, 22, 250, 0, Math.PI / 2)); root.add(road(900, 14, -260, 60, Math.PI / 2));
-  scatter(root, 70, () => palm(7 + Math.random() * 4), { x0: -220, x1: 220, z0: -130, z1: 160 }, (x, z) => Math.hypot(x, z) < 90 || (x > -110 && x < -30 && z > 20 && z < 80) || (x < -90 && z < -50));
-  root.add(parking(20, 3, -40, -110, 0, 0.8));
+  for (const p of [V(-104, 0, -30), V(0, 0, -104), V(104, 0, -20), V(40, 0, 74), V(-60, 0, 74)]) { const hh = hydrant(); hh.position.copy(p); root.add(hh); }
+  anchors.hydrants = V(0, 5, -104); focus.hydrants = focusOf(V(0, 1, -104), 45);
+  const fd = fdc(); fd.position.set(-78, 0, 8); fd.rotation.y = Math.PI / 2; root.add(fd);
+  anchors.fdc = V(-78, 5, 8); focus.fdc = focusOf(V(-78, 1.5, 8), 22);
+  root.add(parking(20, 3, -40, -140, 0, 0.8));
+  buildDowntown(root, world, [[-150, -85, 75], [-40, -140, 60], [120, -155, 60], [0, -100, 30]]);
   const trucks = [fireTruck(), fireTruck()];
-  trucks[0].position.set(-20, 0, 30); trucks[1].position.set(-20, 0, 40); trucks[1].rotation.y = 0.1;
+  trucks[0].position.set(-70, 0, -40); trucks[1].position.set(-70, 0, -25);
   trucks.forEach((tt) => { tt.visible = false; root.add(tt); });
   return {
-    root, anchors, focus, comp, trucks, ph, xrayMats: [skin], xrayFor: ['floor', 'riser', 'transfer'],
-    overview: { pos: [520, 260, 820], target: [0, 230, 40] },
-    env: { ...standardEnv('city', 46), radius: 700, shadowSize: 500 },
-    terrain: { flat: 1500, mountain: 60, biome: 'city', size: 9000 },
+    root, anchors, focus, comp, trucks, ph, xrayMats: [burj.skin, burj.capMat], xrayFor: ['floor', 'riser', 'transfer'],
+    overview: { pos: [150, 210, 1320], target: [40, 340, 0] },
+    env: { ...standardEnv('city', 55), radius: 900, shadowSize: 700 },
+    terrain: { flat: 6000, mountain: 25, biome: 'city', size: 20000, sea: (x, z) => (-x - z) / Math.SQRT2 > 3650 },
   };
 }
 
@@ -633,7 +569,7 @@ function setPumpVisual(site, s) {
 export const BUILDERS = { highrise: buildHighRise, warehouse: buildWarehouse, datacenter: buildDataCenter, tankfarm: buildTankFarm, hangar: buildHangar, custom: buildCustom };
 
 export function buildSite(fac, sc, design, world) {
-  const b = BUILDERS[fac.scene](fac, sc, design);
+  const b = BUILDERS[fac.scene](fac, sc, design, world);
   const root = b.root;
   // terrain & water
   world.setEnvironment(b.env);

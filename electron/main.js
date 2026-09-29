@@ -1,10 +1,15 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell, protocol, net } = require('electron');
+const { pathToFileURL } = require('url');
 const path = require('path');
 const fs = require('fs');
 const { LicenseStore } = require('./license.js');
 
 let win;
 let store;
+
+// Serve the renderer from a private app:// scheme so fetch() of local assets (HDR sky, textures) works
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, stream: true } }]);
+const APP_DIR = path.join(__dirname, '..', 'app');
 
 function send(cmd) { win?.webContents.send('menu', cmd); }
 
@@ -45,7 +50,7 @@ function createWindow() {
     title: 'Fire Protection Digital Twin', icon: path.join(__dirname, '..', 'build', 'icon.png'), show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
-  win.loadFile(path.join(__dirname, '..', 'app', 'index.html'));
+  win.loadURL('app://local/index.html');
   win.once('ready-to-show', () => { win.maximize(); win.show(); });
   // Automated smoke test: FTW_SMOKE=<png path> captures the window after start-up and exits
   if (process.env.FTW_SMOKE) {
@@ -56,10 +61,16 @@ function createWindow() {
     }, 9000));
   }
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^(https?|mailto):/.test(url)) shell.openExternal(url); return { action: 'deny' }; });
-  win.webContents.on('will-navigate', (e, url) => { if (!url.startsWith('file:')) { e.preventDefault(); shell.openExternal(url); } });
+  win.webContents.on('will-navigate', (e, url) => { if (!url.startsWith('app:')) { e.preventDefault(); shell.openExternal(url); } });
 }
 
 app.whenReady().then(() => {
+  protocol.handle('app', (req) => {
+    const rel = decodeURIComponent(new URL(req.url).pathname);
+    const file = path.normalize(path.join(APP_DIR, rel));
+    if (!file.startsWith(APP_DIR)) return new Response('Forbidden', { status: 403 });
+    return net.fetch(pathToFileURL(file).toString());
+  });
   store = new LicenseStore(app.getPath('userData'));
   ipcMain.handle('license:status', () => store.status());
   ipcMain.handle('license:activate', (_e, key) => store.activate(key));

@@ -6,6 +6,10 @@ An educational, real-time **3D digital-twin simulator of fire-fighting systems**
 
 ![3D digital twin](docs/screenshots/01-high-rise-overview.png)
 
+**Realism:** photographed sky with real clouds (HDRI image-based lighting and reflections), CC0 PBR ground and asphalt textures, and Burj Khalifa built on its true Y-shaped plan with 27 spiralling setbacks and the spire to 828 m. Downtown Dubai is placed from real coordinates: Burj Lake and the Dubai Fountain, Dubai Mall, Souk Al Bahar, Old Town, Sheikh Zayed Road, Business Bay, the canal and the Gulf coast. All art assets are CC0 (free for commercial use, see `src/assets/CREDITS.md`).
+
+![Downtown Dubai](docs/screenshots/08-downtown-dubai.png)
+
 ## Facilities (real sites · NFPA reference designs)
 
 | ID | Site | System simulated |

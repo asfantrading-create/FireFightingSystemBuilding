@@ -13,5 +13,6 @@ await build({
   bundle: true, format: 'iife', target: 'chrome120', minify: !process.argv.includes('--dev'),
   sourcemap: process.argv.includes('--dev'), outfile: path.join(out, 'app.js'), legalComments: 'none',
 });
+fs.cpSync(path.join(root, 'src', 'assets'), path.join(out, 'assets'), { recursive: true });
 for (const f of ['index.html', 'styles.css']) fs.copyFileSync(path.join(root, 'src', f), path.join(out, f));
 console.log('✓ renderer built → app/');

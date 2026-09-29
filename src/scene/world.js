@@ -2,6 +2,55 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { Water } from 'three/examples/jsm/objects/Water.js';
+
+const texLoader = new THREE.TextureLoader();
+const texCache = new Map();
+/** Cached tiling texture from app/assets/tex (CC0 ambientCG). */
+export function tileTex(name, repeat = 1, color = false) {
+  const key = `${name}|${repeat}`;
+  if (texCache.has(key)) return texCache.get(key);
+  const t = texLoader.load(`assets/tex/${name}.jpg`);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeat, repeat);
+  t.anisotropy = 8;
+  if (color) t.colorSpace = THREE.SRGBColorSpace;
+  texCache.set(key, t);
+  return t;
+}
+/** PBR material from an ambientCG set (Color / NormalGL / Roughness). */
+export function pbr(set, repeat = 1, extra = {}) {
+  return new THREE.MeshStandardMaterial({
+    map: tileTex(`${set}_Color`, repeat, true), normalMap: tileTex(`${set}_NormalGL`, repeat),
+    roughnessMap: tileTex(`${set}_Roughness`, repeat), roughness: 1, metalness: 0, ...extra,
+  });
+}
+
+/** Tileable procedural water normal map (for three's Water shader). */
+function waterNormals() {
+  const N = 256, c = document.createElement('canvas');
+  c.width = c.height = N;
+  const g = c.getContext('2d'), img = g.createImageData(N, N);
+  const h = (x, y) => {
+    let v = 0;
+    for (const [a, b, amp, ph] of [[1, 2, 1, 0.3], [3, 1, 0.6, 1.7], [2, 5, 0.35, 2.2], [7, 3, 0.2, 0.9], [5, 8, 0.12, 4.1], [11, 6, 0.08, 1.3]]) {
+      v += amp * Math.sin(((a * x + b * y) / N) * Math.PI * 2 + ph);
+    }
+    return v;
+  };
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const dx = h(x + 1, y) - h(x - 1, y), dy = h(x, y + 1) - h(x, y - 1);
+    const n = new THREE.Vector3(-dx * 2, -dy * 2, 1).normalize();
+    const i = (y * N + x) * 4;
+    img.data[i] = (n.x * 0.5 + 0.5) * 255; img.data[i + 1] = (n.y * 0.5 + 0.5) * 255; img.data[i + 2] = (n.z * 0.5 + 0.5) * 255; img.data[i + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+let _wn;
 
 // Deterministic value noise for terrain
 function hash(x, y) {
@@ -65,6 +114,7 @@ export class World {
     this.dir.shadow.normalBias = 0.6;
     this.scene.add(this.dir, this.dir.target);
     this.pmrem = new THREE.PMREMGenerator(this.renderer);
+    this.loadSky();
 
     this.site = null;
     this.labels = [];
@@ -79,6 +129,46 @@ export class World {
     ro.observe(container);
     this.resize();
     this.renderer.setAnimationLoop(() => this.frame());
+  }
+
+  /** Real photographed sky (CC0 HDRI): background + image-based lighting & reflections. */
+  loadSky() {
+    new RGBELoader().load('assets/sky_2k.hdr', (hdr) => {
+      hdr.mapping = THREE.EquirectangularReflectionMapping;
+      this.hdrEnv = this.pmrem.fromEquirectangular(hdr).texture;
+      hdr.dispose();
+      this.scene.environment = this.hdrEnv;
+      this.scene.environmentIntensity = 0.85;
+    }, undefined, () => { /* keep procedural sky */ });
+    texLoader.load('assets/sky_8k.jpg', (t) => {
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 4;
+      t.generateMipmaps = true;
+      this.skyTex = t;
+      // Sky dome: photographed sky above, fading into atmospheric haze at the horizon
+      const mat = new THREE.ShaderMaterial({
+        uniforms: { map: { value: t }, haze: { value: new THREE.Color(0xc9d6e2) }, exposure: { value: 1.0 } },
+        vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); vec4 p = projectionMatrix * modelViewMatrix * vec4(position,1.0); gl_Position = p.xyww; }`,
+        fragmentShader: `uniform sampler2D map; uniform vec3 haze; uniform float exposure; varying vec3 vDir;
+          #include <common>
+          void main(){
+            vec3 d = normalize(vDir);
+            vec2 uv = vec2(atan(d.z, d.x) * RECIPROCAL_PI2 + 0.5, asin(clamp(d.y,-1.0,1.0)) * RECIPROCAL_PI + 0.5);
+            vec3 c = texture2D(map, vec2(uv.x, max(uv.y, 0.505))).rgb * exposure;
+            float h = smoothstep(0.0, 0.09, d.y);
+            gl_FragColor = vec4(mix(haze, c, h), 1.0);
+            #include <colorspace_fragment>
+          }`,
+        side: THREE.BackSide, depthWrite: false, depthTest: true, fog: false,
+      });
+      this.skyDome?.removeFromParent();
+      this.skyDome = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 32), mat);
+      this.skyDome.frustumCulled = false;
+      this.skyDome.renderOrder = -1;
+      this.scene.add(this.skyDome);
+      this.scene.background = new THREE.Color(0xc9d6e2);
+      this.sky.visible = false;
+    });
   }
 
   resize() {
@@ -102,27 +192,31 @@ export class World {
     sc.left = -shadowSize; sc.right = shadowSize; sc.top = shadowSize; sc.bottom = -shadowSize;
     sc.near = 1; sc.far = shadowSize * 5;
     sc.updateProjectionMatrix();
-    this.scene.fog = new THREE.Fog(b.fog, radius * 3, radius * 22);
+    this.scene.fog = new THREE.Fog(0xc9d6e2, radius * 2.5, 7800);
     // environment map from the sky for realistic reflections on glass & steel
     const envScene = new THREE.Scene();
     const sky2 = new Sky(); sky2.scale.setScalar(1000);
     Object.assign(sky2.material.uniforms.sunPosition.value, this.sun);
     for (const k of ['turbidity', 'rayleigh', 'mieCoefficient', 'mieDirectionalG']) sky2.material.uniforms[k].value = u[k].value;
     envScene.add(sky2);
-    if (this.envRT) this.envRT.dispose();
-    this.envRT = this.pmrem.fromScene(envScene, 0.02);
-    this.scene.environment = this.envRT.texture;
+    if (!this.hdrEnv) {
+      if (this.envRT) this.envRT.dispose();
+      this.envRT = this.pmrem.fromScene(envScene, 0.02);
+      this.scene.environment = this.envRT.texture;
+    }
     this.biome = b;
   }
 
   /** Terrain: flat pad around the site, fbm mountains beyond. */
-  makeTerrain({ size = 9000, flat = 500, mountain = 350, seed = 1, sea = null, biome = 'desert' }) {
+  makeTerrain({ size = 16000, flat = 500, mountain = 350, seed = 1, sea = null, biome = 'desert' }) {
     const b = BIOMES[biome] ?? BIOMES.desert;
-    const seg = this.quality === 'high' ? 360 : 180;
+    size = Math.max(size, 16000);
+    const seg = this.quality === 'high' ? 420 : 220;
     const g = new THREE.PlaneGeometry(size, size, seg, seg);
     g.rotateX(-Math.PI / 2);
     const pos = g.attributes.position;
     const colors = new Float32Array(pos.count * 3);
+    const rock = new Float32Array(pos.count);
     const cl = [new THREE.Color(b.low), new THREE.Color(b.mid), new THREE.Color(b.high), new THREE.Color(b.peak)];
     const c = new THREE.Color();
     for (let i = 0; i < pos.count; i++) {
@@ -133,7 +227,7 @@ export class World {
       const mask = Math.min(1, ridge * ridge);
       let n = fbm(x / 900 + seed * 13.1, z / 900 + seed * 7.7, 6);
       n = Math.pow(Math.max(0, n - 0.25) * 1.6, 1.6);
-      h = mask * n * mountain + fbm(x / 60, z / 60, 3) * 1.2 * (1 - mask * 0.5);
+      h = mask * n * mountain + (fbm(x / 60, z / 60, 3) - 0.5) * 0.5 * (1 - mask * 0.5);
       if (sea && sea(x, z)) h = Math.min(h, -2 - fbm(x / 200, z / 200) * 4);
       pos.setY(i, h);
       const t = Math.min(1, Math.max(0, h / (mountain * 0.8)));
@@ -141,23 +235,56 @@ export class World {
       c.copy(cl[idx]).lerp(cl[idx + 1], k - idx);
       const jitter = (fbm(x / 25, z / 25, 2) - 0.5) * 0.12;
       c.offsetHSL(0, 0, jitter);
-      colors.set([c.r, c.g, c.b], i * 3);
+      // vertex colour tints the photographic ground texture (kept near 1 so the texture shows)
+      c.lerp(new THREE.Color(1, 1, 1), 0.55);
+      colors.set([c.r * 1.08, c.g * 1.08, c.b * 1.08], i * 3);
+      rock[i] = Math.min(1, Math.max(0, (h - mountain * 0.08) / (mountain * 0.25)));
     }
     g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    g.setAttribute('rock', new THREE.BufferAttribute(rock, 1));
     g.computeVertexNormals();
-    const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 });
+    const rep = size / 14;
+    const m = new THREE.MeshStandardMaterial({
+      vertexColors: true, roughness: 1, metalness: 0,
+      map: tileTex('Ground054_Color', rep, true), normalMap: tileTex('Ground054_NormalGL', rep),
+    });
+    const rockMap = tileTex('Rock030_Color', size / 40, true);
+    m.onBeforeCompile = (sh) => {
+      sh.uniforms.rockMap = { value: rockMap };
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float rock;\nvarying float vRock;\nvarying vec2 vWorldUv;')
+        .replace('#include <uv_vertex>', '#include <uv_vertex>\nvRock = rock;\nvWorldUv = uv * ' + (size / 40).toFixed(1) + ';');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nuniform sampler2D rockMap;\nvarying float vRock;\nvarying vec2 vWorldUv;')
+        .replace('#include <map_fragment>', `
+          vec4 g0 = texture2D( map, vMapUv );
+          vec4 g1 = texture2D( map, vMapUv * 0.137 );
+          vec4 gr = mix( g0, g1, 0.45 );
+          vec4 rk = texture2D( rockMap, vWorldUv );
+          diffuseColor *= mix( gr, rk, vRock );`);
+    };
     const mesh = new THREE.Mesh(g, m);
     mesh.receiveShadow = true;
     return mesh;
   }
 
-  makeWater(size, pos, color = 0x2f6f8f) {
-    const g = new THREE.PlaneGeometry(size[0], size[1]);
-    g.rotateX(-Math.PI / 2);
-    const m = new THREE.MeshStandardMaterial({ color, roughness: 0.08, metalness: 0.6, transparent: true, opacity: 0.93 });
+  /** Water: PBR surface reflecting the real sky (HDRI), animated ripples. geometry: optional ShapeGeometry. */
+  makeWater(size, pos, color = 0x1f6f8b, geometry = null) {
+    _wn ||= waterNormals();
+    const g = geometry ?? new THREE.PlaneGeometry(size[0], size[1]);
+    // world-scaled UVs so ripples have the same size everywhere
+    const p = g.attributes.position, uv = g.attributes.uv;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, p.getX(i) / 22, p.getY(i) / 22);
+    const nm = _wn.clone(); nm.needsUpdate = true;
+    const m = new THREE.MeshStandardMaterial({
+      color, roughness: 0.06, metalness: 0.05, normalMap: nm, normalScale: new THREE.Vector2(0.35, 0.35),
+      envMapIntensity: 1.35, transparent: true, opacity: 0.94,
+    });
     const w = new THREE.Mesh(g, m);
+    w.rotation.x = -Math.PI / 2;
     w.position.set(pos[0], pos[1] ?? -0.6, pos[2]);
     w.receiveShadow = true;
+    w.userData.isWater = true;
+    this.waters = this.waters || [];
+    this.waters.push(w);
     return w;
   }
 
@@ -171,6 +298,7 @@ export class World {
       for (const l of this.labels) l.obj.removeFromParent();
     }
     this.labels = [];
+    this.waters = (this.waters || []).filter((w) => { let o = w; while (o.parent) o = o.parent; return o === site.root; });
     this.site = site;
     this.scene.add(site.root);
     this.goOverview(true);
@@ -249,7 +377,9 @@ export class World {
     }
     this.controls.update();
     for (const h of this.frameHooks) h(dt);
+    for (const w of this.waters || []) { const o = w.material.normalMap.offset; o.x += dt * 0.004; o.y += dt * 0.0025; }
     this.site?.animate?.(dt, this.camera);
+    if (this.skyDome) { this.skyDome.position.copy(this.camera.position); this.skyDome.updateMatrixWorld(); }
     this.renderer.render(this.scene, this.camera);
     this.labelRenderer.render(this.scene, this.camera);
     this._declutterT = (this._declutterT || 0) + dt;
