@@ -3,7 +3,7 @@
 // and interactive controls. Scenes are plain objects (see ./scenes.js).
 import * as THREE from 'three';
 import { tr, getLang } from '../i18n.js';
-import { surroundings } from './env.js';
+import { surroundings, SCENE_SITE } from './env.js';
 
 const L = (en, ar) => (getLang() === 'ar' ? ar : en);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
@@ -72,7 +72,7 @@ export class Trainer {
     this.world.setEnvironment(s.env || { biome: 'desert', sunElevation: 55, sunAzimuth: 210, radius: 40, shadowSize: 30 });
     // realistic compound around the scene (kept outside s.root so picking only tests the scene)
     const wrap = new THREE.Group();
-    wrap.add(s.root, surroundings(new THREE.Box3().setFromObject(s.root)));
+    wrap.add(s.root, surroundings(new THREE.Box3().setFromObject(s.root), def.site ?? SCENE_SITE[def.id]));
     const site = { root: wrap, overview: s.overview, focus: s.focus || {}, animate: (dt) => s.animate?.(dt), update() {} };
     this.world.setSite(site);
     for (const [id, p] of Object.entries(s.parts)) {

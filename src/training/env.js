@@ -2,7 +2,9 @@
 // compound (paved yard, plant buildings, water tanks, perimeter fence, road, parking, trees and
 // distant sheds) instead of floating on an empty plane. Built around the scene's bounding box.
 import * as THREE from 'three';
-import { M, box, cyl, scaleUV, ribbedTexture, facadeTexture, storageTank, palm, tree, car, fireTruck, road, label3D } from '../scene/kit.js';
+import { M, box, cyl, scaleUV, ribbedTexture, facadeTexture, storageTank, palm, tree, car, fireTruck, road, parking, label3D } from '../scene/kit.js';
+import { curtainWall, stoneWall, tower } from '../scene/dubai.js';
+import { instancedBlocks, cityMats } from '../scene/context.js';
 import { pbr } from '../scene/world.js';
 
 const std = (color, rough = 0.7, metal = 0, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, ...extra });
@@ -20,7 +22,7 @@ function plane(w, d, mat, x, y, z, tile = 8) {
 }
 
 /** Industrial shed with ribbed metal cladding, roof, roller doors and a high window band. */
-function shed(w, h, d, { color = '#d5d9dc', rib = '#a9b0b6', doors = 2, name = '' } = {}) {
+function shed(w, h, d, { color = '#d5d9dc', rib = '#a9b0b6', doors = 2, name = '', flat = false } = {}) {
   const g = new THREE.Group();
   const t = ribbedTexture(color, rib, 48); t.repeat.set(w / 6, 1);
   const td = t.clone(); td.repeat.set(d / 6, 1); td.needsUpdate = true;
@@ -34,7 +36,7 @@ function shed(w, h, d, { color = '#d5d9dc', rib = '#a9b0b6', doors = 2, name = '
   const rg = new THREE.ExtrudeGeometry(tri, { depth: w + 0.6, bevelEnabled: false });
   const roof = new THREE.Mesh(rg, M.roofGrey);
   roof.rotation.y = Math.PI / 2; roof.position.set(-w / 2 - 0.3, h, 0); roof.castShadow = true;
-  g.add(roof);
+  if (flat) g.add(box(w + 0.3, 0.8, d + 0.3, M.white, 0, h - 0.4, 0)); else g.add(roof);
   const doorM = std(0xb7bec4, 0.5, 0.5, { map: ribbedTexture('#b9c0c6', '#8d959c', 20) });
   for (let i = 0; i < doors; i++) {
     const x = -w / 2 + (w / (doors + 1)) * (i + 1);
@@ -137,18 +139,34 @@ function horizon(R, y, rand) {
   return g;
 }
 
+/** Which kind of surroundings each training scene sits in. */
+export const SCENE_SITE = {
+  pumproom: 'industrial', flowtest: 'industrial', drypipe: 'industrial',
+  floorvalve: 'tower', hosedrill: 'tower', stairpress: 'tower',
+  extinguishers: 'office', sprinklertypes: 'office',
+  fm200room: 'datacenter',
+};
+
 /**
- * Build the compound around a scene whose bounding box is `bb`.
+ * Build the surroundings around a scene whose bounding box is `bb`.
+ * kind: 'industrial' | 'tower' | 'office' | 'datacenter'.
  * Returns a Group that is added next to (not inside) the pickable scene root.
  */
-export function surroundings(bb) {
+export function surroundings(bb, kind = 'industrial') {
   const g = new THREE.Group();
-  const rand = rng(11);
-  const y = Math.min(bb.min.y, 0) - 0.03;
-  const cx = (bb.min.x + bb.max.x) / 2, cz = (bb.min.z + bb.max.z) / 2;
-  const hw = (bb.max.x - bb.min.x) / 2, hd = (bb.max.z - bb.min.z) / 2;
-  const R = Math.max(hw, hd);
+  const c = {
+    bb, g, rand: rng(11),
+    y: Math.min(bb.min.y, 0) - 0.03,
+    cx: (bb.min.x + bb.max.x) / 2, cz: (bb.min.z + bb.max.z) / 2,
+    hw: (bb.max.x - bb.min.x) / 2, hd: (bb.max.z - bb.min.z) / 2,
+  };
+  c.R = Math.max(c.hw, c.hd);
+  ({ tower: towerSite, office: officeSite, datacenter: dataCenterSite }[kind] ?? industrialSite)(c);
+  return g;
+}
 
+/** Oil / process plant: yard, process hall, admin block, store, fire-water tanks, fence. */
+function industrialSite({ bb, g, rand, y, cx, cz, hw, R }) {
   // ground: natural soil far away, paved yard around the building
   const soil = pbr('Ground054', 1, { color: 0xd9c7a4 });
   g.add(plane(2600, 2600, soil, cx, y - 0.02, cz, 10));
@@ -211,7 +229,163 @@ export function surroundings(bb) {
   g.add(plane(4, 24, grass, bb.min.x - 23.5, y + 0.01, cz - 2, 4));
 
   g.add(horizon(Math.max(R, 60) + 80, y - 0.02, rand));
-  return g;
+}
+
+/** Downtown high-rise district: street grid, the host tower behind the scene, city beyond. */
+function towerSite({ bb, g, rand, y, cx, cz, hw, hd }) {
+  const S = 92, RD = 16, B = S - RD, N = 4;
+  g.add(plane(2800, 2800, pbr('Asphalt026A', 1, { color: 0x8f8f8f }), cx, y - 0.02, cz, 10));
+  const walk = pbr('PavingStones130', 1, { color: 0xbdbab4 });
+  const mats = [curtainWall(1, 0), curtainWall(2, 1), curtainWall(3, 3), stoneWall(4), curtainWall(5, 4), stoneWall(6), curtainWall(7, 2)];
+  const podium = std(0xe4ddd0, 0.8);
+  // roads (x and z) with dashed lanes, and traffic
+  for (let k = -N; k < N; k++) {
+    const off = (k + 0.5) * S;
+    g.add(road(2 * N * S, RD, cx, cz + off).translateY(y));
+    g.add(road(2 * N * S, RD, cx + off, cz, Math.PI / 2).translateY(y + 0.006));
+    for (let i = 0; i < 10; i++) {
+      const t = (rand() - 0.5) * 2 * N * S, lane = rand() < 0.5 ? -3 : 3;
+      const a = car(); a.position.set(cx + t, y, cz + off + lane); a.rotation.y = lane > 0 ? 0 : Math.PI; g.add(a);
+      const b2 = car(); b2.position.set(cx + off + lane, y, cz + t); b2.rotation.y = lane > 0 ? Math.PI / 2 : -Math.PI / 2; g.add(b2);
+    }
+  }
+  for (let i = -N + 1; i < N; i++) for (let j = -N + 1; j < N; j++) {
+    const bx = cx + i * S, bz = cz + j * S;
+    const home = i === 0 && j === 0, top = home ? y + 0.01 : y + 0.18;
+    if (home) g.add(plane(B, B, walk, bx, top, bz, 5)); else g.add(box(B, 0.18, B, walk, bx, y, bz, { cast: false }));
+    // street trees & lamps along the kerbs
+    for (let t = -B / 2 + 6; t < B / 2 - 2; t += 12) {
+      const tr1 = tree(6 + rand() * 2); tr1.position.set(bx + t, top, bz + B / 2 - 2); g.add(tr1);
+      if ((t | 0) % 24 < 12) { const lp = lightPole(8); lp.position.set(bx + B / 2 - 1.5, top, bz + t); lp.rotation.y = Math.PI; g.add(lp); }
+    }
+    if (i === 0 && j === 0) continue;
+    const m = mats[Math.floor(rand() * mats.length)];
+    if (i === 0 && j === -1) {                              // the high-rise the scene belongs to, right behind it
+      const w = 44, d = 30, h = 150;
+      g.add(tower(w, h, d, mats[0], bx, bz + 4).translateY(y + 0.18));
+      g.add(box(w - 6, 6, d - 6, M.galv, bx, y + h, bz + 4));
+      g.add(box(w + 10, 7, d + 14, podium, bx, y + 0.18, bz + 8));
+      continue;
+    }
+    if (rand() < 0.55) g.add(box(B - 10, 5 + rand() * 4, B - 10, podium, bx, y + 0.18, bz));
+    const n = rand() < 0.5 ? 1 : 2;
+    for (let k = 0; k < n; k++) {
+      const w = 22 + rand() * 16, d = 22 + rand() * 16, h = 30 + rand() ** 2 * 170;
+      const ox = n === 1 ? 0 : (k ? 1 : -1) * (B / 2 - w / 2 - 4);
+      g.add(tower(w, h, d, m, bx + ox, bz + (rand() - 0.5) * 8).translateY(y + 0.18));
+      g.add(box(w * 0.6, 3, d * 0.6, M.galv, bx + ox, y + 0.18 + h, bz));
+    }
+  }
+  // home plaza: planters, benches, bollards, hydrant & FDC by the entrance
+  const px = bb.max.x + 6, pz = bb.max.z + 7;
+  for (let k = 0; k < 4; k++) {
+    g.add(box(3, 0.6, 3, std(0x9c968b, 0.8), px - 14 + k * 9, y, pz));
+    const t = tree(4.5); t.position.set(px - 14 + k * 9, y + 0.6, pz); g.add(t);
+    g.add(box(2, 0.45, 0.6, std(0x6b4f35, 0.7), px - 9.5 + k * 9, y, pz + 1.5));
+  }
+  for (let k = 0; k < 8; k++) g.add(cyl(0.12, 0.9, M.darkSteel, bx0(bb) + k * 1.8, y, bb.max.z + 12.5, 10));
+  g.add(cyl(0.3, 0.9, M.fireRed, bb.max.x + 3, y, bb.max.z + 4, 16));
+  g.add(box(0.8, 0.6, 0.3, M.fireRed, bb.min.x + 2, y + 0.9, bb.max.z + 1));
+  instancedBlocks(g, {
+    count: 1300, seed: 5, mats: cityMats(9),
+    place: (R) => { const x = (R() - 0.5) * 2600, z = (R() - 0.5) * 2600; return Math.max(Math.abs(x), Math.abs(z)) < N * S + 20 ? null : [cx + x, cz + z, 0]; },
+    height: (R) => 12 + R() ** 3 * 90, footprint: (R) => [18 + R() * 26, 18 + R() * 26],
+  });
+}
+const bx0 = (bb) => (bb.min.x + bb.max.x) / 2 - 6.3;
+
+/** Business park: lawns, office blocks, parking, entrance road, flags and trees. */
+function officeSite({ bb, g, rand, y, cx, cz }) {
+  g.add(plane(2800, 2800, pbr('Grass004', 1, { color: 0xa9b886 }), cx, y - 0.02, cz, 6));
+  const pave = pbr('PavingStones130', 1, { color: 0xd9d3c8 });
+  const x0 = bb.min.x - 10, x1 = bb.max.x + 10, z0 = bb.min.z - 10, z1 = bb.max.z + 12;
+  g.add(plane(x1 - x0, z1 - z0, pave, (x0 + x1) / 2, y, (z0 + z1) / 2, 5));
+  const roadZ = z1 + 26;
+  g.add(road(1200, 12, cx, roadZ).translateY(y));
+  g.add(road(roadZ - z1, 8, cx, (z1 + roadZ) / 2, Math.PI / 2, false).translateY(y + 0.006));
+  g.add(parking(14, 2, bb.min.x - 12, z1 + 12).translateY(y));
+  g.add(parking(10, 2, bb.max.x + 30, z1 + 12).translateY(y));
+  // flags at the entrance
+  for (const [k, col] of [[0, 0x1f7a3a], [1, 0xffffff], [2, 0xb4161c]]) {
+    const x = cx + 8 + k * 2.5;
+    g.add(cyl(0.06, 10, M.steel, x, y, z1 + 3, 8));
+    g.add(box(1.8, 1.1, 0.02, std(col, 0.8, 0, { side: THREE.DoubleSide }), x + 0.95, y + 8.5, z1 + 3, { cast: false }));
+  }
+  // surrounding office buildings
+  const blocks = [
+    [bb.min.x - 40, bb.min.z - 30, 34, 14, 18, 0.3], [cx + 10, bb.min.z - 50, 60, 18, 20, 0], [bb.max.x + 50, cz - 30, 40, 11, 22, -0.4],
+    [bb.min.x - 90, cz + 10, 44, 22, 18, 1.2], [bb.max.x + 110, cz + 40, 50, 14, 20, -1.3], [cx - 20, bb.min.z - 130, 70, 26, 24, 0.1],
+    [bb.max.x + 90, bb.min.z - 110, 46, 18, 18, 0.5],
+  ];
+  const rects = [];
+  for (const [x, z, w, h, d, r] of blocks) {
+    const o = office(w, h, d); o.position.set(x, y, z); o.rotation.y = r; g.add(o);
+    g.add(plane(w + 10, d + 10, pave, x, y + 0.004, z, 5).rotateZ(r));
+    rects.push([x, z, Math.max(w, d) / 2 + 8]);
+  }
+  // footpaths & trees on the lawns
+  g.add(plane(3, 90, pave, bb.min.x - 22, y + 0.006, cz - 30, 5));
+  for (let i = 0; i < 160; i++) {
+    const a = rand() * Math.PI * 2, r = 30 + rand() * 260;
+    const x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r;
+    if (Math.abs(z - roadZ) < 9 || rects.some(([rx, rz, rr]) => Math.hypot(x - rx, z - rz) < rr)) continue;
+    if (x > x0 - 30 && x < x1 + 60 && z > z0 - 4 && z < roadZ + 4) continue;
+    const t = rand() < 0.25 ? palm(6 + rand() * 3) : tree(5 + rand() * 4); t.position.set(x, y, z); g.add(t);
+  }
+  for (let x = cx - 200; x < cx + 200; x += 25) { const p = lightPole(); p.position.set(x, y, roadZ - 7); p.rotation.y = Math.PI / 2; g.add(p); }
+  instancedBlocks(g, {
+    count: 700, seed: 3, mats: cityMats(4),
+    place: (R) => { const a = R() * Math.PI * 2, r = 380 + R() * 1000; return [cx + Math.cos(a) * r, cz + Math.sin(a) * r]; },
+    height: (R) => 8 + R() ** 3 * 40, footprint: (R) => [20 + R() * 30, 20 + R() * 30],
+  });
+}
+
+/** Data-centre campus: data halls with rooftop chillers, generator yard, substation, fence. */
+function dataCenterSite({ bb, g, rand, y, cx, cz, R }) {
+  g.add(plane(2800, 2800, pbr('Ground054', 1, { color: 0xd9c7a4 }), cx, y - 0.02, cz, 10));
+  const yard = pbr('Concrete034', 1, { color: 0xc9c6bf });
+  const x0 = bb.min.x - 70, x1 = bb.max.x + 70, z0 = bb.min.z - 90, z1 = bb.max.z + 22;
+  g.add(plane(x1 - x0, z1 - z0, yard, (x0 + x1) / 2, y, (z0 + z1) / 2, 6));
+  const chiller = (x, z) => {
+    const c2 = new THREE.Group(); c2.position.set(x, 0, z);
+    c2.add(box(6, 1.8, 2.4, M.white)); c2.add(box(6, 0.05, 2.4, M.galv, 0, 1.8, 0));
+    for (const k of [-1.5, 1.5]) c2.add(cyl(0.9, 0.12, M.black, k, 1.8, 0, 20));
+    return c2;
+  };
+  const hall = (w, d, h, x, z, name) => {
+    const s2 = shed(w, h, d, { color: '#eef0f1', rib: '#c9ced3', doors: 1, name, flat: true }); s2.position.set(x, y, z); g.add(s2);
+    for (let i = -w / 2 + 6; i < w / 2 - 4; i += 8) for (const k of [-d / 4, d / 4]) g.add(chiller(x + i, z + k).translateY(y + h));
+  };
+  hall(90, 34, 10, cx + 10, bb.min.z - 30, 'DATA HALL A');
+  hall(60, 30, 10, bb.max.x + 60, cz - 20, 'DATA HALL B');
+  // generator yard: containerised diesel gensets with stacks & belly tanks
+  for (let i = 0; i < 7; i++) {
+    const x = bb.min.x - 12, z = bb.min.z - 20 + i * 5;
+    g.add(box(12, 3, 2.8, std(0xe6e5de, 0.6, 0.2), x - 8, y, z));
+    g.add(box(12, 0.6, 3, M.darkSteel, x - 8, y, z));
+    g.add(cyl(0.25, 3, M.darkSteel, x - 12, y + 3, z, 10));
+  }
+  g.add(label3D('GENERATOR YARD', { size: 0.8, bg: 'rgba(30,41,59,0.92)' }).translateX(bb.min.x - 20).translateY(y + 4.5).translateZ(bb.min.z - 23));
+  // substation
+  const sx = bb.max.x + 30, sz = bb.max.z - 4;
+  for (let i = 0; i < 3; i++) {
+    const t = new THREE.Group(); t.position.set(sx + i * 7, y, sz);
+    t.add(box(3.2, 2.6, 2.4, std(0x7d8c80, 0.6, 0.3)));
+    for (let f = -1.2; f <= 1.2; f += 0.3) t.add(box(0.05, 2, 0.5, std(0x6b786e, 0.6, 0.3), f, 0.3, 1.45));
+    for (const k of [-0.8, 0, 0.8]) t.add(cyl(0.08, 1.2, M.white, k, 2.6, -0.5, 8));
+    g.add(t);
+  }
+  g.add(box(22, 0.3, 10, M.concreteDark, sx + 7, y, sz));
+  for (const [i, dx] of [[0, 0], [1, 16]]) {
+    const t = storageTank({ r: 6, h: 9, text: i ? '' : 'FIRE WATER' }); t.position.set(bb.max.x + 20 + dx, y, bb.min.z - 70); g.add(t);
+  }
+  const roadZ = z1 + 12;
+  g.add(road(900, 11, cx, roadZ).translateY(y));
+  g.add(parking(16, 2, bb.min.x - 20, z1 - 6).translateY(y));
+  g.add(fence(x0 - 6, z0 - 6, x1 + 6, z1 + 2.5, y));
+  for (let x = x0; x < x1; x += 22) { const p = lightPole(); p.position.set(x, y, z1 + 1); p.rotation.y = Math.PI / 2; g.add(p); }
+  for (let x = x0 - 20; x < x1 + 20; x += 9) { const t = palm(6 + rand() * 3); t.position.set(x, y, roadZ + 9); g.add(t); }
+  g.add(horizon(Math.max(R, 60) + 110, y - 0.02, rand));
 }
 
 /** Light office floor tiles (60 cm grid) for indoor scenes without room(). */
