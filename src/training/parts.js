@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { M, V, box, cyl, pipe, cloneMat, label3D } from '../scene/kit.js';
 import { pbr } from '../scene/world.js';
+import { roomFitOut } from './env.js';
 
 export const MAT = {
   red: M.fireRed, steel: M.steel, dark: M.darkSteel, galv: M.galv, yellow: M.yellow, white: M.white,
@@ -15,17 +16,18 @@ export const MAT = {
 
 export function tag(obj, id) { obj.userData.pick = id; return obj; }
 
-/** Room shell: textured floor, two low back walls (cut-away view). */
+/** Room shell: textured floor, two full back walls (cut-away view) and a realistic fit-out. */
 export function room(w, d, h = 5, { walls = 'back' } = {}) {
   const g = new THREE.Group();
   const floor = box(w, 0.3, d, pbr('Concrete034', 1, { color: 0xc9c6bf }), 0, -0.3, 0);
   g.add(floor);
-  const wm = pbr('Concrete034', 1, { color: 0xe8e4da });
+  const wm = pbr('Concrete034', 1, { color: 0xf3f0ea });
   g.add(box(w, h, 0.25, wm, 0, 0, -d / 2));
   g.add(box(0.25, h, d, wm, -w / 2, 0, 0));
-  if (walls === 'all') { g.add(box(w, 1.0, 0.25, wm, 0, 0, d / 2)); g.add(box(0.25, 1.0, d, wm, w / 2, 0, 0)); }
-  // drain channel & painted walkway
-  g.add(box(w - 1, 0.02, 0.35, new THREE.MeshStandardMaterial({ color: 0x3b3f44 }), 0, 0.001, d / 2 - 0.8));
+  // low cut-away walls on the viewer's sides so the room reads as a building section
+  const low = walls === 'all' ? 1.0 : 0.45;
+  g.add(box(w, low, 0.25, wm, 0, 0, d / 2)); g.add(box(0.25, low, d, wm, w / 2, 0, 0));
+  roomFitOut(g, w, d, h);
   return g;
 }
 

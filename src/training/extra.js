@@ -179,7 +179,6 @@ export const stairScene = {
     const root = new THREE.Group();
     const parts = {};
     const P = (id, obj, name, info) => { tag(obj, id); parts[id] = { obj, name, info }; root.add(obj); return obj; };
-    const g = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshStandardMaterial({ color: 0xc9c2b4 })); g.rotation.x = -Math.PI / 2; g.userData.ground = true; root.add(g);
     const concrete = new THREE.MeshStandardMaterial({ color: 0xd9d5cc, roughness: 0.9 });
     const glassM = new THREE.MeshStandardMaterial({ color: 0xbcd7e6, transparent: true, opacity: 0.18, depthWrite: false });
     const Htot = FLOORS * FH;

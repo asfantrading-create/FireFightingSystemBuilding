@@ -1,5 +1,6 @@
 // Scenes 5 & 6 — Portable extinguisher placement + PASS, and the landing-valve hose drill.
 import * as THREE from 'three';
+import { tileFloorMaterial } from './env.js';
 import { MAT, tag, room, osyValve, Stream, V, box, cyl, pipe, label3D } from './parts.js';
 import { FireFX } from '../scene/kit.js';
 import { tr } from '../i18n.js';
@@ -76,7 +77,7 @@ export const extinguisherScene = {
   build() {
     const root = new THREE.Group();
     const parts = {};
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ color: 0xd9d4ca, roughness: 0.9 }));
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), tileFloorMaterial(W, D));
     floor.rotation.x = -Math.PI / 2; floor.userData.ground = true; floor.receiveShadow = true; root.add(floor);
     const wallM = new THREE.MeshStandardMaterial({ color: 0xf1ede4, roughness: 0.8 });
     root.add(box(W, 2.8, 0.2, wallM, 0, 0, -D / 2)); root.add(box(0.2, 2.8, D, wallM, -W / 2, 0, 0)); root.add(box(W, 0.6, 0.2, wallM, 0, 0, D / 2));

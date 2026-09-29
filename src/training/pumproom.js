@@ -13,8 +13,6 @@ function buildRoom() {
   const parts = {};
   const P = (id, obj, name, info, extra = {}) => { tag(obj, id); parts[id] = { obj, name, info, ...extra }; root.add(obj); return obj; };
   root.add(room(18, 13, 5));
-  const g = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({ color: 0xcbb899, roughness: 1 }));
-  g.rotation.x = -Math.PI / 2; g.position.y = -0.31; g.userData.ground = true; root.add(g);
 
   // ── suction tank (cut-away shell) with float valve, overflow, anti-vortex plate
   const tank = new THREE.Group(); tank.position.set(-4, -0.3, -12.5);
