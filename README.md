@@ -29,13 +29,16 @@ Site names, coordinates and building facts are public data. **The fire-protectio
 * **Physics simulation** — t² fire growth, Alpert ceiling-jet correlations, RTI sprinkler-bulb heating, smoke/heat detector response, Evans suppression model, pump curves and system compliance, pressure-switch sequencing, water-tank depletion, clean-agent concentration & hold time, foam blanket coverage, fire-service arrival.
 * **Fault injection** — power failure (diesel takes over), closed control valve, jockey failure, leak (short-cycling), low tank, detector failure, abort switch, door held open.
 * **3D twin** — live labels on each component, click to inspect, x-ray view inside buildings, fire / smoke / water spray / agent fog / foam effects, fire trucks on arrival, playback 1×–60× with timeline scrubbing, screenshots.
-* **Training (interactive 3D scenes)** — six hands-on scenes built from the course videos, each with an *Explore* mode (click any component) and scored step-by-step procedures on live physics (time ×1/×5/×10, results saved to the Classroom):
+* **Training (interactive 3D scenes)** — nine hands-on scenes built from the course videos, each with an *Explore* mode (click any component) and scored step-by-step procedures on live physics (time ×1/×5/×10, results saved to the Classroom):
   1. Fire pump room walk-through & NFPA 20 start sequence (jockey → electric → diesel on power failure, manual stop)
   2. Annual fire pump flow test (churn / 100 % / 150 %, acceptance curve, pass/fail)
   3. Dry-pipe valve full trip test (timed water delivery vs. 50 s limit, accelerator on/off) and 9-step reset
   4. Floor control valve assembly: waterflow alarm test (retard, 90 s rule) and tamper/supervisory test
   5. Portable extinguishers: placement design with live 22.9 m travel-distance coverage map (NFPA 10) and a P-A-S-S fire-fighting game
   6. Hose drill: fire hose cabinet, 65 mm landing valve, coupling tug test, two-person team, slow valve opening
+  7. Sprinkler types (pendent, upright, sidewall, concealed, recessed, ESFR, open) and a response race of six bulbs (rating & RTI) under a t² fire
+  8. Stairwell pressurization (NFPA 92): ΔP ≥ 12.5 Pa, door-opening force ≤ 133 N, relief damper, open-door velocity, smoke ingress; Q = 0.839·A·√ΔP
+  9. FM-200 room: live NFPA 2001 calculator (SI/IP, NOAEL/LOAEL warnings) and the cross-zoned discharge sequence with abort, 10 s discharge and hold
 * **Design Data editor** — change any design value (hazard, K, spacing, RTI, pipes, elevation, PRV, fire, pump, tank, FM-200, foam), see NFPA compliance checks and run the simulation on your own data.
 * **Dashboard** — live trends, pump curve with moving operating point.
 * **Learn** — 11 bilingual lessons (fire basics, sprinklers, hazard classes, pipe schedule, hydraulics, fire pumps, standpipes, detection & alarm, FM-200, foam, NFPA 25).
