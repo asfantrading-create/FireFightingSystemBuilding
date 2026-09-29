@@ -58,7 +58,7 @@ function createWindow() {
       const img = await win.webContents.capturePage();
       fs.writeFileSync(process.env.FTW_SMOKE, img.toPNG());
       app.quit();
-    }, 9000));
+    }, +(process.env.FTW_SMOKE_MS || 9000)));
   }
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^(https?|mailto):/.test(url)) shell.openExternal(url); return { action: 'deny' }; });
   win.webContents.on('will-navigate', (e, url) => { if (!url.startsWith('app:')) { e.preventDefault(); shell.openExternal(url); } });
