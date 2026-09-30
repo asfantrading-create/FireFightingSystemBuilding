@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>دليل البائع – Seller Guide</title>
+<style>
+  @page { size: A4; margin: 15mm 14mm 17mm; }
+  :root { --red:#c4161c; --dark:#0f172a; --muted:#5b6b7f; --line:#dbe2ea; --teal:#0f9d8f; --soft:#f6f8fa; }
+  body { font-family: 'Segoe UI', 'Noto Sans Arabic', 'Noto Naskh Arabic', Tahoma, sans-serif; color: var(--dark); font-size: 10.8pt; line-height: 1.65; margin: 0; }
+  h1 { font-size: 18pt; color: var(--red); margin: 0 0 5mm; padding-bottom: 2mm; border-bottom: 2px solid var(--red); page-break-before: always; }
+  h1.first { page-break-before: auto; }
+  h2 { font-size: 12.5pt; margin: 6mm 0 2mm; border-inline-start: 4px solid var(--teal); padding-inline-start: 3mm; }
+  p { margin: 1.5mm 0 2.5mm; } li { margin: 1.2mm 0; }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.8pt; page-break-inside: avoid; }
+  th, td { border: 1px solid var(--line); padding: 1.8mm 2.4mm; text-align: start; vertical-align: top; } th { background: var(--soft); color: var(--muted); }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: var(--soft); border-radius: 1mm; padding: 0 1mm; direction: ltr; unicode-bidi: isolate; }
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps > li { counter-increment: s; position: relative; padding-inline-start: 10mm; margin: 2.5mm 0; }
+  .steps > li::before { content: counter(s); position: absolute; inset-inline-start: 0; top: 0; width: 7mm; height: 7mm; border-radius: 50%; background: var(--red); color: #fff; font-weight: 700; font-size: 9pt; display: grid; place-items: center; }
+  .box { border-radius: 2mm; padding: 3mm 4mm; margin: 3mm 0 4mm; page-break-inside: avoid; }
+  .tip { background: #ecfdf5; border-inline-start: 4px solid var(--teal); } .warn { background: #fff7ed; border-inline-start: 4px solid #f97316; } .crit { background: #fef2f2; border-inline-start: 4px solid var(--red); }
+  .cover { text-align: center; padding: 30mm 10mm 10mm; }
+  .cover .logo { width: 24mm; height: 24mm; border-radius: 6mm; margin: 0 auto; background: linear-gradient(135deg, #8f0f14, #c4161c 60%, #f97316); display: grid; place-items: center; font-size: 13mm; }
+  .cover h1 { border: none; font-size: 26pt; color: var(--dark); page-break-before: auto; margin-top: 8mm; }
+  .cover .sub { color: var(--red); font-weight: 700; font-size: 13pt; }
+  .en { direction: ltr; text-align: left; }
+  .flow { display: flex; gap: 2mm; align-items: stretch; margin: 3mm 0 5mm; }
+  .flow div { flex: 1; border: 1px solid var(--line); border-radius: 2mm; padding: 2.5mm; font-size: 9pt; text-align: center; background: var(--soft); }
+  .flow div b { display: block; color: var(--red); font-size: 10pt; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="logo">🔥</div>
+  <h1>دليل البائع<br><span style="font-size:15pt;color:#5b6b7f">Seller &amp; Release Guide</span></h1>
+  <div class="sub">التوأم الرقمي لأنظمة مكافحة الحريق · الإصدار 1.1</div>
+  <p style="margin-top:10mm;color:#5b6b7f">البناء والنشر دون شهادة توقيع · توزيع البرنامج · إصدار التراخيص الشهرية والسنوية والباقات · حماية المفتاح الخاص · التحديثات والدعم</p>
+  <p style="margin-top:40mm;color:#5b6b7f">وثيقة داخلية لأصفان للتجارة – لا تُرسل للعملاء<br>© 2026 ASFAN Trading</p>
+</div>
+
+<h1>1 · ما الذي لديك الآن</h1>
+<table><tr><th>العنصر</th><th>أين هو</th><th>الغرض</th></tr>
+<tr><td>كود البرنامج</td><td>مستودع GitHub <code>asfantrading-create/FireFightingSystemBuilding</code></td><td>مصدر البرنامج؛ كل تعديل يُبنى تلقائياً.</td></tr>
+<tr><td>البناء التلقائي</td><td>GitHub → Actions → «Build Windows app»</td><td>ينتج ملف التثبيت والنسخة المحمولة لويندوز خلال 2–3 دقائق.</td></tr>
+<tr><td>ملف التثبيت</td><td><code>FireProtectionDigitalTwin-Setup-1.1.0.exe</code></td><td>ما تبيعه للعميل (تثبيت عادي باللغتين مع اتفاقية الترخيص).</td></tr>
+<tr><td>النسخة المحمولة</td><td><code>FireProtectionDigitalTwin-Portable-1.1.0.exe</code></td><td>تعمل دون تثبيت (للمختبرات وأجهزة الجامعات المقيدة).</td></tr>
+<tr><td>دليل المستخدم</td><td><code>FireTwin_User_Manual_AR.pdf</code> و <code>_EN.pdf</code></td><td>مدمج داخل البرنامج (زر ❓ وقائمة Help)، ويمكن إرساله للعميل.</td></tr>
+<tr><td>مولّد التراخيص</td><td><code>tools/license-generator.html</code></td><td>صفحتك الخاصة لإصدار التراخيص الشهرية والسنوية والباقات.</td></tr>
+<tr><td>المفتاح الخاص</td><td><code>private.jwk.json</code> (عندك فقط)</td><td>يوقّع التراخيص. <b>سري جداً.</b></td></tr></table>
+
+<h1>2 · بناء نسخة للبيع ونشرها (دون شهادة توقيع)</h1>
+<p>البرنامج جاهز للبيع دون شراء شهادة توقيع (Code-Signing Certificate). الفرق الوحيد أن ويندوز يعرض عند التثبيت رسالة SmartScreen الزرقاء، ويتجاوزها العميل بزرّين (القسم 4).</p>
+<h2>الطريقة أ – إصدار رسمي (Release) موصى بها</h2>
+<ol class="steps">
+<li>افتح المستودع على GitHub ← <b>Releases</b> ← <b>Draft a new release</b>.</li>
+<li>في <b>Choose a tag</b> اكتب <code>v1.1.0</code> واختر <b>Create new tag</b>. في <b>Target</b> اختر الفرع الذي فيه آخر نسخة (حالياً <code>claude/quirky-dijkstra-ekvkkm</code>، أو <code>main</code> بعد الدمج).</li>
+<li>العنوان: <code>Fire Protection Digital Twin 1.1.0</code>، ثم اضغط <b>Publish release</b>.</li>
+<li>يبدأ البناء تلقائياً (Actions). بعد 3–4 دقائق يُرفق ملف التثبيت والنسخة المحمولة بصفحة الإصدار تلقائياً.</li>
+<li>نزّل الملفين من صفحة الإصدار (قسم <b>Assets</b>).</li>
+</ol>
+<h2>الطريقة ب – من صفحة Actions مباشرة</h2>
+<ol class="steps"><li>GitHub ← <b>Actions</b> ← آخر تشغيل بعلامة ✅.</li><li>أسفل الصفحة في <b>Artifacts</b> نزّل <code>FireProtectionDigitalTwin-Windows</code> (ملف zip) وفكّ ضغطه.</li></ol>
+<div class="box tip"><b>رقم الإصدار:</b> لكل تحديث جديد ارفع رقم الإصدار في <code>package.json</code> (مثلاً 1.2.0) وأنشئ Release جديداً بالوسم <code>v1.2.0</code>. يستطيع Claude فعل ذلك لك عند الطلب.</div>
+
+<h1>3 · اختبار النسخة قبل البيع</h1>
+<ol class="steps">
+<li>على جهاز ويندوز نظيف (أو جهاز صديق) شغّل ملف التثبيت واتبع القسم 4.</li>
+<li>تأكد أن البرنامج يفتح كنسخة تجريبية 14 يوماً وأن الشارة 🔑 تعرض الأيام.</li>
+<li>أصدر ترخيص اختبار لنفسك من المولّد (شهري، باقة مختلفة)، وفعّله، وتأكد أن الأجزاء غير المشمولة تظهر بقفل 🔒.</li>
+<li>افتح دليل المستخدم من زر ❓ للتأكد أنه مرفق.</li>
+<li>جرّب النسخة المحمولة على فلاشة.</li>
+</ol>
+
+<h1>4 · التثبيت عند العميل ورسالة SmartScreen</h1>
+<p>لأن البرنامج غير موقّع بشهادة مدفوعة، يظهر عند أول تشغيل لملف التثبيت:</p>
+<table><tr><th>ما يراه العميل</th><th>ما يفعله</th></tr>
+<tr><td>نافذة زرقاء <b>Windows protected your PC</b></td><td>يضغط <b>More info</b> ثم <b>Run anyway</b>.</td></tr>
+<tr><td>تحذير من المتصفح عند التنزيل (Chrome / Edge)</td><td>يختار <b>Keep</b> / <b>الاحتفاظ</b>.</td></tr>
+<tr><td>برنامج حماية يطلب تأكيداً</td><td>يسمح بالملف (Allow).</td></tr></table>
+<p>بعدها: اختيار اللغة ← الموافقة على الاتفاقية ← مجلد التثبيت ← Install ← Finish. هذه الخطوات موجودة في دليل المستخدم (القسم 3) بالصور، فأرسل الدليل مع الرابط.</p>
+<div class="box tip"><b>لاحقاً (اختياري):</b> لإزالة رسالة SmartScreen نهائياً يمكن شراء شهادة توقيع (سنوية) أو استخدام خدمة Microsoft Trusted Signing الشهرية، ثم إعادة البناء. البرنامج لا يحتاجها ليعمل أو ليُباع.</div>
+
+<h1>5 · توزيع البرنامج على العملاء</h1>
+<p>المستودع خاص (Private)، لذلك لا يستطيع العميل التنزيل من GitHub مباشرة. انقل الملف إلى مكان تشاركه:</p>
+<table><tr><th>الطريقة</th><th>الخطوات</th></tr>
+<tr><td>Google Drive / OneDrive / Dropbox</td><td>ارفع <code>Setup.exe</code> ودليلي المستخدم إلى مجلد «FireTwin 1.1» ← مشاركة ← «أي شخص لديه الرابط – عارض» ← أرسل الرابط للعميل.</td></tr>
+<tr><td>موقع الشركة</td><td>ارفع الملفات إلى صفحة تنزيل (مثلاً asfanco.com/download) وأرسل الرابط.</td></tr>
+<tr><td>فلاشة USB</td><td>انسخ ملف التثبيت والنسخة المحمولة والأدلة (مناسب للجامعات والدورات).</td></tr></table>
+<div class="box warn">حجم ملف التثبيت حوالي 75–80 ميجابايت، فهو أكبر من حد مرفقات البريد وواتساب. أرسل <b>رابطاً</b> دائماً.</div>
+
+<h1>6 · إصدار ترخيص لعميل (شهري / سنوي / باقة)</h1>
+<div class="flow"><div><b>1</b>طلب العميل</div><div><b>2</b>معرّف الجهاز</div><div><b>3</b>المولّد</div><div><b>4</b>ملف .lic</div><div><b>5</b>التفعيل</div><div><b>6</b>السجل</div></div>
+<ol class="steps">
+<li><b>استلم الطلب:</b> اسم العميل والجهة، الخطة (شهري / سنوي / تاريخ مخصص)، عدد الأجهزة، والباقة المطلوبة (كامل أو جزء).</li>
+<li><b>معرّف الجهاز (اختياري):</b> إذا أردت ربط الترخيص بجهاز واحد، اطلب من العميل تثبيت البرنامج والضغط على 🔑 ثم نسخ <b>Machine ID</b> وإرساله لك.</li>
+<li><b>افتح المولّد:</b> انقر نقراً مزدوجاً على <code>license-generator.html</code> ليفتح في Chrome أو Edge. في المرة الأولى حمّل <code>private.jwk.json</code> واضغط «حفظ في هذا المتصفح» (على جهازك الشخصي فقط).</li>
+<li><b>املأ البيانات:</b> الاسم والجهة والبريد والمقاعد والخطة، والصق معرّف الجهاز إن وُجد.</li>
+<li><b>اختر الباقة:</b>
+  <ul>
+  <li><b>البرنامج كاملاً:</b> كل شيء.</li>
+  <li><b>باقات جاهزة:</b> الرشاشات والمضخات / إنذار الحريق الذكي / المخاطر الخاصة / التوعية الأساسية.</li>
+  <li><b>باقة مخصصة:</b> علّم بالضبط المنشآت والمشاهد التدريبية ووحدات المختبر الذكي والصفحات التي دفع العميل ثمنها.</li>
+  </ul></li>
+<li>علّم <b>ترخيص مشرف</b> للمدرّس أو المدرّب فقط.</li>
+<li>اضغط <b>توليد مفتاح الترخيص</b> ← <b>تنزيل ملف .lic</b> ← (اختياري) <b>طباعة ملخص الترخيص للعميل</b> كـ PDF.</li>
+<li>أرسل للعميل: ملف <code>.lic</code> + رابط البرنامج + دليل المستخدم. التفعيل: 🔑 ← «تحميل ملف ترخيص .lic» ← تفعيل.</li>
+<li>يُحفظ كل ترخيص تلقائياً في <b>سجل التراخيص</b> أسفل الصفحة؛ صدّره CSV شهرياً واحتفظ بنسخة.</li>
+</ol>
+<h2>التجديد والترقية</h2>
+<table><tr><th>الحالة</th><th>ما تفعله</th></tr>
+<tr><td>تجديد اشتراك</td><td>في السجل اضغط <b>إعادة استخدام</b> بجانب العميل ← تُملأ البيانات والباقة ← ولّد مفتاحاً جديداً (يُحسب التاريخ الجديد من اليوم).</td></tr>
+<tr><td>ترقية الباقة</td><td>إعادة استخدام ← أضف المحتوى الجديد ← ولّد مفتاحاً جديداً. العميل يفعّل المفتاح الجديد فوق القديم.</td></tr>
+<tr><td>تغيير الجهاز</td><td>اطلب معرّف الجهاز الجديد وأصدر مفتاحاً جديداً.</td></tr>
+<tr><td>جامعة بعدة أجهزة</td><td>ترخيص غير مربوط بجهاز مع عدد المقاعد، أو ترخيص لكل جهاز (أدق في التحكم).</td></tr></table>
+
+<h1>7 · حماية المفتاح الخاص</h1>
+<div class="box crit"><b>أهم قاعدة:</b> الملف <code>private.jwk.json</code> هو «ختم» شركتك. من يملكه يستطيع إصدار تراخيص للبرنامج.</div>
+<ul>
+<li>احتفظ بنسختين احتياطيتين: فلاشة في مكان آمن + خزنة كلمات مرور أو مجلد سحابي مشفّر.</li>
+<li>لا ترسله لأي عميل أو موظف مبيعات، ولا ترفعه إلى GitHub (المستودع مهيأ لتجاهل مجلد <code>keys/</code>).</li>
+<li>استخدم المولّد على جهازك فقط. إذا حفظت المفتاح في المتصفح على جهاز مشترك فامسح بيانات المتصفح.</li>
+<li>إذا تسرّب المفتاح: يمكن توليد مفتاح جديد وإعادة بناء البرنامج، لكن كل التراخيص القديمة ستتوقف ويجب إعادة إصدارها للعملاء.</li>
+</ul>
+
+<h1>8 · التحديثات والدعم</h1>
+<ol class="steps">
+<li>بعد أي تحديث للبرنامج أنشئ Release جديداً (القسم 2) وارفع الملف الجديد مكان القديم في رابط التنزيل.</li>
+<li>أبلغ العملاء: «نزّلوا النسخة الجديدة وشغّلوا ملف التثبيت» — يبقى الترخيص والنتائج كما هي.</li>
+<li>للدعم اطلب دائماً: معرّف الجهاز، رقم الإصدار (Help ← About)، وصورة المشكلة.</li>
+</ol>
+<h2>قائمة فحص قبل كل عملية بيع</h2>
+<table><tr><th></th><th>البند</th></tr>
+<tr><td>☐</td><td>رابط تنزيل آخر إصدار يعمل.</td></tr>
+<tr><td>☐</td><td>الباقة ومدة الاشتراك وعدد الأجهزة كما في الفاتورة.</td></tr>
+<tr><td>☐</td><td>ملف .lic تم التحقق منه في قسم «التحقق من مفتاح».</td></tr>
+<tr><td>☐</td><td>أُرسل للعميل: الرابط + ملف .lic + دليل المستخدم.</td></tr>
+<tr><td>☐</td><td>تم تصدير سجل التراخيص CSV وحفظه.</td></tr></table>
+
+<h1 class="en">Seller guide – English summary</h1>
+<div class="en">
+<ol>
+<li><b>Build a release (no certificate needed):</b> GitHub → Releases → Draft a new release → tag <code>v1.1.0</code> on the latest branch → Publish. The workflow attaches <code>Setup</code> and <code>Portable</code> .exe files in ~3–4 minutes (or download them from Actions → Artifacts).</li>
+<li><b>Test</b> on a clean Windows PC: trial, activation with a test key, locked parts, the ❓ user manual.</li>
+<li><b>SmartScreen:</b> customers click <i>More info → Run anyway</i> (browsers: <i>Keep</i>). A code-signing certificate is optional and can be added later.</li>
+<li><b>Distribute</b> through a Google Drive / OneDrive / website link or USB — the file (~80 MB) is too large for e-mail/WhatsApp attachments; the GitHub repository is private.</li>
+<li><b>License a customer:</b> open <code>license-generator.html</code> → private key → customer data → monthly / yearly / custom → optional Machine ID → package (Full, Sprinklers &amp; pumps, Smart fire alarm, Special hazards, Basic awareness or Custom selection of facilities, training scenes, Smart Lab modules and pages) → Generate → download <code>.lic</code> → send with the download link and manual. Renew or upgrade with <i>Reuse</i> in the ledger.</li>
+<li><b>Protect</b> <code>private.jwk.json</code>: two offline backups, never share or commit it.</li>
+</ol></div>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Fire Protection Digital Twin – User Manual</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm; }
+  :root { --red:#c4161c; --dark:#0f172a; --muted:#5b6b7f; --line:#dbe2ea; --teal:#0f9d8f; --soft:#f6f8fa; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', 'Noto Sans Arabic', 'Noto Naskh Arabic', Tahoma, sans-serif; color: var(--dark); font-size: 10.6pt; line-height: 1.6; margin: 0; }
+  [dir=rtl] body, body[dir=rtl] { font-size: 11pt; }
+  h1 { font-size: 20pt; color: var(--red); margin: 0 0 6mm; padding-bottom: 3mm; border-bottom: 2px solid var(--red); page-break-before: always; }
+  h1 .n { display: inline-block; min-width: 11mm; color: #fff; background: var(--red); border-radius: 3mm; text-align: center; margin-inline-end: 3mm; font-size: 15pt; padding: 1mm 0; }
+  h2 { font-size: 13pt; margin: 7mm 0 2mm; color: var(--dark); border-inline-start: 4px solid var(--teal); padding-inline-start: 3mm; }
+  h3 { font-size: 11pt; margin: 5mm 0 1mm; color: var(--teal); }
+  p { margin: 1.5mm 0 2.5mm; } ul, ol { margin: 1mm 0 3mm; padding-inline-start: 7mm; } li { margin: 1mm 0; }
+  figure { margin: 4mm 0 5mm; text-align: center; page-break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid var(--line); border-radius: 2mm; box-shadow: 0 1mm 3mm rgba(15,23,42,.12); }
+  figcaption { font-size: 9pt; color: var(--muted); margin-top: 1.5mm; }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.6pt; page-break-inside: avoid; }
+  th, td { border: 1px solid var(--line); padding: 1.8mm 2.4mm; text-align: start; vertical-align: top; }
+  th { background: var(--soft); color: var(--muted); font-weight: 700; }
+  .tip, .warn, .note { border-radius: 2mm; padding: 3mm 4mm; margin: 3mm 0 4mm; page-break-inside: avoid; }
+  .tip { background: #ecfdf5; border-inline-start: 4px solid var(--teal); }
+  .warn { background: #fff7ed; border-inline-start: 4px solid #f97316; }
+  .note { background: #eff6ff; border-inline-start: 4px solid #2563eb; }
+  .tip b:first-child, .warn b:first-child, .note b:first-child { display: block; margin-bottom: 1mm; }
+  kbd { font-family: Consolas, monospace; font-size: 9pt; background: var(--soft); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 1.2mm; padding: 0 1.5mm; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: var(--soft); border-radius: 1mm; padding: 0 1mm; direction: ltr; unicode-bidi: isolate; }
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps > li { counter-increment: s; position: relative; padding-inline-start: 10mm; margin: 2.5mm 0; }
+  .steps > li::before { content: counter(s); position: absolute; inset-inline-start: 0; top: 0; width: 7mm; height: 7mm; border-radius: 50%; background: var(--red); color: #fff; font-weight: 700; font-size: 9pt; display: grid; place-items: center; }
+  .cover { height: 262mm; display: flex; flex-direction: column; justify-content: space-between; padding: 12mm 6mm; background: linear-gradient(160deg, #fff 0%, #fff 55%, #fff1f1 100%); border: 1px solid var(--line); border-radius: 4mm; }
+  .cover .logo { width: 26mm; height: 26mm; border-radius: 6mm; background: linear-gradient(135deg, #8f0f14, #c4161c 60%, #f97316); display: grid; place-items: center; font-size: 15mm; }
+  .cover h1 { page-break-before: auto; border: none; font-size: 30pt; color: var(--dark); margin: 8mm 0 2mm; padding: 0; line-height: 1.15; }
+  .cover .sub { font-size: 14pt; color: var(--red); font-weight: 700; }
+  .cover .ver { color: var(--muted); margin-top: 4mm; }
+  .cover img { width: 100%; border-radius: 3mm; box-shadow: 0 2mm 6mm rgba(15,23,42,.18); }
+  .cover .foot { display: flex; justify-content: space-between; align-items: flex-end; color: var(--muted); font-size: 9.5pt; }
+  .toc { columns: 2; column-gap: 10mm; font-size: 10.4pt; } .toc div { break-inside: avoid; margin: 1.2mm 0; }
+  .toc b { color: var(--red); display: inline-block; min-width: 8mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .grid2 figure { margin: 1mm 0; }
+  .badge { display: inline-block; font-size: 8.5pt; font-weight: 700; padding: 0.3mm 2mm; border-radius: 99px; background: #fee2e2; color: #991b1b; }
+  .mod { page-break-inside: avoid; border: 1px solid var(--line); border-radius: 2.5mm; padding: 3mm 4mm; margin: 3mm 0; }
+  .mod h3 { margin-top: 0; }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+</style>
+</head>
+<body>
+<div id="doc"></div>
+<script>
+const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
+document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+const img = (n) => `img/${lang}-${n}.jpg`;
+const fig = (n, cap) => `<figure><img src="${img(n)}"/><figcaption>${cap}</figcaption></figure>`;
+let sec = 0;
+const H1 = (t) => `<h1><span class="n">${++sec}</span>${t}</h1>`;
+
+const EN = () => `
+<div class="cover">
+  <div><div class="logo">🔥</div><h1>Fire Protection<br>Digital Twin</h1><div class="sub">User Manual · Educational fire-fighting & smart fire-alarm simulator</div><div class="ver">Version 1.1 · Windows 10 / 11 (64-bit) · English</div></div>
+  <img src="${img('twin')}"/>
+  <div class="foot"><div><b style="color:#0f172a;font-size:12pt">ASFAN Trading</b><br>info@asfanco.com · WhatsApp +962 77 614 0404</div><div>© 2026 ASFAN Trading</div></div>
+</div>
+<h1 style="page-break-before:always">Contents</h1>
+<div class="toc">
+${['Introduction', 'System requirements', 'Installing the program', 'First start, trial & license activation', 'The main screen & 3D navigation', '3D Digital Twin', 'Dashboard', 'Design Data editor', 'Hands-on training scenes', 'Smart Systems Lab (advanced)', 'Learn, Quiz, Classroom & Reports', 'Troubleshooting', 'Support & contact'].map((t, i) => `<div><b>${i + 1}</b>${t}</div>`).join('')}
+</div>
+
+${H1('Introduction')}
+<p><b>Fire Protection Digital Twin</b> is an educational real-time simulator of fire-fighting and fire-alarm systems for universities, training centres and companies. Real sites (Burj Khalifa, Aqaba port, Amman data centre, oil tank farm, airport hangar) are modelled in 3D with their fire-protection systems designed to NFPA standards. A physics engine simulates fire growth, detection, sprinkler operation, pumps, water supply, clean agents and foam — and every value is shown live on the 3D model.</p>
+<h2>What you can do</h2>
+<ul>
+<li>Watch complete fire scenarios in 3D, with live pressures, flows, temperatures and alarms on every component.</li>
+<li>Inject faults (power failure, closed valve, jockey pump failure, leaks…) and diagnose them.</li>
+<li>Edit the design data and run the simulation on your own design, with NFPA compliance checks.</li>
+<li>Practise real procedures in ten interactive 3D training scenes, scored step by step.</li>
+<li>Learn smart (addressable) fire-alarm systems in the Smart Systems Lab: panel, cause &amp; effect, BMS integration, commissioning, maintenance and incident command.</li>
+<li>Study lessons, take quizzes, run classroom challenges, print reports and certificates.</li>
+</ul>
+<div class="note"><b>Educational use</b>Building data are public information; the fire systems are NFPA-based reference designs for teaching. Do not use results for real projects without verification by a qualified engineer.</div>
+
+${H1('System requirements')}
+<table><tr><th></th><th>Minimum</th><th>Recommended</th></tr>
+<tr><td>Operating system</td><td>Windows 10 64-bit</td><td>Windows 11 64-bit</td></tr>
+<tr><td>Processor</td><td>Intel Core i5 (8th gen) / Ryzen 5</td><td>Core i7 / Ryzen 7</td></tr>
+<tr><td>Memory</td><td>8 GB RAM</td><td>16 GB RAM</td></tr>
+<tr><td>Graphics</td><td>Integrated GPU with DirectX 11 / WebGL 2</td><td>Dedicated GPU (NVIDIA / AMD), 2 GB</td></tr>
+<tr><td>Screen</td><td>1366 × 768</td><td>1920 × 1080 or larger</td></tr>
+<tr><td>Disk space</td><td colspan="2">about 500 MB</td></tr>
+<tr><td>Internet</td><td colspan="2">Not required (only for the optional YouTube source-video links)</td></tr></table>
+
+${H1('Installing the program')}
+<p>You receive one of two files from ASFAN:</p>
+<table><tr><th>File</th><th>Use</th></tr>
+<tr><td class="ltr"><code>FireProtectionDigitalTwin-Setup-1.1.0.exe</code></td><td><b>Installer (recommended).</b> Installs into Program Files, creates desktop and Start-menu shortcuts and an uninstaller.</td></tr>
+<tr><td class="ltr"><code>FireProtectionDigitalTwin-Portable-1.1.0.exe</code></td><td><b>Portable.</b> Runs directly without installation — e.g. from a USB stick or a lab PC without admin rights.</td></tr></table>
+<h2>Installation steps</h2>
+<ol class="steps">
+<li>Double-click <code>FireProtectionDigitalTwin-Setup-1.1.0.exe</code>.</li>
+<li>Windows may show a blue <b>“Windows protected your PC”</b> window (Microsoft SmartScreen). Click <b>More info</b>, then <b>Run anyway</b>. This appears because the program is new and is not yet signed with a paid code-signing certificate — it is safe to continue.</li>
+<li>Choose the installer language (English / العربية) and accept the license agreement.</li>
+<li>Choose <b>for all users</b> or <b>only for me</b>, and the installation folder (the default is fine).</li>
+<li>Click <b>Install</b>, then <b>Finish</b>. The program starts automatically; a shortcut <b>Fire Protection Digital Twin</b> is placed on the desktop.</li>
+</ol>
+<div class="warn"><b>Antivirus</b>Some antivirus programs may scan the new file for a few seconds or ask for confirmation the first time. Allow the file — it is the official ASFAN installer. If a school network blocks unknown programs, ask the IT administrator to allow the installer or use the portable version.</div>
+<h2>Updating and uninstalling</h2>
+<ul><li><b>Update:</b> run the new Setup file — it replaces the old version. Your license, settings and results are kept.</li>
+<li><b>Uninstall:</b> Windows Settings → Apps → Fire Protection Digital Twin → Uninstall.</li></ul>
+
+${H1('First start, trial & license activation')}
+<p>On the first start the program runs as a <b>14-day full trial</b>. The license badge at the top (🔑) shows the remaining days.</p>
+${fig('license', 'The license window: plan, customer, expiry, package contents and the Machine ID')}
+<h2>Buying and activating a subscription</h2>
+<ol class="steps">
+<li>Click the 🔑 badge at the top of the window (or <b>Help → License…</b>).</li>
+<li>Copy your <b>Machine ID</b> with the ⧉ button and send it with your order to ASFAN (e-mail or WhatsApp) — only needed if your license should be bound to this computer.</li>
+<li>ASFAN sends you a license file <code>.lic</code> (or a key starting with <code>FTW1-</code>).</li>
+<li>In the license window click <b>Load a .lic license file</b> (or paste the key) and press <b>Activate</b>. The badge changes to <b>Licensed · Monthly / Annual</b>.</li>
+</ol>
+<h2>Packages</h2>
+<p>A license can include the <b>full program</b> or only a <b>package</b>, for example <i>Sprinklers &amp; pumps</i>, <i>Smart fire alarm</i>, <i>Special hazards</i> or <i>Basic awareness</i>, or a custom selection. The license window lists exactly which facilities, training scenes, Smart Lab modules and pages are included. Everything else is shown with a 🔒 lock; clicking it opens the license window so you can upgrade.</p>
+<table><tr><th>Situation</th><th>What happens</th></tr>
+<tr><td>Subscription expires</td><td>The program asks for a new key. Your data and results are kept.</td></tr>
+<tr><td>New computer</td><td>Unbound licenses can be activated on the new PC; bound licenses need a new key for the new Machine ID.</td></tr>
+<tr><td>Supervisor (teacher) license</td><td>Sees, exports and clears the results of all students and the instructor dashboard.</td></tr></table>
+<div class="warn"><b>Do not change the computer date</b>Setting the clock back is detected and blocks the program until the date is corrected.</div>
+
+${H1('The main screen & 3D navigation')}
+${fig('twin', 'Main screen: top bar, 3D view with live labels, information card, KPIs, alarms and components')}
+<h2>Top bar</h2>
+<table><tr><th>Element</th><th>Function</th></tr>
+<tr><td>Facility selector</td><td>Choose one of the reference facilities or <b>Create facility manually</b> (your own building).</td></tr>
+<tr><td>Tabs</td><td>3D Digital Twin · Dashboard · Design Data · Training · Smart Lab · Learn · Quiz · Classroom · Reports.</td></tr>
+<tr><td>🔑 badge</td><td>License status and activation.</td></tr>
+<tr><td>A− / A+</td><td>Smaller / larger text.</td></tr>
+<tr><td>🌙 / ☀️</td><td>Dark / light theme.</td></tr>
+<tr><td>❓</td><td>Opens this user manual.</td></tr>
+<tr><td>English / العربية</td><td>Switch the whole program language (Arabic is right-to-left).</td></tr></table>
+<h2>Moving in 3D</h2>
+<table><tr><th>Action</th><th>Mouse / keyboard</th></tr>
+<tr><td>Move (pan)</td><td>Left button drag</td></tr><tr><td>Rotate</td><td>Right button drag</td></tr><tr><td>Zoom</td><td>Mouse wheel</td></tr>
+<tr><td>Walk</td><td><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd></td></tr><tr><td>Turn</td><td><kbd>Q</kbd> / <kbd>E</kbd></td></tr><tr><td>Up / down</td><td><kbd>R</kbd> / <kbd>F</kbd></td></tr>
+<tr><td>Play / pause simulation</td><td><kbd>Space</kbd></td></tr></table>
+<p>Buttons on the right of the 3D view: <b>Labels</b> on/off, <b>Quality</b> high/low (use <i>low</i> on slow laptops), <b>Orbit</b> auto-rotation, and <b>Screenshot</b> (also <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>).</p>
+
+${H1('3D Digital Twin')}
+${fig('twin-fire', 'A fire scenario running: sprinklers operating, live pressures and alarms')}
+<ol class="steps">
+<li>Select a <b>facility</b> and a <b>scenario</b> (e.g. fire on a given floor).</li>
+<li>Press ▶ to play. Use the speed buttons (1×–60×) and drag the time slider to jump.</li>
+<li>Click any label or component to fly to it; its live values appear in <b>Selected component</b>.</li>
+<li>Watch <b>KPIs</b> (heat release, gas temperature, pressure, flow, sprinklers open…) and the <b>Alarms &amp; events</b> log.</li>
+<li>Open <b>Fault injection</b> to add failures (power failure, closed valve, leak, pump failure…) and see how the system reacts.</li>
+</ol>
+<div class="tip"><b>Create facility manually</b>Choose it from the facility selector to build your own building (city, occupancy, floors, dimensions, sprinkler K-factor, temperature rating, response type). The design and simulation are generated automatically.</div>
+
+${H1('Dashboard')}
+${fig('dash', 'Dashboard: fire, hydraulics, pump curve with moving operating point and water supply')}
+<p>Live trend charts for the running scenario: heat release and gas temperature, system pressure and flow, the fire-pump curve with the moving operating point, and tank/agent/foam supply. Charts follow the simulation time.</p>
+
+${H1('Design Data editor')}
+${fig('data', 'Design Data: NFPA calculation steps, editable values and compliance checks')}
+<p>Shows every design calculation step (NFPA 13 density/area, K-factor, Hazen–Williams, pump selection, NFPA 2001 agent quantity, NFPA 11 foam…) in SI and US units. Change any value in the editor, press <b>Apply</b> or <b>Apply &amp; run</b>, and the simulation runs on your design. The compliance list shows which NFPA rules pass or fail. <b>Reset</b> returns to the reference design.</p>
+
+${H1('Hands-on training scenes')}
+${fig('train', 'The Training page with the ten interactive 3D scenes')}
+<table><tr><th>Scene</th><th>What you practise</th></tr>
+<tr><td>Fire pump room</td><td>NFPA 20 components and the jockey → electric → diesel start sequence, manual stop.</td></tr>
+<tr><td>Annual pump flow test</td><td>Churn, 100 % and 150 % flow, acceptance curve (NFPA 25).</td></tr>
+<tr><td>Dry-pipe valve</td><td>Full trip test with water-delivery time and the reset procedure.</td></tr>
+<tr><td>Floor control valve</td><td>Waterflow alarm test (retard) and tamper / supervisory test.</td></tr>
+<tr><td>Portable extinguishers</td><td>Placement to NFPA 10 travel distance and the P-A-S-S technique.</td></tr>
+<tr><td>Hose drill</td><td>Landing valve, couplings and two-person team operation.</td></tr>
+<tr><td>Sprinkler types</td><td>Pendent, upright, sidewall, concealed, ESFR… and a response race.</td></tr>
+<tr><td>Stair pressurization</td><td>NFPA 92 pressure difference, door-opening force, relief damper.</td></tr>
+<tr><td>FM-200 room</td><td>NFPA 2001 calculator and the cross-zoned discharge sequence.</td></tr>
+<tr><td>3D installation mode</td><td>Placing detectors and sprinklers on a real ceiling with obstruction rules.</td></tr></table>
+${fig('scene', 'A training scene (fire pump room) with the procedure panel on the right')}
+<h2>How a scene works</h2>
+<ol class="steps">
+<li><b>Explore:</b> click any component (or its label) to read what it is and how it works.</li>
+<li>Choose a <b>procedure</b>. The steps appear on the right; the current step is highlighted.</li>
+<li>Perform each step by clicking components, moving sliders or answering questions. Wrong actions count as mistakes.</li>
+<li>Use ×1 / ×5 / ×10 to speed up waiting times. At the end you get a score; results are saved to the Classroom.</li>
+</ol>
+${fig('scene-proc', 'Procedure mode: current step, live values and the event log')}
+
+${H1('Smart Systems Lab (advanced)')}
+<p>The <b>Smart Lab</b> tab trains engineers on smart (addressable) fire-alarm and life-safety systems. All ten modules share one live system: a fault planted in the panel appears in the building, the BMS, the monitoring centre and the commissioning records. A ✓ in the left menu marks completed modules.</p>
+${fig('lab-facp', 'Module 1 – addressable fire alarm panel with the building plans and SLC loop')}
+<div class="mod"><h3>1 · Addressable panel lab</h3><p>A realistic panel (LCD, LEDs, <b>ACKNOWLEDGE</b>, <b>ALARM SILENCE</b>, <b>SYSTEM RESET</b>, <b>DRILL</b>, lamp test and the access-level key switch). Click a device on the plan to test it (smoke, heat, call point, waterflow, valve). Use the toolbar to <b>cut</b> or <b>short</b> the loop, compare Class A and B, see isolators work, add devices and run <b>auto-learn</b> in the Programming tab. <b>Guided exercises</b> are detected automatically; the <b>Inspector challenge</b> hides faults for you to find. Silence and reset need access level 2 — turn the key.</p></div>
+${fig('lab-cause', 'Module 2 – running a fire scenario on the building section')}
+<div class="mod"><h3>2 · Cause &amp; effect matrix</h3><p>Click cells to program which inputs drive which outputs (● immediate, ⏱ 30 s delay). <b>Code check</b> grades the matrix against NFPA 72, 90A, 92, 101 and 2001. <b>Run scenarios</b> shows voice evacuation, AHUs, dampers, stair fans, lift recall, doors, access control, FM-200 and the Civil Defense signal on a live building section.</p></div>
+<div class="mod"><h3>3 · BMS &amp; building integration</h3><p>SCADA-style BMS graphics, BACnet objects and Modbus registers with live traffic, firefighter lift (Phase I recall and Phase II in-car operation — hold DOOR OPEN), the voice-evacuation console (zones, alert/evacuate messages, push-to-talk) and the monitoring-centre receiver with Contact-ID decoding.</p></div>
+${fig('lab-bms', 'Module 3 – BMS graphics fed by the fire alarm gateway')}
+<div class="mod"><h3>4 · Installation mode</h3><p>Rules and diagrams (0.7 × S spacing, wall distances, beam pockets, diffuser clearance, sprinkler spacing and the beam rule) and a button to open the 3D installation scene. A short quiz records your score.</p></div>
+<div class="mod"><h3>5 · Commissioning &amp; acceptance</h3><p>Pre-functional checks (insulation test), device-by-device functional test of all devices (optionally with hidden installation defects), audibility survey with a sound-level meter, battery &amp; power tests, sprinkler hydrostatic test and a printable NFPA 72 <b>Record of Completion</b>.</p></div>
+${fig('lab-commission', 'Module 5 – commissioning: device tests, audibility, batteries, hydrostatic test, record')}
+<div class="mod"><h3>6 · Predictive maintenance</h3><p>Condition data for detectors, pumps and batteries with trend forecasts, the NFPA 72 / NFPA 25 inspection-testing-maintenance calendar, work orders that really clean detectors on the panel, and a monthly planning challenge.</p></div>
+${fig('lab-maint', 'Module 6 – fleet health, risk register and forecast')}
+<div class="mod"><h3>7 · Incident commander</h3><p>Timed decisions in fires with cascading failures (night server-room fire, office-hours kitchen fire). Afterwards <b>Replay &amp; debrief</b> shows your timeline, the best actions and their code basis.</p></div>
+<div class="mod"><h3>8 · Modern detection &amp; suppression</h3><p>Simulators for aspirating smoke detection (VESDA), beam detectors, UV/IR flame detectors, linear heat cable, water mist and pre-action systems (non-, single- and double-interlock), plus a technology-selection challenge.</p></div>
+${fig('lab-tech', 'Module 8 – modern technologies simulators')}
+<div class="mod"><h3>9 · Engineering tools</h3><p>Sprinkler hydraulic calculation with supply/demand graph and printable report, battery calculation, NAC voltage drop, SLC loop loading and an automatically generated riser diagram (SVG / PDF).</p></div>
+${fig('lab-tools', 'Module 9 – hydraulic calculation and other design tools')}
+<div class="mod"><h3>10 · Learning paths &amp; certificates</h3><p>Enter your name, follow a path (Technician, Engineer, Supervisor, Designer), complete the required modules, pass the final exam (≥ 80 %) and print a certificate with a verification code. Supervisors see the instructor dashboard with each trainee's progress.</p></div>
+${fig('lab-paths', 'Module 10 – learning paths, final exam and certificates')}
+
+${H1('Learn, Quiz, Classroom & Reports')}
+<div class="grid2">${fig('learn', 'Learn – bilingual lessons with source videos')}${fig('quiz', 'Quiz – questions with explanations')}</div>
+<div class="grid2">${fig('class', 'Classroom – challenges and results')}${fig('reports', 'Reports – printable simulation report')}</div>
+<ul>
+<li><b>Learn:</b> illustrated lessons (fire basics, sprinklers, hazards, hydraulics, pumps, standpipes, detection &amp; alarm, clean agents, foam, ITM) with links to the source videos.</li>
+<li><b>Quiz:</b> choose a topic and number of questions; each answer shows an explanation.</li>
+<li><b>Classroom:</b> enter the student name and group, start a <b>troubleshooting challenge</b> (hidden fault), and see results. A supervisor license can export and clear all results (CSV).</li>
+<li><b>Reports:</b> <b>Save as PDF</b> or <b>Print</b> a full simulation report with screenshot, calculations and event log.</li>
+</ul>
+
+${H1('Troubleshooting')}
+<table><tr><th>Problem</th><th>Solution</th></tr>
+<tr><td>“Windows protected your PC” when installing</td><td>Click <b>More info → Run anyway</b>. The program is safe; the message appears because it is not signed with a paid certificate.</td></tr>
+<tr><td>3D view is black, slow or flickering</td><td>Switch <b>Quality</b> to <b>Low</b>; update the graphics driver; on laptops choose the dedicated GPU for the program in Windows Graphics settings.</td></tr>
+<tr><td>“License is bound to another computer”</td><td>Send your current Machine ID to ASFAN to receive a key for this computer.</td></tr>
+<tr><td>“System clock rollback detected”</td><td>Set the correct date and time in Windows and restart the program.</td></tr>
+<tr><td>A tab or module shows 🔒</td><td>It is not included in your package. Contact ASFAN to upgrade.</td></tr>
+<tr><td>Text too small / large</td><td>Use <b>A−</b> / <b>A+</b> in the top bar.</td></tr>
+<tr><td>Results disappeared</td><td>Results are stored per Windows user; log in with the same Windows account.</td></tr></table>
+
+${H1('Support & contact')}
+<p><b>ASFAN Trading</b><br>E-mail: <b>info@asfanco.com</b><br>WhatsApp: <b class="ltr">+962 77 614 0404</b></p>
+<p>When you contact support, please send: your name / organisation, your Machine ID (license window), the program version (Help → About) and a screenshot of the problem.</p>
+`;
+
+const AR = () => `
+<div class="cover">
+  <div><div class="logo">🔥</div><h1>التوأم الرقمي لأنظمة<br>مكافحة الحريق</h1><div class="sub">دليل المستخدم · محاكي تعليمي لأنظمة مكافحة الحريق والإنذار الذكي</div><div class="ver">الإصدار 1.1 · ويندوز 10 / 11 (64 بت) · العربية</div></div>
+  <img src="${img('twin')}"/>
+  <div class="foot"><div><b style="color:#0f172a;font-size:12pt">أصفان للتجارة – ASFAN Trading</b><br>info@asfanco.com · واتساب <span class="ltr">+962 77 614 0404</span></div><div>© 2026 أصفان للتجارة</div></div>
+</div>
+<h1 style="page-break-before:always">المحتويات</h1>
+<div class="toc">
+${['المقدمة', 'متطلبات التشغيل', 'تثبيت البرنامج', 'التشغيل الأول والنسخة التجريبية وتفعيل الترخيص', 'الشاشة الرئيسية والتنقل ثلاثي الأبعاد', 'التوأم الرقمي ثلاثي الأبعاد', 'لوحة المؤشرات', 'محرر بيانات التصميم', 'المشاهد التدريبية العملية', 'المختبر الذكي (المتقدم)', 'تعلّم، الاختبارات، الصف الدراسي والتقارير', 'حل المشكلات', 'الدعم والتواصل'].map((t, i) => `<div><b>${i + 1}</b>${t}</div>`).join('')}
+</div>
+
+${H1('المقدمة')}
+<p><b>التوأم الرقمي لأنظمة مكافحة الحريق</b> محاكٍ تعليمي يعمل في الزمن الحقيقي لأنظمة مكافحة الحريق وإنذاره، موجّه للجامعات ومراكز التدريب والشركات. المواقع حقيقية (برج خليفة، ميناء العقبة، مركز بيانات في عمّان، خزانات نفط، حظيرة طائرات) ومرسومة ثلاثية الأبعاد، وأنظمة الحماية فيها مصممة وفق معايير NFPA. محرك فيزيائي يحاكي نمو الحريق والكشف وعمل الرشاشات والمضخات والمياه والمواد النظيفة والرغوة، وتظهر كل القيم مباشرة على المجسم.</p>
+<h2>ماذا يمكنك أن تفعل</h2>
+<ul>
+<li>مشاهدة سيناريوهات حريق كاملة ثلاثية الأبعاد مع الضغوط والتدفقات والحرارة والإنذارات لكل مكوّن.</li>
+<li>حقن الأعطال (انقطاع الكهرباء، صمام مغلق، تعطل مضخة الجوكي، تسريب…) وتشخيصها.</li>
+<li>تعديل بيانات التصميم وتشغيل المحاكاة على تصميمك مع فحص المطابقة لـ NFPA.</li>
+<li>التدرّب على الإجراءات الحقيقية في عشرة مشاهد تدريبية تفاعلية مع تقييم خطوة بخطوة.</li>
+<li>تعلّم أنظمة إنذار الحريق الذكية (المعنونة) في المختبر الذكي: اللوحة، السبب والنتيجة، التكامل مع BMS، الاستلام، الصيانة، وقيادة الحوادث.</li>
+<li>دراسة الدروس وحل الاختبارات وإدارة تحديات الصف وطباعة التقارير والشهادات.</li>
+</ul>
+<div class="note"><b>الاستخدام التعليمي</b>بيانات المباني معلومات منشورة، وأنظمة الحريق تصاميم مرجعية وفق NFPA لأغراض التعليم. لا تستخدم النتائج في مشاريع حقيقية دون تحقق من مهندس مؤهل.</div>
+
+${H1('متطلبات التشغيل')}
+<table><tr><th></th><th>الحد الأدنى</th><th>الموصى به</th></tr>
+<tr><td>نظام التشغيل</td><td>ويندوز 10 (64 بت)</td><td>ويندوز 11 (64 بت)</td></tr>
+<tr><td>المعالج</td><td>Intel Core i5 (الجيل الثامن) / Ryzen 5</td><td>Core i7 / Ryzen 7</td></tr>
+<tr><td>الذاكرة</td><td>8 جيجابايت</td><td>16 جيجابايت</td></tr>
+<tr><td>كرت الشاشة</td><td>مدمج يدعم DirectX 11 / WebGL 2</td><td>كرت منفصل NVIDIA / AMD بذاكرة 2 جيجابايت</td></tr>
+<tr><td>الشاشة</td><td class="ltr">1366 × 768</td><td class="ltr">1920 × 1080 أو أكبر</td></tr>
+<tr><td>مساحة القرص</td><td colspan="2">حوالي 500 ميجابايت</td></tr>
+<tr><td>الإنترنت</td><td colspan="2">غير مطلوب (فقط لروابط فيديوهات يوتيوب الاختيارية)</td></tr></table>
+
+${H1('تثبيت البرنامج')}
+<p>تستلم من أصفان أحد الملفين:</p>
+<table><tr><th>الملف</th><th>الاستخدام</th></tr>
+<tr><td class="ltr"><code>FireProtectionDigitalTwin-Setup-1.1.0.exe</code></td><td><b>ملف التثبيت (موصى به).</b> يثبّت البرنامج في Program Files وينشئ اختصارات على سطح المكتب وقائمة ابدأ وبرنامج إزالة.</td></tr>
+<tr><td class="ltr"><code>FireProtectionDigitalTwin-Portable-1.1.0.exe</code></td><td><b>النسخة المحمولة.</b> تعمل مباشرة دون تثبيت، مثلاً من فلاشة أو على جهاز مختبر دون صلاحيات مدير.</td></tr></table>
+<h2>خطوات التثبيت</h2>
+<ol class="steps">
+<li>انقر نقراً مزدوجاً على الملف <code>FireProtectionDigitalTwin-Setup-1.1.0.exe</code>.</li>
+<li>قد يظهر ويندوز نافذة زرقاء <b>«Windows protected your PC»</b> (Microsoft SmartScreen). اضغط <b>More info</b> (مزيد من المعلومات) ثم <b>Run anyway</b> (تشغيل على أي حال). تظهر هذه الرسالة لأن البرنامج جديد وغير موقّع بشهادة توقيع مدفوعة — ويمكن المتابعة بأمان.</li>
+<li>اختر لغة المثبّت (English / العربية) ووافق على اتفاقية الترخيص.</li>
+<li>اختر التثبيت <b>لجميع المستخدمين</b> أو <b>لي فقط</b>، ومجلد التثبيت (الافتراضي مناسب).</li>
+<li>اضغط <b>Install</b> ثم <b>Finish</b>. يفتح البرنامج تلقائياً، ويظهر اختصار <b>Fire Protection Digital Twin</b> على سطح المكتب.</li>
+</ol>
+<div class="warn"><b>برامج مكافحة الفيروسات</b>قد يفحص بعض برامج الحماية الملف الجديد لبضع ثوانٍ أو يطلب التأكيد في المرة الأولى. اسمح بالملف فهو ملف التثبيت الرسمي من أصفان. إذا كانت شبكة المدرسة تمنع البرامج غير المعروفة فاطلب من مسؤول تقنية المعلومات السماح به أو استخدم النسخة المحمولة.</div>
+<h2>التحديث والإزالة</h2>
+<ul><li><b>التحديث:</b> شغّل ملف التثبيت الجديد فيستبدل النسخة القديمة، ويبقى الترخيص والإعدادات والنتائج كما هي.</li>
+<li><b>الإزالة:</b> إعدادات ويندوز ← التطبيقات ← Fire Protection Digital Twin ← إلغاء التثبيت.</li></ul>
+
+${H1('التشغيل الأول والنسخة التجريبية وتفعيل الترخيص')}
+<p>عند التشغيل الأول يعمل البرنامج كـ <b>نسخة تجريبية كاملة لمدة 14 يوماً</b>، وتُظهر شارة الترخيص (🔑) في الأعلى الأيام المتبقية.</p>
+${fig('license', 'نافذة الترخيص: الخطة واسم العميل وتاريخ الانتهاء ومحتوى الباقة ومعرّف الجهاز')}
+<h2>شراء الاشتراك وتفعيله</h2>
+<ol class="steps">
+<li>اضغط شارة 🔑 أعلى النافذة (أو <b>Help ← License…</b>).</li>
+<li>انسخ <b>معرّف الجهاز (Machine ID)</b> بالزر ⧉ وأرسله مع طلبك إلى أصفان (بريد أو واتساب) — مطلوب فقط إذا كان الترخيص سيُربط بهذا الجهاز.</li>
+<li>ترسل لك أصفان ملف ترخيص <code>.lic</code> (أو مفتاحاً يبدأ بـ <code>FTW1-</code>).</li>
+<li>في نافذة الترخيص اضغط <b>تحميل ملف ترخيص .lic</b> (أو الصق المفتاح) ثم <b>تفعيل</b>. تتغير الشارة إلى <b>مرخّص · شهري / سنوي</b>.</li>
+</ol>
+<h2>الباقات</h2>
+<p>يمكن أن يشمل الترخيص <b>البرنامج كاملاً</b> أو <b>باقة</b> محددة، مثل <i>الرشاشات والمضخات</i> أو <i>إنذار الحريق الذكي</i> أو <i>المخاطر الخاصة</i> أو <i>التوعية الأساسية</i>، أو اختياراً مخصصاً. تعرض نافذة الترخيص بالضبط المنشآت والمشاهد التدريبية ووحدات المختبر الذكي والصفحات المشمولة، وكل ما عداها يظهر بقفل 🔒، والضغط عليه يفتح نافذة الترخيص للترقية.</p>
+<table><tr><th>الحالة</th><th>ماذا يحدث</th></tr>
+<tr><td>انتهاء الاشتراك</td><td>يطلب البرنامج مفتاحاً جديداً، وتبقى بياناتك ونتائجك محفوظة.</td></tr>
+<tr><td>جهاز جديد</td><td>الترخيص غير المربوط يُفعّل على الجهاز الجديد؛ والمربوط يحتاج مفتاحاً جديداً لمعرّف الجهاز الجديد.</td></tr>
+<tr><td>ترخيص المشرف (المدرّس)</td><td>يرى نتائج جميع الطلاب ويصدّرها ويمسحها، ولوحة المدرّب في المختبر الذكي.</td></tr></table>
+<div class="warn"><b>لا تغيّر تاريخ الجهاز</b>إرجاع الساعة للخلف يُكتشف ويوقف البرنامج حتى تصحيح التاريخ.</div>
+
+${H1('الشاشة الرئيسية والتنقل ثلاثي الأبعاد')}
+${fig('twin', 'الشاشة الرئيسية: الشريط العلوي، العرض ثلاثي الأبعاد مع التسميات الحية، بطاقة المعلومات، المؤشرات، الإنذارات والمكوّنات')}
+<h2>الشريط العلوي</h2>
+<table><tr><th>العنصر</th><th>الوظيفة</th></tr>
+<tr><td>اختيار المنشأة</td><td>اختر إحدى المنشآت المرجعية أو <b>إنشاء منشأة يدوياً</b> (مبناك الخاص).</td></tr>
+<tr><td>التبويبات</td><td>التوأم الرقمي · لوحة المؤشرات · بيانات التصميم · التدريب العملي · المختبر الذكي · تعلّم · اختبار · الصف الدراسي · التقارير.</td></tr>
+<tr><td>شارة 🔑</td><td>حالة الترخيص والتفعيل.</td></tr>
+<tr><td>A− / A+</td><td>تصغير / تكبير الخط.</td></tr>
+<tr><td>🌙 / ☀️</td><td>الوضع الداكن / الفاتح.</td></tr>
+<tr><td>❓</td><td>يفتح دليل المستخدم هذا.</td></tr>
+<tr><td>English / العربية</td><td>تغيير لغة البرنامج كاملاً (العربية من اليمين لليسار).</td></tr></table>
+<h2>التنقل في العرض ثلاثي الأبعاد</h2>
+<table><tr><th>الإجراء</th><th>الفأرة / لوحة المفاتيح</th></tr>
+<tr><td>تحريك</td><td>السحب بالزر الأيسر</td></tr><tr><td>تدوير</td><td>السحب بالزر الأيمن</td></tr><tr><td>تكبير / تصغير</td><td>عجلة الفأرة</td></tr>
+<tr><td>التجوّل</td><td><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd></td></tr><tr><td>الالتفاف</td><td><kbd>Q</kbd> / <kbd>E</kbd></td></tr><tr><td>أعلى / أسفل</td><td><kbd>R</kbd> / <kbd>F</kbd></td></tr>
+<tr><td>تشغيل / إيقاف المحاكاة</td><td><kbd>Space</kbd></td></tr></table>
+<p>الأزرار على يمين العرض: <b>التسميات</b> تشغيل/إيقاف، <b>الجودة</b> عالية/منخفضة (استخدم المنخفضة على الأجهزة الضعيفة)، <b>الدوران</b> التلقائي، و<b>لقطة شاشة</b> (أيضاً <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>).</p>
+
+${H1('التوأم الرقمي ثلاثي الأبعاد')}
+${fig('twin-fire', 'سيناريو حريق يعمل: الرشاشات تعمل والضغوط والإنذارات حية')}
+<ol class="steps">
+<li>اختر <b>المنشأة</b> و<b>السيناريو</b> (مثلاً حريق في طابق معيّن).</li>
+<li>اضغط ▶ للتشغيل. استخدم أزرار السرعة (1×–60×) واسحب شريط الوقت للانتقال.</li>
+<li>انقر على أي تسمية أو مكوّن للانتقال إليه، وتظهر قيمه الحية في <b>المكوّن المحدد</b>.</li>
+<li>راقب <b>مؤشرات الأداء</b> (معدل الحرارة، حرارة الغاز، الضغط، التدفق، الرشاشات المفتوحة…) وسجل <b>الإنذارات والأحداث</b>.</li>
+<li>افتح <b>حقن الأعطال</b> لإضافة أعطال (انقطاع الكهرباء، صمام مغلق، تسريب، تعطل مضخة…) وشاهد استجابة النظام.</li>
+</ol>
+<div class="tip"><b>إنشاء منشأة يدوياً</b>اخترها من قائمة المنشآت لبناء مبناك (المدينة، الإشغال، عدد الطوابق، الأبعاد، معامل K للرشاش، درجة حرارة التشغيل، نوع الاستجابة)، ويُنشأ التصميم والمحاكاة تلقائياً.</div>
+
+${H1('لوحة المؤشرات')}
+${fig('dash', 'لوحة المؤشرات: الحريق والهيدروليك ومنحنى المضخة مع نقطة التشغيل والإمداد')}
+<p>رسوم بيانية حية للسيناريو الجاري: معدل انطلاق الحرارة وحرارة الغاز، ضغط المنظومة وتدفقها، منحنى مضخة الحريق مع نقطة التشغيل المتحركة، وإمداد الخزان أو المادة أو الرغوة. تتبع الرسوم وقت المحاكاة.</p>
+
+${H1('محرر بيانات التصميم')}
+${fig('data', 'بيانات التصميم: خطوات حساب NFPA والقيم القابلة للتعديل وفحص المطابقة')}
+<p>يعرض كل خطوات الحساب التصميمي (كثافة/مساحة NFPA 13، معامل K، معادلة هازن-وليامز، اختيار المضخة، كمية المادة وفق NFPA 2001، الرغوة وفق NFPA 11…) بالوحدات المترية والأمريكية. غيّر أي قيمة في المحرر ثم اضغط <b>تطبيق</b> أو <b>تطبيق وتشغيل</b> لتعمل المحاكاة على تصميمك. تبيّن قائمة المطابقة القواعد الناجحة والمخالفة، وزر <b>إعادة</b> يرجع للتصميم المرجعي.</p>
+
+${H1('المشاهد التدريبية العملية')}
+${fig('train', 'صفحة التدريب العملي مع المشاهد العشرة التفاعلية')}
+<table><tr><th>المشهد</th><th>ما الذي تتدرب عليه</th></tr>
+<tr><td>غرفة مضخات الحريق</td><td>مكوّنات NFPA 20 وتسلسل تشغيل الجوكي ← الكهربائية ← الديزل والإيقاف اليدوي.</td></tr>
+<tr><td>اختبار التدفق السنوي</td><td>نقطة الإغلاق و100% و150% من التدفق ومنحنى القبول (NFPA 25).</td></tr>
+<tr><td>صمام الأنابيب الجافة</td><td>اختبار الفصل الكامل وزمن وصول الماء وإجراء إعادة الضبط.</td></tr>
+<tr><td>صمام التحكم بالطابق</td><td>اختبار إنذار التدفق (المؤخّر) واختبار مفتاح العبث/الإشراف.</td></tr>
+<tr><td>طفايات الحريق</td><td>التوزيع وفق مسافة الوصول في NFPA 10 وطريقة P-A-S-S.</td></tr>
+<tr><td>تدريب الخرطوم</td><td>صمام الهبوط والوصلات والعمل بفريق من شخصين.</td></tr>
+<tr><td>أنواع الرشاشات</td><td>المتدلي والقائم والجانبي والمخفي وESFR… وسباق الاستجابة.</td></tr>
+<tr><td>ضغط بيت الدرج</td><td>فرق الضغط وفق NFPA 92، قوة فتح الباب، خانق التنفيس.</td></tr>
+<tr><td>غرفة FM-200</td><td>حاسبة NFPA 2001 وتسلسل التفريغ بالكشف المتقاطع.</td></tr>
+<tr><td>وضع التركيب ثلاثي الأبعاد</td><td>تركيب الكواشف والرشاشات على سقف حقيقي مع قواعد العوائق.</td></tr></table>
+${fig('scene', 'مشهد تدريبي (غرفة المضخات) ولوحة الإجراء على اليمين')}
+<h2>كيف يعمل المشهد</h2>
+<ol class="steps">
+<li><b>استكشاف:</b> انقر على أي مكوّن (أو تسميته) لتقرأ ما هو وكيف يعمل.</li>
+<li>اختر <b>إجراءً</b>؛ تظهر الخطوات على اليمين والخطوة الحالية مميّزة.</li>
+<li>نفّذ كل خطوة بالنقر على المكوّنات أو تحريك المنزلقات أو الإجابة عن الأسئلة. الإجراءات الخاطئة تُحسب أخطاء.</li>
+<li>استخدم ×1 / ×5 / ×10 لتسريع أوقات الانتظار. في النهاية تحصل على درجة وتُحفظ النتيجة في الصف الدراسي.</li>
+</ol>
+${fig('scene-proc', 'وضع الإجراء: الخطوة الحالية والقيم الحية وسجل الأحداث')}
+
+${H1('المختبر الذكي (المتقدم)')}
+<p>تبويب <b>المختبر الذكي</b> يدرّب المهندسين على أنظمة إنذار الحريق والسلامة الذكية (المعنونة). الوحدات العشر تعمل على نظام حي واحد: أي عطل تزرعه في اللوحة يظهر في المبنى ونظام إدارة المبنى ومركز المراقبة وسجلات الاستلام. علامة ✓ في القائمة اليسرى تعني أن الوحدة مكتملة.</p>
+${fig('lab-facp', 'الوحدة 1 – لوحة الإنذار المعنونة مع مخططات المبنى وحلقة SLC')}
+<div class="mod"><h3>1 · مختبر لوحة الإنذار المعنونة</h3><p>لوحة واقعية (شاشة LCD، مصابيح، أزرار <b>ACKNOWLEDGE</b> و<b>ALARM SILENCE</b> و<b>SYSTEM RESET</b> و<b>DRILL</b>، اختبار المصابيح، ومفتاح مستوى الوصول). انقر على جهاز في المخطط لاختباره (دخان، حرارة، زر يدوي، تدفق، صمام). استخدم شريط الأدوات لـ <b>قطع</b> الحلقة أو عمل <b>قصر</b>، وقارن الفئتين A وB، وشاهد العوازل، وأضف أجهزة وشغّل <b>التعلّم التلقائي</b> في تبويب البرمجة. <b>التمارين الموجهة</b> تُكتشف تلقائياً، و<b>تحدي المفتش</b> يخفي أعطالاً لتكتشفها. الإسكات وإعادة الضبط يحتاجان المستوى 2 — أدِر المفتاح.</p></div>
+${fig('lab-cause', 'الوحدة 2 – تشغيل سيناريو حريق على مقطع المبنى')}
+<div class="mod"><h3>2 · مصفوفة السبب والنتيجة</h3><p>انقر على الخلايا لبرمجة أي المدخلات تشغّل أي المخرجات (● فوري، ⏱ بعد 30 ثانية). <b>فحص الكود</b> يقيّم المصفوفة وفق NFPA 72 و90A و92 و101 و2001. <b>تشغيل السيناريوهات</b> يعرض الإخلاء الصوتي والمكيفات والخوانق ومراوح الدرج واستدعاء المصعد والأبواب والتحكم بالدخول وFM-200 وإشارة الدفاع المدني على مقطع حي للمبنى.</p></div>
+<div class="mod"><h3>3 · التكامل مع نظام إدارة المبنى</h3><p>رسومات BMS بأسلوب SCADA، كائنات BACnet وسجلات Modbus مع حركة الشبكة، مصعد رجال الإطفاء (استدعاء المرحلة الأولى وتشغيل المرحلة الثانية — اضغط باستمرار على فتح الباب)، لوحة الإخلاء الصوتي (المناطق، رسائل التنبيه والإخلاء، اضغط للتحدث)، ومستقبل مركز المراقبة مع فكّ رسائل Contact-ID.</p></div>
+${fig('lab-bms', 'الوحدة 3 – رسومات BMS من بوابة لوحة الإنذار')}
+<div class="mod"><h3>4 · وضع التركيب</h3><p>القواعد والرسومات (تباعد 0.7 × S، المسافات من الجدران، جيوب العوارض، البعد عن فتحات التكييف، تباعد الرشاشات وقاعدة العارضة) وزر لفتح مشهد التركيب ثلاثي الأبعاد، مع اختبار قصير يسجل درجتك.</p></div>
+<div class="mod"><h3>5 · الاستلام والتشغيل</h3><p>فحوصات ما قبل التشغيل (اختبار العزل)، اختبار وظيفي لكل الأجهزة واحداً واحداً (مع عيوب تركيب مخفية اختيارياً)، مسح مستوى الصوت بجهاز الديسيبل، اختبار البطاريات والكهرباء، اختبار الضغط الهيدروستاتيكي، و<b>سجل الإنجاز</b> وفق NFPA 72 قابل للطباعة.</p></div>
+${fig('lab-commission', 'الوحدة 5 – الاستلام: اختبار الأجهزة والصوت والبطاريات والضغط والسجل')}
+<div class="mod"><h3>6 · الصيانة التنبؤية</h3><p>بيانات حالة الكواشف والمضخات والبطاريات مع التنبؤ بالاتجاه، وتقويم الفحص والاختبار والصيانة وفق NFPA 72 وNFPA 25، وأوامر عمل تنظّف الكواشف فعلياً على اللوحة، وتحدي تخطيط صيانة الشهر.</p></div>
+${fig('lab-maint', 'الوحدة 6 – صحة الأصول وسجل المخاطر والتنبؤ')}
+<div class="mod"><h3>7 · قائد الحادثة</h3><p>قرارات بعدّ تنازلي في حرائق تتعطل خلالها المعدات (حريق ليلي في غرفة الخوادم، حريق مطبخ في ساعات الدوام). بعدها يعرض <b>الإعادة والاستخلاص</b> خطك الزمني وأفضل الإجراءات وأساسها في الكود.</p></div>
+<div class="mod"><h3>8 · تقنيات الكشف والإطفاء الحديثة</h3><p>محاكيات لكشف الدخان بالشفط (VESDA) والكاشف الشعاعي وكاشف اللهب UV/IR وكابل الحرارة الخطي ورذاذ الماء وأنظمة ما قبل الفعل (عديمة ومفردة ومزدوجة التعشيق)، مع تحدي اختيار التقنية المناسبة.</p></div>
+${fig('lab-tech', 'الوحدة 8 – محاكيات التقنيات الحديثة')}
+<div class="mod"><h3>9 · الأدوات الهندسية</h3><p>حساب هيدروليكي للرشاشات مع منحنى المصدر والطلب وتقرير قابل للطباعة، وحساب البطاريات، وهبوط الجهد في دوائر الإنذار، وتحميل حلقة SLC، ومخطط رأسي (Riser) يُرسم تلقائياً (SVG / PDF).</p></div>
+${fig('lab-tools', 'الوحدة 9 – الحساب الهيدروليكي وأدوات التصميم الأخرى')}
+<div class="mod"><h3>10 · المسارات التعليمية والشهادات</h3><p>أدخل اسمك واتبع مساراً (فني، مهندس، مشرف، مصمم)، وأكمل الوحدات المطلوبة، واجتز الاختبار النهائي (≥ 80%)، واطبع شهادة برمز تحقق. يرى المشرفون لوحة المدرّب مع تقدّم كل متدرب.</p></div>
+${fig('lab-paths', 'الوحدة 10 – المسارات والاختبار النهائي والشهادات')}
+
+${H1('تعلّم، الاختبارات، الصف الدراسي والتقارير')}
+<div class="grid2">${fig('learn', 'تعلّم – دروس ثنائية اللغة مع فيديوهات المصدر')}${fig('quiz', 'اختبار – أسئلة مع شرح الإجابة')}</div>
+<div class="grid2">${fig('class', 'الصف الدراسي – التحديات والنتائج')}${fig('reports', 'التقارير – تقرير محاكاة قابل للطباعة')}</div>
+<ul>
+<li><b>تعلّم:</b> دروس مصوّرة (أساسيات الحريق، الرشاشات، تصنيف المخاطر، الهيدروليك، المضخات، الأنابيب القائمة، الكشف والإنذار، المواد النظيفة، الرغوة، الفحص والصيانة) مع روابط فيديوهات المصدر.</li>
+<li><b>اختبار:</b> اختر الموضوع وعدد الأسئلة، ويظهر شرح بعد كل إجابة.</li>
+<li><b>الصف الدراسي:</b> أدخل اسم الطالب والمجموعة، وابدأ <b>تحدي التشخيص</b> (عطل مخفي)، وشاهد النتائج. ترخيص المشرف يصدّر كل النتائج ويمسحها (CSV).</li>
+<li><b>التقارير:</b> <b>حفظ PDF</b> أو <b>طباعة</b> تقرير محاكاة كامل مع صورة وحسابات وسجل الأحداث.</li>
+</ul>
+
+${H1('حل المشكلات')}
+<table><tr><th>المشكلة</th><th>الحل</th></tr>
+<tr><td>رسالة «Windows protected your PC» عند التثبيت</td><td>اضغط <b>More info ← Run anyway</b>. البرنامج آمن، والرسالة تظهر لأنه غير موقّع بشهادة مدفوعة.</td></tr>
+<tr><td>العرض ثلاثي الأبعاد أسود أو بطيء أو يرمش</td><td>غيّر <b>الجودة</b> إلى <b>منخفضة</b>، وحدّث تعريف كرت الشاشة، وفي الأجهزة المحمولة اختر كرت الشاشة المنفصل للبرنامج من إعدادات الرسومات في ويندوز.</td></tr>
+<tr><td>«الترخيص مربوط بجهاز آخر»</td><td>أرسل معرّف جهازك الحالي إلى أصفان لتحصل على مفتاح لهذا الجهاز.</td></tr>
+<tr><td>«تم اكتشاف تغيير في ساعة النظام»</td><td>اضبط التاريخ والوقت الصحيحين في ويندوز وأعد تشغيل البرنامج.</td></tr>
+<tr><td>تبويب أو وحدة عليها 🔒</td><td>غير مشمولة في باقتك؛ تواصل مع أصفان للترقية.</td></tr>
+<tr><td>الخط صغير / كبير</td><td>استخدم <b>A−</b> / <b>A+</b> في الشريط العلوي.</td></tr>
+<tr><td>اختفت النتائج</td><td>النتائج محفوظة لكل مستخدم ويندوز؛ ادخل بنفس حساب ويندوز.</td></tr></table>
+
+${H1('الدعم والتواصل')}
+<p><b>أصفان للتجارة – ASFAN Trading</b><br>البريد الإلكتروني: <b>info@asfanco.com</b><br>واتساب: <b class="ltr">+962 77 614 0404</b></p>
+<p>عند التواصل مع الدعم أرسل: اسمك / جهتك، ومعرّف الجهاز (من نافذة الترخيص)، ورقم الإصدار (Help ← About)، وصورة للمشكلة.</p>
+`;
+document.getElementById('doc').innerHTML = lang === 'ar' ? AR() : EN();
+</script>
+</body>
+</html>
