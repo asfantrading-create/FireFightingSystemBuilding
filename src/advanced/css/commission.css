@@ -141,3 +141,6 @@ tr.cm-row-defect td { background: color-mix(in srgb, var(--warn) 6%, transparent
 .cm-loc { max-width: 190px; }
 .cm-msel { max-width: 170px; }
 .cm-dt td.num { white-space: nowrap; }
+.cm .adv-field input, .cm .adv-field select { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px; font: inherit; }
+.cm .adv-field input:focus { outline: 2px solid var(--accent-line); border-color: var(--accent); }
+:root[data-theme="dark"] .cm input[type="date"] { color-scheme: dark; }

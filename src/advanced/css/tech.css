@@ -110,3 +110,5 @@
 .tech-fire-pulse > circle { animation: tech-blink 1s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .tech [class*="tech-"] { animation: none !important; } }
 .tech-tt th { position: static; }
+.tech-f { direction: ltr; unicode-bidi: isolate; display: inline-block; font-family: var(--mono); font-size: .95em; }
+.adv-stat .v [dir="auto"] { unicode-bidi: isolate; }

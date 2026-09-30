@@ -902,7 +902,7 @@ function tabLhd(root) {
       L('<b>Analog</b> (integrating) cable: the insulation resistance falls with temperature along the whole length, so the alarm depends on temperature × heated length — a short very hot spot or a long warm section. It is restorable, but the location is not exact.', 'الكابل <b>التناظري</b> (التكاملي): تنخفض مقاومة العزل مع الحرارة على كامل الطول، فيعتمد الإنذار على الحرارة × الطول المسخّن — نقطة قصيرة شديدة الحرارة أو قسم طويل دافئ. قابل للاستعادة لكن الموقع غير دقيق.'),
       L('For long tunnels, fibre-optic DTS (Raman) gives a temperature profile every ~1 m over up to 10 km with rate-of-rise and zone programming.', 'للأنفاق الطويلة، يعطي الكشف الحراري بالألياف البصرية DTS (رامان) منحنى الحرارة كل ~1 م على مسافة تصل إلى 10 كم مع برمجة معدل الارتفاع والمناطق.'),
     ], [
-      L('NFPA 72 §17.6.2.1: choose a rating at least 11 °C (20 °F) above the maximum expected ambient; §17.6.3 — spacing per listing (typically ≤ 6–9 m between runs on ceilings; directly above hazards on conveyors).', 'NFPA 72 §17.6.2.1: اختر درجة تشغيل أعلى بـ 11°م (20°ف) على الأقل من أقصى حرارة محيطة متوقعة؛ §17.6.3 — التباعد حسب الاعتماد (عادة ≤ 6–9 م بين المسارات على الأسقف؛ مباشرة فوق الخطر في النواقل).'),
+      L('NFPA 72 §17.6.2: choose a rating at least 11 °C (20 °F) above the maximum expected ambient; §17.6.3 — spacing per listing (typically ≤ 6–9 m between runs on ceilings; directly above hazards on conveyors).', 'NFPA 72 §17.6.2: اختر درجة تشغيل أعلى بـ 11°م (20°ف) على الأقل من أقصى حرارة محيطة متوقعة؛ §17.6.3 — التباعد حسب الاعتماد (عادة ≤ 6–9 م بين المسارات على الأسقف؛ مباشرة فوق الخطر في النواقل).'),
       L('Conveyors: run the cable above the belt near idlers/bearings (typically 0.5–1 m), or on both sides for wide belts; use listed clips every 0.75–1.5 m; avoid sharp bends (> 75 mm radius).', 'النواقل: مدّ الكابل فوق الحزام قرب البكرات/المحامل (عادة 0.5–1 م)، أو على الجانبين للأحزمة العريضة؛ استخدم مشابك معتمدة كل 0.75–1.5 م؛ تجنب الانحناءات الحادة (نصف قطر > 75 مم).'),
       L('Terminate with the EOL device for supervision; record the loop resistance per metre and the "cable map" (distance → physical landmark) at commissioning.', 'أنهِ الدائرة بعنصر نهاية الخط للإشراف؛ سجّل مقاومة الحلقة لكل متر و"خريطة الكابل" (المسافة ← معلم فعلي) عند الاستلام.'),
       L('Test: digital — short the conductors at the far end with the test switch (never heat the cable); analog — use the calibrated test box; verify location readout at known points.', 'الاختبار: الرقمي — اقصر الموصلات عند الطرف البعيد بمفتاح الاختبار (لا تسخّن الكابل أبداً)؛ التناظري — استخدم صندوق الاختبار المعاير؛ تحقق من قراءة الموقع عند نقاط معروفة.'),
@@ -951,20 +951,20 @@ function tabLhd(root) {
       const x = P.pos;
       const R = LHD_LEAD + 2 * LHD_R * x;
       h = `<div class="tech-calc">
-        <div>${L('Normal (supervised) loop', 'الحلقة الطبيعية (مراقبة)')}: R = R<sub>lead</sub> + 2·r·L + R<sub>EOL</sub> = ${n(LHD_LEAD, 1)} + 2×${n(LHD_R, 2)}×${n(P.len)} + ${n(LHD_EOL)} = <b>${n(Rnorm, 1, 'Ω')}</b></div>
-        <div>${L('After the short at the hot spot', 'بعد القصر عند النقطة الساخنة')}: R = R<sub>lead</sub> + 2·r·x ${S.shorted ? `= <b>${n(R, 1, 'Ω')}</b>` : `(${L('no short yet', 'لا يوجد قصر بعد')})`}</div>
-        <div class="tech-big">x = (R − R<sub>lead</sub>) / (2·r) ${S.shorted ? `= (${n(R, 1)} − ${n(LHD_LEAD, 1)}) / (2×${n(LHD_R, 2)}) = <b>${n((R - LHD_LEAD) / (2 * LHD_R), 1, 'm')}</b>` : ''}</div>
-        <div class="adv-note">r = ${n(LHD_R, 2, 'Ω/m')} ${L('per conductor (from cable data sheet, verified at commissioning)', 'لكل موصل (من بيانات الكابل، يُتحقق منه عند الاستلام)')} · R<sub>lead</sub> = ${n(LHD_LEAD, 1, 'Ω')}</div></div>`;
+        <div>${L('Normal (supervised) loop', 'الحلقة الطبيعية (مراقبة)')}: <span class="tech-f">R = R<sub>lead</sub> + 2·r·L + R<sub>EOL</sub> = ${fx(LHD_LEAD, 1)} + 2×${fx(LHD_R, 2)}×${fx(P.len)} + ${fx(LHD_EOL)} = <b>${fx(Rnorm, 1)} Ω</b></span></div>
+        <div>${L('After the short at the hot spot', 'بعد القصر عند النقطة الساخنة')}: <span class="tech-f">R = R<sub>lead</sub> + 2·r·x${S.shorted ? ` = <b>${fx(R, 1)} Ω</b>` : ''}</span> ${S.shorted ? '' : `(${L('no short yet', 'لا يوجد قصر بعد')})`}</div>
+        <div class="tech-big"><span class="tech-f">x = (R − R<sub>lead</sub>) / (2·r)${S.shorted ? ` = (${fx(R, 1)} − ${fx(LHD_LEAD, 1)}) / (2×${fx(LHD_R, 2)}) = <b>${fx((R - LHD_LEAD) / (2 * LHD_R), 1)} m</b>` : ''}</span></div>
+        <div class="adv-note"><span class="tech-f">r = ${fx(LHD_R, 2)} Ω/m</span> ${L('per conductor (from cable data sheet, verified at commissioning)', 'لكل موصل (من بيانات الكابل، يُتحقق منه عند الاستلام)')} · <span class="tech-f">R<sub>lead</sub> = ${fx(LHD_LEAD, 1)} Ω</span></div></div>`;
     } else {
       const gA = Math.exp(AN_B * (P.Ta - 20)), gH = Math.exp(AN_B * (S.Tc - 20));
       const dG = P.lh * (gH - gA);
-      h = `<div class="tech-calc"><div>${L('Analog cable: conductance change', 'الكابل التناظري: تغير الموصلية')} ΔG ∝ ℓ·(e<sup>β(T−20)</sup> − e<sup>β(Ta−20)</sup>) = ${n(P.lh, 1)} × (${n(gH, 1)} − ${n(gA, 2)}) = <b>${n(dG, 0)}</b></div>
-        <div class="tech-big">${L('Alarm when', 'إنذار عندما')} ΔG ≥ ${n(AN_D)} → ${dG >= AN_D ? pill('bad', L('ALARM', 'إنذار')) : pill('ok', `${n((dG / AN_D) * 100, 0, '%')} ${L('of threshold', 'من العتبة')}`)}</div>
+      h = `<div class="tech-calc"><div>${L('Analog cable: conductance change', 'الكابل التناظري: تغير الموصلية')} <span class="tech-f">ΔG ∝ ℓ·(e<sup>β(T−20)</sup> − e<sup>β(Ta−20)</sup>) = ${fx(P.lh, 1)} × (${fx(gH, 1)} − ${fx(gA, 2)}) = <b>${fx(dG, 0)}</b></span></div>
+        <div class="tech-big">${L('Alarm when', 'إنذار عندما')} <span class="tech-f">ΔG ≥ ${AN_D}</span> → ${dG >= AN_D ? pill('bad', L('ALARM', 'إنذار')) : pill('ok', `${n((dG / AN_D) * 100, 0, '%')} ${L('of threshold', 'من العتبة')}`)}</div>
         <div class="adv-note">${L('The hot spot position cannot be derived from resistance alone — analog LHD gives a zone alarm (use digital with locator, or fibre DTS, when location matters).', 'لا يمكن استنتاج موقع النقطة الساخنة من المقاومة وحدها — الكابل التناظري يعطي إنذار منطقة (استخدم الرقمي مع محدد الموقع أو الألياف DTS عند أهمية الموقع).')}</div></div>`;
     }
     const margin = P.rating - P.Ta;
-    if (dig) h += margin < 11 ? `<div class="adv-callout bad tech-mt">❌ ${L(`Rating ${P.rating} °C is only ${margin} °C above the max. ambient ${P.Ta} °C — NFPA 72 §17.6.2.1 requires ≥ 11 °C. Select a higher rating.`, `الدرجة ${P.rating}°م أعلى بـ ${margin}°م فقط من أقصى حرارة محيطة ${P.Ta}°م — يتطلب NFPA 72 §17.6.2.1 فرقاً ≥ 11°م. اختر درجة أعلى.`)}</div>`
-      : `<div class="adv-callout tech-mt">✅ ${L(`Rating margin ${margin} °C above max. ambient (≥ 11 °C, NFPA 72 §17.6.2.1).`, `هامش الدرجة ${margin}°م فوق أقصى حرارة محيطة (≥ 11°م، NFPA 72 §17.6.2.1).`)}</div>`;
+    if (dig) h += margin < 11 ? `<div class="adv-callout bad tech-mt">❌ ${L(`Rating ${P.rating} °C is only ${margin} °C above the max. ambient ${P.Ta} °C — NFPA 72 §17.6.2 requires ≥ 11 °C. Select a higher rating.`, `الدرجة ${P.rating}°م أعلى بـ ${margin}°م فقط من أقصى حرارة محيطة ${P.Ta}°م — يتطلب NFPA 72 §17.6.2 فرقاً ≥ 11°م. اختر درجة أعلى.`)}</div>`
+      : `<div class="adv-callout tech-mt">✅ ${L(`Rating margin ${margin} °C above max. ambient (≥ 11 °C, NFPA 72 §17.6.2).`, `هامش الدرجة ${margin}°م فوق أقصى حرارة محيطة (≥ 11°م، NFPA 72 §17.6.2).`)}</div>`;
     K.html('lCalc', h);
   }
   function tick() {
