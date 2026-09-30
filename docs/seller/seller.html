@@ -31,6 +31,7 @@
 </head>
 <body>
 <div class="cover">
+  <img src="img/asfan-logo.png" style="height:16mm;margin-bottom:8mm"/><br>
   <div class="logo">🔥</div>
   <h1>دليل البائع<br><span style="font-size:15pt;color:#5b6b7f">Seller &amp; Release Guide</span></h1>
   <div class="sub">التوأم الرقمي لأنظمة مكافحة الحريق · الإصدار 1.1</div>
@@ -48,20 +49,34 @@
 <tr><td>مولّد التراخيص</td><td><code>tools/license-generator.html</code></td><td>صفحتك الخاصة لإصدار التراخيص الشهرية والسنوية والباقات.</td></tr>
 <tr><td>المفتاح الخاص</td><td><code>private.jwk.json</code> (عندك فقط)</td><td>يوقّع التراخيص. <b>سري جداً.</b></td></tr></table>
 
-<h1>2 · بناء نسخة للبيع ونشرها (دون شهادة توقيع)</h1>
-<p>البرنامج جاهز للبيع دون شراء شهادة توقيع (Code-Signing Certificate). الفرق الوحيد أن ويندوز يعرض عند التثبيت رسالة SmartScreen الزرقاء، ويتجاوزها العميل بزرّين (القسم 4).</p>
-<h2>الطريقة أ – إصدار رسمي (Release) موصى بها</h2>
+<h1>2 · الإعداد الدائم على GitHub (مرة واحدة فقط)</h1>
+<p>الكود يبقى في مستودعك الخاص، ونضيف <b>مستودعاً عاماً للتنزيلات فقط</b> لا يحتوي أي كود. منه يحصل العميل على <b>رابط تنزيل دائم لا يتغير</b>، ومنه يقرأ البرنامج تنبيه التحديثات. كل إصدار جديد يُنشر إليه تلقائياً.</p>
+<h2>أ – إنشاء مستودع التنزيلات العام</h2>
 <ol class="steps">
-<li>افتح المستودع على GitHub ← <b>Releases</b> ← <b>Draft a new release</b>.</li>
-<li>في <b>Choose a tag</b> اكتب <code>v1.1.0</code> واختر <b>Create new tag</b>. في <b>Target</b> اختر الفرع الذي فيه آخر نسخة (حالياً <code>claude/quirky-dijkstra-ekvkkm</code>، أو <code>main</code> بعد الدمج).</li>
-<li>العنوان: <code>Fire Protection Digital Twin 1.1.0</code>، ثم اضغط <b>Publish release</b>.</li>
-<li>يبدأ البناء تلقائياً (Actions). بعد 3–4 دقائق يُرفق ملف التثبيت والنسخة المحمولة بصفحة الإصدار تلقائياً.</li>
-<li>نزّل الملفين من صفحة الإصدار (قسم <b>Assets</b>).</li>
+<li>ادخل GitHub بحساب <code>asfantrading-create</code> ← زر <b>+</b> أعلى الصفحة ← <b>New repository</b>.</li>
+<li>الاسم بالضبط: <code>firetwin-releases</code> · اختر <b>Public</b> · علّم <b>Add a README file</b> ← <b>Create repository</b>.</li>
+<li>افتح ملف README ← أيقونة القلم ✏️ ← احذف المحتوى والصق محتوى الملف <code>docs/releases-repo/README.md</code> (صفحة تنزيل جاهزة باللغتين) ← <b>Commit changes</b>.</li>
 </ol>
-<h2>الطريقة ب – من صفحة Actions مباشرة</h2>
-<ol class="steps"><li>GitHub ← <b>Actions</b> ← آخر تشغيل بعلامة ✅.</li><li>أسفل الصفحة في <b>Artifacts</b> نزّل <code>FireProtectionDigitalTwin-Windows</code> (ملف zip) وفكّ ضغطه.</li></ol>
-<div class="box tip"><b>رقم الإصدار:</b> لكل تحديث جديد ارفع رقم الإصدار في <code>package.json</code> (مثلاً 1.2.0) وأنشئ Release جديداً بالوسم <code>v1.2.0</code>. يستطيع Claude فعل ذلك لك عند الطلب.</div>
+<h2>ب – إنشاء مفتاح النشر (Token)</h2>
+<ol class="steps">
+<li>GitHub ← صورتك أعلى اليمين ← <b>Settings</b> ← <b>Developer settings</b> ← <b>Personal access tokens</b> ← <b>Fine-grained tokens</b> ← <b>Generate new token</b>.</li>
+<li>الاسم: <code>firetwin-publish</code> · المدة: سنة (أو بلا انتهاء) · <b>Repository access</b>: <b>Only select repositories</b> ← اختر <code>firetwin-releases</code>.</li>
+<li><b>Permissions</b> ← <b>Repository permissions</b> ← <b>Contents</b>: <b>Read and write</b> ← <b>Generate token</b> ← انسخ المفتاح (يظهر مرة واحدة).</li>
+</ol>
+<h2>ج – حفظ المفتاح في مستودع الكود</h2>
+<ol class="steps">
+<li>افتح مستودع الكود <code>FireFightingSystemBuilding</code> ← <b>Settings</b> ← <b>Secrets and variables</b> ← <b>Actions</b> ← <b>New repository secret</b>.</li>
+<li>الاسم بالضبط: <code>RELEASES_TOKEN</code> · القيمة: المفتاح الذي نسخته ← <b>Add secret</b>.</li>
+</ol>
+<div class="box tip"><b>انتهى الإعداد.</b> لا تحتاج إلى تكراره. إذا انتهت صلاحية المفتاح يوماً ما، أنشئ مفتاحاً جديداً وحدّث قيمة <code>RELEASES_TOKEN</code>.</div>
 
+<h2>د – نشر إصدار جديد (في كل مرة)</h2>
+<ol class="steps">
+<li>(اختياري) اكتب ملاحظات الإصدار بالعربي والإنجليزي في <code>docs/update/latest.json</code> (أو اطلب من Claude). تأكد أن رقم الإصدار في <code>package.json</code> هو الرقم الجديد.</li>
+<li>مستودع الكود ← <b>Releases</b> ← <b>Draft a new release</b> ← <b>Choose a tag</b>: اكتب <code>v1.1.0</code> (نفس الرقم) ← <b>Create new tag</b> ← <b>Target</b>: الفرع الذي فيه آخر نسخة ← <b>Publish release</b>.</li>
+<li>تلقائياً خلال 4–5 دقائق: يُبنى البرنامج، ويُنشر في مستودع التنزيلات العام مع دليلي المستخدم، ويُحدَّث ملف التنبيه <code>latest.json</code>.</li>
+<li>تحقق: افتح <code>github.com/asfantrading-create/firetwin-releases/releases</code> وتأكد من ظهور الإصدار وملفاته.</li>
+</ol>
 <h1>3 · اختبار النسخة قبل البيع</h1>
 <ol class="steps">
 <li>على جهاز ويندوز نظيف (أو جهاز صديق) شغّل ملف التثبيت واتبع القسم 4.</li>
@@ -80,14 +95,15 @@
 <p>بعدها: اختيار اللغة ← الموافقة على الاتفاقية ← مجلد التثبيت ← Install ← Finish. هذه الخطوات موجودة في دليل المستخدم (القسم 3) بالصور، فأرسل الدليل مع الرابط.</p>
 <div class="box tip"><b>لاحقاً (اختياري):</b> لإزالة رسالة SmartScreen نهائياً يمكن شراء شهادة توقيع (سنوية) أو استخدام خدمة Microsoft Trusted Signing الشهرية، ثم إعادة البناء. البرنامج لا يحتاجها ليعمل أو ليُباع.</div>
 
-<h1>5 · توزيع البرنامج على العملاء</h1>
-<p>المستودع خاص (Private)، لذلك لا يستطيع العميل التنزيل من GitHub مباشرة. انقل الملف إلى مكان تشاركه:</p>
-<table><tr><th>الطريقة</th><th>الخطوات</th></tr>
-<tr><td>Google Drive / OneDrive / Dropbox</td><td>ارفع <code>Setup.exe</code> ودليلي المستخدم إلى مجلد «FireTwin 1.1» ← مشاركة ← «أي شخص لديه الرابط – عارض» ← أرسل الرابط للعميل.</td></tr>
-<tr><td>موقع الشركة</td><td>ارفع الملفات إلى صفحة تنزيل (مثلاً asfanco.com/download) وأرسل الرابط.</td></tr>
-<tr><td>فلاشة USB</td><td>انسخ ملف التثبيت والنسخة المحمولة والأدلة (مناسب للجامعات والدورات).</td></tr></table>
-<div class="box warn">حجم ملف التثبيت حوالي 75–80 ميجابايت، فهو أكبر من حد مرفقات البريد وواتساب. أرسل <b>رابطاً</b> دائماً.</div>
-
+<h1>5 · رابط التنزيل الدائم للعميل</h1>
+<p>بعد الإعداد في القسم 2 يصبح لديك روابط <b>لا تتغير أبداً</b> وتعطي العميل دائماً <b>أحدث إصدار</b>:</p>
+<table><tr><th>الرابط</th><th>الاستخدام</th></tr>
+<tr><td><code>https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe</code></td><td><b>رابط التنزيل المباشر</b> لملف التثبيت (يبدأ التنزيل فوراً).</td></tr>
+<tr><td><code>https://github.com/asfantrading-create/firetwin-releases</code></td><td><b>صفحة التنزيل</b> باللغتين (التثبيت، النسخة المحمولة، الأدلة، الدعم).</td></tr>
+<tr><td><code>https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Portable.exe</code></td><td>النسخة المحمولة.</td></tr>
+<tr><td><code>…/releases/latest/download/FireTwin_User_Manual_AR.pdf</code> و <code>_EN.pdf</code></td><td>دليل المستخدم.</td></tr></table>
+<div class="box tip">ضع رابط صفحة التنزيل في موقعك وعروض الأسعار ورسائل واتساب. يمكن أيضاً اختصاره بخدمة مثل bit.ly أو ربطه بزر في موقعك asfanco.com.</div>
+<div class="box warn">صفحة التنزيل عامة، لكن البرنامج لا يعمل بعد الفترة التجريبية (14 يوماً) إلا بترخيص موقّع منك، فلا مشكلة في أن يكون الرابط عاماً.</div>
 <h1>6 · إصدار ترخيص لعميل (شهري / سنوي / باقة)</h1>
 <div class="flow"><div><b>1</b>طلب العميل</div><div><b>2</b>معرّف الجهاز</div><div><b>3</b>المولّد</div><div><b>4</b>ملف .lic</div><div><b>5</b>التفعيل</div><div><b>6</b>السجل</div></div>
 <ol class="steps">
@@ -122,24 +138,19 @@
 <li>إذا تسرّب المفتاح: يمكن توليد مفتاح جديد وإعادة بناء البرنامج، لكن كل التراخيص القديمة ستتوقف ويجب إعادة إصدارها للعملاء.</li>
 </ul>
 
-<h1>8 · نشر تحديث جديد وتنبيه العملاء تلقائياً</h1>
-<p>كل نسخة من الإصدار 1.1.0 فما فوق تتحقق عند التشغيل (إذا كان الجهاز متصلاً بالإنترنت) من ملف صغير اسمه <code>latest.json</code>، فإذا وجدت إصداراً أحدث يظهر للعميل شريط أخضر «يتوفر إصدار جديد» مع زر «ما الجديد» وزر «تنزيل». البرنامج يبحث عن الملف في هذين العنوانين بالترتيب:</p>
-<table><tr><th>#</th><th>العنوان</th></tr>
-<tr><td>1</td><td><code>https://asfanco.com/firetwin/latest.json</code> (موقع شركتك – موصى به)</td></tr>
-<tr><td>2</td><td><code>https://raw.githubusercontent.com/asfantrading-create/firetwin-releases/main/latest.json</code> (مستودع GitHub عام للإصدارات فقط – احتياطي)</td></tr></table>
-<ol class="steps">
-<li>ابنِ الإصدار الجديد (القسم 2) برقم أعلى، مثلاً 1.2.0.</li>
-<li>ارفع ملف التثبيت الجديد إلى مكان عام، مثلاً <code>https://asfanco.com/firetwin/FireProtectionDigitalTwin-Setup-1.2.0.exe</code>.</li>
-<li>أنشئ ملف <code>latest.json</code>: يستطيع Claude تجهيزه لك، أو بالأمر <code>node tools/make-update-manifest.mjs --url &lt;رابط الملف&gt; --en "ملاحظة|ملاحظة" --ar "ملاحظة|ملاحظة"</code>. نموذج جاهز في <code>docs/update/latest.json</code>.</li>
-<li>ارفع <code>latest.json</code> إلى <code>asfanco.com/firetwin/</code> (استبدل القديم). من اللحظة التالية يرى كل عميل يفتح البرنامج التنبيه.</li>
-<li>لتحديث <b>إلزامي</b> (مثلاً إصلاح مهم) اجعل <code>"mandatory": true</code> أو ضع <code>"minVersion"</code> فلا يستطيع العميل تأجيله.</li>
-</ol>
-<div class="box warn"><b>مهم:</b> التنبيه يعمل فقط في النسخ التي تحتوي الميزة (1.1.0 فما فوق). وزّع على العملاء الإصدار 1.1.0 أو أحدث من البداية.</div>
-
+<h1>8 · تنبيه العملاء بالتحديثات (تلقائي)</h1>
+<p>كل نسخة من الإصدار 1.1.0 فما فوق تقرأ عند التشغيل (إذا كان الجهاز متصلاً بالإنترنت) الملف <code>latest.json</code> من مستودع التنزيلات العام، فإذا وجدت إصداراً أحدث يظهر للعميل شريط أخضر <b>«يتوفر إصدار جديد»</b> مع زري <b>«ما الجديد»</b> و<b>«تنزيل»</b>.</p>
+<ul>
+<li>عند نشر أي إصدار جديد (القسم 2-د) يُحدَّث الملف <b>تلقائياً</b>، فلا تحتاج لفعل شيء آخر.</li>
+<li>ملاحظات التحديث التي يراها العميل تُكتب في <code>docs/update/latest.json</code> قبل النشر (<code>notes.ar</code> و <code>notes.en</code>).</li>
+<li>لتحديث <b>إلزامي</b> (إصلاح مهم): اجعل <code>"mandatory": true</code> أو ارفع <code>"minVersion"</code> فلا يظهر زر «لاحقاً».</li>
+<li>احتياطياً يقرأ البرنامج أيضاً <code>https://asfanco.com/firetwin/latest.json</code> إن رفعته إلى موقعك.</li>
+</ul>
+<div class="box warn"><b>مهم:</b> التنبيه يعمل فقط في النسخ 1.1.0 فما فوق — لذلك وزّع على العملاء هذه النسخة أو أحدث من البداية.</div>
 <h1>9 · التحديثات والدعم</h1>
 <ol class="steps">
-<li>بعد أي تحديث للبرنامج أنشئ Release جديداً (القسم 2) وارفع الملف الجديد مكان القديم في رابط التنزيل.</li>
-<li>أبلغ العملاء: «نزّلوا النسخة الجديدة وشغّلوا ملف التثبيت» — يبقى الترخيص والنتائج كما هي.</li>
+<li>بعد أي تحديث للبرنامج انشر إصداراً جديداً (القسم 2-د) — يتحدّث رابط التنزيل الدائم وتنبيه العملاء تلقائياً.</li>
+<li>العميل يرى «يتوفر إصدار جديد»، ينزّل ويثبّت فوق القديم — يبقى الترخيص والنتائج كما هي.</li>
 <li>للدعم اطلب دائماً: معرّف الجهاز، رقم الإصدار (Help ← About)، وصورة المشكلة.</li>
 </ol>
 <h2>قائمة فحص قبل كل عملية بيع</h2>
@@ -153,12 +164,12 @@
 <h1 class="en">Seller guide – English summary</h1>
 <div class="en">
 <ol>
-<li><b>Build a release (no certificate needed):</b> GitHub → Releases → Draft a new release → tag <code>v1.1.0</code> on the latest branch → Publish. The workflow attaches <code>Setup</code> and <code>Portable</code> .exe files in ~3–4 minutes (or download them from Actions → Artifacts).</li>
+<li><b>One-time setup:</b> create the public repository <code>firetwin-releases</code> (paste <code>docs/releases-repo/README.md</code> as its README), create a fine-grained token with Contents read/write on it, and save it as the secret <code>RELEASES_TOKEN</code> in the code repository.</li><li><b>Publish a version (no certificate needed):</b> Releases → Draft a new release → tag <code>v1.1.0</code> (= package.json version) → Publish. The workflow builds and publishes to the public repository and updates <code>latest.json</code>.</li><li><b>Permanent link:</b> <code>https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe</code></li>
 <li><b>Test</b> on a clean Windows PC: trial, activation with a test key, locked parts, the ❓ user manual.</li>
 <li><b>SmartScreen:</b> customers click <i>More info → Run anyway</i> (browsers: <i>Keep</i>). A code-signing certificate is optional and can be added later.</li>
-<li><b>Distribute</b> through a Google Drive / OneDrive / website link or USB — the file (~80 MB) is too large for e-mail/WhatsApp attachments; the GitHub repository is private.</li>
+
 <li><b>License a customer:</b> open <code>license-generator.html</code> → private key → customer data → monthly / yearly / custom → optional Machine ID → package (Full, Sprinklers &amp; pumps, Smart fire alarm, Special hazards, Basic awareness or Custom selection of facilities, training scenes, Smart Lab modules and pages) → Generate → download <code>.lic</code> → send with the download link and manual. Renew or upgrade with <i>Reuse</i> in the ledger.</li>
-<li><b>Update notice:</b> upload the new installer and a new <code>latest.json</code> (see <code>docs/update/latest.json</code>, <code>tools/make-update-manifest.mjs</code>) to <code>https://asfanco.com/firetwin/</code> — every copy from 1.1.0 on shows “A new version is available” at start-up. Set <code>"mandatory": true</code> for required updates.</li>
+<li><b>Update notice:</b> automatic — every copy from 1.1.0 on reads <code>latest.json</code> from the public repository and shows “A new version is available”. Edit the notes in <code>docs/update/latest.json</code> before tagging; <code>"mandatory": true</code> for required updates.</li>
 <li><b>Protect</b> <code>private.jwk.json</code>: two offline backups, never share or commit it.</li>
 </ol></div>
 </body>
