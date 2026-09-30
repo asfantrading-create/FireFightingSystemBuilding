@@ -608,9 +608,9 @@ function renderBat(body, ctx) {
       <div class="tl-f"><span>${L('Standby capacity', 'سعة الاستعداد')}</span><code>C<sub>s</sub> = I<sub>q</sub> × t<sub>s</sub> = ${fx(c.standbyA, 3)} A × ${st.standbyH} h = <b>${fx(c.standbyAh, 2)} Ah</b></code></div>
       <div class="tl-f"><span>${L('Alarm capacity', 'سعة الإنذار')}</span><code>C<sub>a</sub> = I<sub>a</sub> × t<sub>a</sub> = ${fx(c.alarmA, 3)} A × ${c.alarmMin}/60 h = <b>${fx(c.alarmAh, 2)} Ah</b></code></div>
       <div class="tl-f"><span>${L('With safety margin', 'مع هامش الأمان')}</span><code>C = (C<sub>s</sub> + C<sub>a</sub>) × ${fx(1 + st.margin / 100, 2)} = ${fx(c.base, 2)} × ${fx(1 + st.margin / 100, 2)} = <b>${fx(c.required, 2)} Ah</b></code></div>
-      <div class="tl-f"><span>${L('Battery selected', 'البطارية المختارة')}</span><code>${L('next standard size ≥', 'أقرب مقاس قياسي ≥')} ${fx(c.required, 2)} Ah → <b>2 × 12 V ${c.pick} Ah</b> ${L('in series (24 V)', 'على التوالي (24 فولت)')}</code></div>
+      <div class="tl-f"><span>${L('Next standard size, 2 in series', 'أقرب مقاس قياسي، اثنتان على التوالي')}</span><code>≥ ${fx(c.required, 2)} Ah → <b>2 × 12 V ${c.pick} Ah</b> (24 V)</code></div>
       <div class="tl-f"><span>${L('Charger check (48 h)', 'فحص الشاحن (48 ساعة)')}</span><code>I<sub>ch</sub> ≥ I<sub>q</sub> + 1.2·(C<sub>s</sub>+C<sub>a</sub>)/48 = ${fx(c.standbyA, 3)} + 1.2×${fx(c.base, 2)}/48 = <b>${fx(c.chargerReq, 2)} A</b> ${c.chargerOk ? '≤' : '>'} ${fx(st.charger, 1)} A ${pill(c.chargerOk)}</code></div>
-      <div class="adv-note" style="margin-top:8px">${L('Cross-check with the panel quick estimate (loop devices + NAC only, 5 min):', 'مقارنة مع التقدير السريع للوحة (أجهزة الحلقة ودوائر التنبيه فقط، 5 دقائق):')} ${num(quick.ah, 2, 'Ah')} → ${n(quick.pick + ' Ah')}. ${c.voice ? L('The cause & effect matrix drives VOICE EVACUATION, so the alarm period is 15 min.', 'مصفوفة السبب والنتيجة تشغّل الإخلاء الصوتي، لذلك فترة الإنذار 15 دقيقة.') : ''}</div>`;
+      <div class="adv-note" style="margin-top:8px">${L('Cross-check with the panel quick estimate (loop devices + NAC only, 5 min):', 'مقارنة مع التقدير السريع للوحة (أجهزة الحلقة ودوائر التنبيه فقط، 5 دقائق):')} ${n(`${fx(quick.ah, 2)} Ah → ${quick.pick} Ah`)}. ${c.voice ? L('The cause & effect matrix drives VOICE EVACUATION, so the alarm period is 15 min.', 'مصفوفة السبب والنتيجة تشغّل الإخلاء الصوتي، لذلك فترة الإنذار 15 دقيقة.') : ''}</div>`;
     $('btVis').innerHTML = batterySvg(c);
     drawChart(c);
   }
@@ -883,7 +883,7 @@ function nacTask(el, ctx) {
 
 // ═════════════════════════════════════════ 4. SLC
 const SLC_DEF = { cable: 'mm1.5', auto: true, length: 600, pf: 150, loopV: 24, vmin: 17, maxR: 40, maxC: 0.5, maxA: 0.5, maxBetween: 32 };
-const TYPE_COL = { smoke: '#2563eb', heat: '#ea580c', multi: '#7c3aed', mcp: '#dc2626', flow: '#0891b2', tamper: '#ca8a04', relay: '#16a34a', iso: '#0f172a' };
+const TYPE_COL = { smoke: '#2563eb', heat: '#ea580c', multi: '#7c3aed', mcp: '#dc2626', flow: '#0891b2', tamper: '#ca8a04', relay: '#16a34a', iso: '#64748b' };
 function renderSlc(body, ctx) {
   const sys = ctx.sys;
   const st = { ...SLC_DEF, ...store.get('tools.slc', {}) };

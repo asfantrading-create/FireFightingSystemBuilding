@@ -12,7 +12,7 @@ const card = (title, inner, cls = '', right = '') => `<div class="card ${cls}"><
 const rng = (id, label, min, max, step, val, unit = '') => `<label class="adv-range"><span class="lbl"><span>${label}</span><b><span id="${id}V">${val}</span>${unit ? ' ' + unit : ''}</b></span><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"></label>`;
 const chk = (id, label, on = false) => `<label class="tech-chk"><input type="checkbox" id="${id}" ${on ? 'checked' : ''}><span>${label}</span></label>`;
 const seg = (id, opts, val) => `<div class="tech-seg" id="${id}">${opts.map(([v, l]) => `<button type="button" data-v="${v}" class="${String(v) === String(val) ? 'on' : ''}">${l}</button>`).join('')}</div>`;
-const sstat = (id, label, unit = '') => stat(label, `<span id="${id}">—</span>`, unit).replace('class="adv-stat ', `id="${id}S" class="adv-stat `);
+const sstat = (id, label, unit = '') => stat(label, `<span id="${id}" dir="auto">—</span>`, unit).replace('class="adv-stat ', `id="${id}S" class="adv-stat `);
 const ul = (items) => `<ul class="tech-ul">${items.map((x) => `<li>${x}</li>`).join('')}</ul>`;
 const explain = (how, keys) => `<div class="adv-grid c2 tech-explain">${card('⚙️ ' + L('How it works', 'مبدأ العمل'), ul(how))}${card('🛠️ ' + L('Installation & commissioning — key points', 'التركيب والاختبار والاستلام — نقاط أساسية'), ul(keys))}</div>`;
 const lay = (scene, side) => `<div class="tech-lay"><div class="tech-main">${scene}</div><aside class="tech-side">${side}</aside></div>`;
@@ -40,7 +40,7 @@ function kit(root) {
   const attr = (id, a, v) => { const e = $(id); if (e) e.setAttribute(a, v); };
   const log = (id, t, msg, cls = 'info') => {
     const e = $(id); if (!e) return;
-    e.insertAdjacentHTML('afterbegin', `<div class="${cls}"><span class="t">${mmssT(t)}</span>${msg}</div>`);
+    e.insertAdjacentHTML('afterbegin', `<div class="${cls}" dir="auto"><span class="t">${mmssT(t)}</span>${msg}</div>`);
     while (e.children.length > 40) e.lastElementChild.remove();
   };
   return { $, onRange, onSeg, onChk, txt, html, st, attr, log };
@@ -233,7 +233,7 @@ function tabVesda(root) {
     K.$('vFlow').style.animationDuration = `${clamp(3 / Math.max(0.2, NET.vLead), 0.25, 8).toFixed(2)}s`;
     // table
     K.$('vTbl').innerHTML = `<table class="adv-table"><thead><tr><th>${L('Hole', 'الفتحة')}</th><th class="num">${L('Distance', 'المسافة')}</th><th class="num">${L('Flow share', 'حصة التدفق')}</th><th class="num">${L('Transport', 'زمن النقل')}</th><th>${L('Status', 'الحالة')}</th></tr></thead><tbody>${NET.holes.map((h) => {
-      const st = h.w === 0 ? pill('bad', L('no sample', 'لا عينة')) : h.T > 120 ? pill('bad', '> 120 s') : h.T > 90 ? pill('warn', '≤ 120 s') : pill('ok', '≤ 90 s');
+      const st = h.w === 0 ? pill('bad', L('no sample', 'لا عينة')) : h.T > 120 ? pill('bad', `<span class="tech-n">&gt; 120 s</span>`) : h.T > 90 ? pill('warn', `<span class="tech-n">≤ 120 s</span>`) : pill('ok', `<span class="tech-n">≤ 90 s</span>`);
       return `<tr><td>H${h.k + 1}${h.k === NH - 1 ? ` <small class="tech-mut">(${L('end cap', 'النهاية')})</small>` : ''}</td><td class="num">${h.d.toFixed(1)} m</td><td class="num">${NET.Q ? ((h.q / NET.Q) * 100).toFixed(1) : 0} %</td><td class="num">${fx(h.T, 1)} s</td><td>${st}</td></tr>`;
     }).join('')}</tbody></table>`;
     const mt = NET.maxT;
@@ -432,14 +432,14 @@ function beamPlan(P) {
   const bad = P.sp > 18 || lastEdge > P.sp / 2 + 0.01;
   return {
     cnt, lastEdge, bad,
-    svg: `<svg viewBox="0 0 320 200" class="adv-svg tech-svg tech-plan">
+    svg: `<svg viewBox="0 0 320 212" class="adv-svg tech-svg tech-plan">
     <defs><pattern id="bPrismP" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#cbd5e1"/><path d="M0 0 L3 3" stroke="#475569" stroke-width=".6"/></pattern></defs>
-    <rect width="320" height="200" rx="8" fill="#0f1720"/>
+    <rect width="320" height="212" rx="8" fill="#0f1720"/>
     <rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="#1a2430" stroke="#94a3b8" stroke-width="2"/>
     ${bands}${lines}
     <line x1="${x0 + w + 10}" y1="${y0}" x2="${x0 + w + 10}" y2="${y0 + (P.sp / 2) * sy}" stroke="#fbbf24"/><text x="${x0 + w + 13}" y="${y0 + (P.sp / 4) * sy + 3}" font-size="8.5" fill="#fbbf24">${(P.sp / 2).toFixed(1)}</text>
     ${cnt > 1 ? `<line x1="${x0 + w / 2}" y1="${y0 + (P.sp / 2) * sy}" x2="${x0 + w / 2}" y2="${y0 + (P.sp * 1.5) * sy}" stroke="#fbbf24" stroke-dasharray="2 2"/><text x="${x0 + w / 2 + 4}" y="${y0 + P.sp * sy + 3}" font-size="9" fill="#fbbf24">S = ${P.sp} m</text>` : ''}
-    <text x="${x0 + w / 2}" y="${y0 + h + 16}" text-anchor="middle" font-size="9.5" fill="#94a3b8">${L('Roof plan', 'مخطط السقف')} · ${P.dist} m × ${W} m · ${cnt} ${L('beams', 'أشعة')}</text>
+    <text x="${x0 + w / 2}" y="${y0 + h + 16}" text-anchor="middle" font-size="9.5" fill="#94a3b8">${L(`Roof plan — ${cnt} beams`, `مخطط السقف — ${cnt} أشعة`)}</text><text x="${x0 + w / 2}" y="${y0 + h + 30}" text-anchor="middle" font-size="9.5" fill="#94a3b8">${P.dist} m × ${W} m</text>
     <text x="${x0 + w / 2}" y="13" text-anchor="middle" font-size="9.5" fill="${bad ? '#f87171' : '#86efac'}">${bad ? L('spacing / wall distance exceeded', 'تجاوز التباعد / المسافة من الجدار') : L('coverage OK', 'التغطية سليمة')}</text>
   </svg>`,
   };
@@ -925,8 +925,8 @@ function tabLhd(root) {
     let pa = '';
     for (let l = 0.5; l <= 20; l += 0.25) { const T = 20 + Math.log(AN_D / l + gA) / AN_B; pa += `${pa ? 'L' : 'M'}${tx(l).toFixed(1)} ${ty(clamp(T, 20, 200)).toFixed(1)} `; }
     let grid = '';
-    for (let T = 20; T <= 200; T += 30) grid += `<line x1="${x0}" y1="${ty(T)}" x2="${x0 + w}" y2="${ty(T)}" stroke="${GRID}"/><text x="${x0 - 5}" y="${ty(T) + 3}" text-anchor="end" font-size="9" fill="${TICK}">${T}</text>`;
-    for (let l = 0; l <= 20; l += 5) grid += `<text x="${tx(l)}" y="${y0 + h + 13}" text-anchor="middle" font-size="9" fill="${TICK}">${l}</text>`;
+    for (let T = 20; T <= 200; T += 30) grid += `<line x1="${x0}" y1="${ty(T)}" x2="${x0 + w}" y2="${ty(T)}" stroke="${GRID}"/><text x="${x0 - 5}" y="${ty(T) + 3}" text-anchor="end" font-size="11" fill="${TICK}">${T}</text>`;
+    for (let l = 0; l <= 20; l += 5) grid += `<text x="${tx(l)}" y="${y0 + h + 13}" text-anchor="middle" font-size="11" fill="${TICK}">${l}</text>`;
     const cx = tx(clamp(P.lh, 0, 20)), cy = ty(clamp(S.Tc, 20, 200));
     K.html('lCurve', `<svg viewBox="0 0 ${W} ${H}" class="adv-svg tech-svg">${grid}
       <rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="none" stroke="${TICK}" stroke-opacity=".5"/>
@@ -934,11 +934,11 @@ function tabLhd(root) {
       <line x1="${x0}" y1="${ty(P.rating)}" x2="${x0 + w}" y2="${ty(P.rating)}" stroke="#ef4444" stroke-width="2.2" stroke-dasharray="7 4"/>
       <line x1="${x0}" y1="${ty(P.Ta)}" x2="${x0 + w}" y2="${ty(P.Ta)}" stroke="#0ea5e9" stroke-width="1.2" stroke-dasharray="2 3"/>
       <circle cx="${cx}" cy="${cy}" r="6" fill="${S.alarm ? '#ef4444' : '#22c55e'}" stroke="#fff" stroke-width="1.5"/>
-      <text x="${x0 + w - 4}" y="${ty(P.rating) - 5}" text-anchor="end" font-size="9.5" fill="#ef4444" font-weight="700">${L('digital', 'رقمي')} ${P.rating} °C</text>
-      <text x="${tx(2.2)}" y="${ty(clamp(20 + Math.log(AN_D / 2 + gA) / AN_B, 20, 200)) - 6}" font-size="9.5" fill="#a855f7" font-weight="700">${L('analog alarm curve', 'منحنى إنذار تناظري')}</text>
-      <text x="${x0 + w - 4}" y="${ty(P.Ta) - 4}" text-anchor="end" font-size="9" fill="#0ea5e9">${L('ambient', 'المحيط')}</text>
-      <text x="${x0 + w / 2}" y="${H - 2}" text-anchor="middle" font-size="9.5" fill="${TICK}">${L('heated length (m)', 'الطول المسخّن (م)')}</text>
-      <text x="10" y="${y0 + h / 2}" font-size="9.5" fill="${TICK}" transform="rotate(-90 10 ${y0 + h / 2})" text-anchor="middle">°C</text></svg>
+      <text x="${x0 + w - 4}" y="${ty(P.rating) - 5}" text-anchor="end" font-size="11.5" fill="#ef4444" font-weight="700">${L('digital', 'رقمي')} ${P.rating} °C</text>
+      <text x="${tx(2.2)}" y="${ty(clamp(20 + Math.log(AN_D / 2 + gA) / AN_B, 20, 200)) - 6}" font-size="11.5" fill="#a855f7" font-weight="700">${L('analog alarm curve', 'منحنى إنذار تناظري')}</text>
+      <text x="${x0 + w - 4}" y="${ty(P.Ta) - 4}" text-anchor="end" font-size="11" fill="#0ea5e9">${L('ambient', 'المحيط')}</text>
+      <text x="${x0 + w / 2}" y="${H - 2}" text-anchor="middle" font-size="11.5" fill="${TICK}">${L('heated length (m)', 'الطول المسخّن (م)')}</text>
+      <text x="10" y="${y0 + h / 2}" font-size="11.5" fill="${TICK}" transform="rotate(-90 10 ${y0 + h / 2})" text-anchor="middle">°C</text></svg>
       <div class="adv-note">${L('Digital cable alarms at its rating regardless of length. Analog cable alarms on temperature × length: ~99 °C over 1 m, ~70 °C over 10 m — the dot is the current hot spot.', 'يعطي الكابل الرقمي إنذاراً عند درجته بغض النظر عن الطول. أما التناظري فيعتمد على الحرارة × الطول: ~99°م على 1 م، ~70°م على 10 م — النقطة تمثل النقطة الساخنة الحالية.')}</div>`);
   }
   function calc() {
@@ -1310,7 +1310,7 @@ function preSvg() {
     <rect x="70" y="386" width="10" height="10" fill="#334155"/><rect x="190" y="386" width="10" height="10" fill="#334155"/>
     <text x="135" y="368" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1f2937">${L('AIR COMPRESSOR', 'ضاغط الهواء')}</text>
   </g>
-  <path d="M135 312 V230 H330" stroke="#e2e8f0" stroke-width="3" fill="none"/>
+  <path d="M210 356 H249 V240 M266 230 H330" stroke="#e2e8f0" stroke-width="3" fill="none"/>
   <g filter="url(#pSh)"><rect x="232" y="220" width="34" height="20" rx="3" fill="#0f766e" stroke="#5eead4"/><text x="249" y="234" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ecfeff">AMD</text></g>
   <text x="249" y="214" text-anchor="middle" font-size="8.5" fill="#99f6e4">${L('air maint. device', 'جهاز تنظيم الهواء')}</text>
   <path d="M290 230 l8 -5 v10 z" fill="#e2e8f0"/>

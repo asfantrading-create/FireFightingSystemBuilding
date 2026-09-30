@@ -37,7 +37,7 @@ const svg = (id, w, h, body, cls = '') => `<svg class="adv-svg inst-svg ${cls}" 
 
 // ───────────────────────── diagrams
 function svgDetSpacing(S) {
-  const id = 'ids', sc = 20, R = 0.7 * S, ox = 250, oy = 150;
+  const id = 'ids', sc = 12.5, R = 0.7 * S, ox = 250, oy = 150;
   const half = (S / 2) * sc;
   const pts = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([a, b]) => [ox + a * half, oy + b * half]);
   return svg(id, 500, 300, `
@@ -55,19 +55,19 @@ function svgWalls() {
   const id = 'iwl';
   return svg(id, 500, 250, `
     <rect x="30" y="40" width="440" height="16" fill="url(#${id}c)"/><rect x="30" y="56" width="18" height="170" fill="url(#${id}c)"/>
-    <text class="tx" x="250" y="34" text-anchor="middle" font-size="12" font-weight="700">${esc(L('Ceiling', 'السقف'))}</text>
-    <text class="tx" x="26" y="150" font-size="12" font-weight="700" transform="rotate(-90 26 150)" text-anchor="middle">${esc(L('Wall', 'الجدار'))}</text>
-    <rect x="48" y="56" width="${0.3 * 280}" height="${0.3 * 280 * 0.5}" fill="#fecaca" opacity=".55"/>
-    <text x="70" y="88" font-size="11" fill="#b91c1c" font-weight="700">✗</text>
-    ${detSide(165, 56, 1.3)}
-    ${dim(id, 48, 110, 165, 110, '≥ 0.1 m (4 in)', { color: '#16a34a', off: 16 })}
-    ${detSide(62, 125, 0.9).replace('translate(62 125)', 'translate(62 132) rotate(-90)')}
-    ${dim(id, 96, 56, 96, 128, '0.1–0.3 m', { color: '#16a34a', off: 8 })}
-    <text class="mut" x="104" y="160" font-size="11">${esc(L('Sidewall mounting: top of detector 0.1–0.3 m below the ceiling', 'التركيب على الجدار: أعلى الكاشف 0.1–0.3 م تحت السقف'))}</text>
-    <line x1="330" y1="56" x2="330" y2="200" stroke="#2563eb" stroke-dasharray="4 4"/>
-    ${spkSide(id, 330, 56, 72)}
-    ${dim(id, 48, 200, 330, 200, L('sprinkler: 0.1 – 2.3 m (½ S)', 'رشاش: 0.1 – 2.3 م (½ S)'), { color: '#2563eb', off: 16 })}
-    <text class="mut" x="250" y="240" text-anchor="middle" font-size="11">NFPA 72 §17.7.3.2.1 · NFPA 13 §10.2.5.2–10.2.5.3</text>`);
+    <text class="tx" x="250" y="32" text-anchor="middle" font-size="12" font-weight="700">${esc(L('Ceiling', 'السقف'))}</text>
+    <text class="tx" x="20" y="150" font-size="12" font-weight="700" transform="rotate(-90 20 150)" text-anchor="middle">${esc(L('Wall', 'الجدار'))}</text>
+    <path d="M48 56 h26 L48 82 z" fill="#ef4444" opacity=".35"/>
+    <text x="52" y="70" font-size="10" font-weight="800" fill="#b91c1c">✗</text>
+    <g transform="translate(48 88) rotate(-90)">${detSide(0, 0, 0.8)}</g>
+    ${dim(id, 78, 56, 78, 74, '0.1–0.3 m', { color: '#16a34a', off: 8, size: 11 })}
+    ${detSide(210, 56, 1.3)}
+    ${dim(id, 48, 128, 210, 128, '≥ 0.1 m (4 in)', { color: '#16a34a', off: -8 })}
+    <text class="mut" x="58" y="152" font-size="10.5">${esc(L('Wall-mounted: top of detector 0.1–0.3 m below the ceiling', 'على الجدار: أعلى الكاشف 0.1–0.3 م تحت السقف'))}</text>
+    <line x1="400" y1="56" x2="400" y2="198" stroke="#2563eb" stroke-dasharray="4 4"/>
+    ${spkSide(id, 400, 56, 72)}
+    ${dim(id, 48, 198, 400, 198, L('sprinkler: 0.1 – 2.3 m (½ S)', 'رشاش: 0.1 – 2.3 م (½ S)'), { color: '#2563eb', off: -8 })}
+    <text class="mut" x="250" y="238" text-anchor="middle" font-size="11">NFPA 72 §17.7.3.2.1 · NFPA 13 §10.2.5.2–10.2.5.3</text>`);
 }
 function svgBeamPocket() {
   const id = 'ibp';
@@ -80,7 +80,7 @@ function svgBeamPocket() {
     <path d="M114 214 q6 -18 12 -4 q4 -14 10 2" fill="#f97316"/>
     ${detSide(120, 58, 1.1)}${detSide(370, 58, 1.1)}
     <text x="120" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">✓ ${esc(L('alarm', 'إنذار'))}</text>
-    <text x="370" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">✗ ${esc(L('smoke never arrives', 'لا يصل الدخان'))}</text>
+    <text x="370" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">✗ ${esc(L('smoke never arrives', 'لا يصل الدخان'))}</text>
     ${dim(id, 285, 58, 285, 130, 'd = 0.5 m', { color: '#dc2626', off: 8 })}
     ${dim(id, 460, 58, 460, 220, 'H = 3.0 m', { color: '#2563eb', off: -8 })}
     <text class="tx" x="250" y="160" text-anchor="middle" font-size="12.5" font-weight="700">d / H = 17 % &gt; 10 % → ${esc(L('each pocket = separate area', 'كل جيب = منطقة مستقلة'))}</text>
@@ -95,7 +95,7 @@ function svgDiffuser() {
     ${[[0, -1], [1, 0], [0, 1], [-1, 0]].map(([a, b]) => `<path d="M${cx + a * 32} ${cy + b * 32} l${a * 44} ${b * 44}" stroke="#38bdf8" stroke-width="3" marker-end="url(#${id}a)" style="color:#38bdf8" opacity=".85"/>`).join('')}
     ${detSym(cx + 150, cy - 50, true)}${detSym(cx + 70, cy + 40, false)}
     ${dim(id, cx + 26, cy + 95, cx + 110, cy + 95, '0.9 m (3 ft)', { color: '#d97706', off: 16 })}
-    <text class="mut" x="${cx}" y="${cy - 36}" text-anchor="middle" font-size="11" font-weight="700">${esc(L('SUPPLY', 'إمداد'))}</text>
+    <text class="mut" x="${cx + 32}" y="${cy + 44}" font-size="10.5" font-weight="700">${esc(L('SUPPLY', 'إمداد'))}</text>
     <text x="${cx + 164}" y="${cy - 64}" font-size="11" font-weight="700" fill="#16a34a">✓</text>
     <text x="${cx + 84}" y="${cy + 56}" font-size="11" font-weight="700" fill="#dc2626">✗ 0.45 m</text>
     <text class="mut" x="250" y="250" text-anchor="middle" font-size="11">NFPA 72 §17.7.4.3 — ${esc(L('measured from the diffuser edge; the jet dilutes and deflects smoke', 'تُقاس من حافة الناشر؛ التيار يخفف الدخان ويحرفه'))}</text>`);
@@ -128,21 +128,21 @@ function svgDeflector(mm) {
     <text class="mut" x="250" y="190" text-anchor="middle" font-size="11">NFPA 13 §10.2.6.1.1 — ${esc(L('deflector 1–12 in below a smooth unobstructed ceiling', 'العاكس 1–12 بوصة تحت سقف أملس غير معاق'))}</text>`);
 }
 function svgBeamRule(A, B) {
-  const id = 'ibr', y0 = 50, sc = 120, bx = 300, bw = 42, bd = 0.5 * sc;
+  const id = 'ibr', y0 = 44, sc = 200, bx = 560, bw = 70, bd = 0.5 * sc;
   const allowed = allowedB(A), ok = B <= allowed;
-  const sx = bx - A * sc, yd = y0 + bd - (B / 1000) * sc;
-  return svg(id, 500, 230, `
-    <rect x="20" y="${y0 - 18}" width="460" height="18" fill="url(#${id}c)"/>
+  const sx = bx - A * sc, yd = y0 + bd - (B / 1000) * sc, yb = y0 + bd;
+  return svg(id, 800, 290, `
+    <rect x="20" y="${y0 - 18}" width="760" height="18" fill="url(#${id}c)"/>
     <rect x="${bx}" y="${y0}" width="${bw}" height="${bd}" fill="url(#${id}c)" stroke="#9ca3af"/>
-    <line x1="20" y1="${y0 + bd}" x2="480" y2="${y0 + bd}" stroke="#94a3b8" stroke-dasharray="3 4"/>
-    <path d="M${sx} ${yd + 3} L${bx + bw + 150} ${y0 + bd + 110} L${sx - 150} ${y0 + bd + 110} Z" fill="#38bdf8" opacity=".12"/>
-    <path d="M${sx} ${yd + 3} L${bx} ${y0 + bd}" stroke="${ok ? '#16a34a' : '#dc2626'}" stroke-width="1.6" stroke-dasharray="5 4"/>
-    ${!ok ? `<path d="M${bx} ${y0 + bd} L${bx + bw + 140} ${y0 + bd + 110 * 0.9} L${bx + bw} ${y0 + bd} Z" fill="#475569" opacity=".25"/><text x="${bx + bw + 20}" y="${y0 + bd + 50}" font-size="11.5" font-weight="700" fill="#dc2626">${esc(L('shadow', 'منطقة ظل'))}</text>` : ''}
+    <line x1="20" y1="${yb}" x2="780" y2="${yb}" stroke="#94a3b8" stroke-dasharray="3 4"/>
+    <path d="M${sx} ${yd + 3} L${sx + 230} ${yb + 110} L${sx - 230} ${yb + 110} Z" fill="#38bdf8" opacity=".13"/>
+    <path d="M${sx} ${yd + 3} L${bx} ${yb}" stroke="${ok ? '#16a34a' : '#dc2626'}" stroke-width="1.6" stroke-dasharray="5 4"/>
+    ${!ok ? `<path d="M${bx} ${yb} L${bx + (bx - sx) * 110 / Math.max(8, yb - yd) + 0} ${yb + 110} L${bx + bw + 60} ${yb + 110} L${bx + bw} ${yb} Z" fill="#475569" opacity=".22"/><text x="${bx + bw + 14}" y="${yb + 30}" font-size="12" font-weight="700" fill="#dc2626">${esc(L('spray shadow', 'منطقة ظل الرش'))}</text>` : ''}
     ${spkSide(id, sx, y0, yd)}
-    ${dim(id, sx, y0 + bd + 24, bx, y0 + bd + 24, `A = ${A.toFixed(2)} m`, { color: '#2563eb', off: 16 })}
-    ${dim(id, sx - 22, yd, sx - 22, y0 + bd, `B = ${B} mm`, { color: ok ? '#16a34a' : '#dc2626', off: -8 })}
-    <text x="480" y="${y0 + bd + 70}" text-anchor="end" font-size="12.5" font-weight="800" fill="${ok ? '#16a34a' : '#dc2626'}">${ok ? '✓' : '✗'} B ${ok ? '≤' : '&gt;'} ${allowed} mm ${esc(L('allowed at this A', 'المسموح عند هذه المسافة'))}</text>
-    <text class="mut" x="250" y="222" text-anchor="middle" font-size="11">NFPA 13 Table 10.2.7.2.1.3 — ${esc(L('standard-spray pendent / upright', 'رشاش قياسي متدلٍّ / قائم'))}</text>`);
+    ${dim(id, sx, yb + 26, bx, yb + 26, `A = ${A.toFixed(2)} m`, { color: '#2563eb', off: 18 })}
+    ${dim(id, sx - 26, yd, sx - 26, yb, `B = ${B} mm`, { color: ok ? '#16a34a' : '#dc2626', off: -8 })}
+    <text x="780" y="${yb + 92}" text-anchor="end" font-size="14" font-weight="800" fill="${ok ? '#16a34a' : '#dc2626'}">${ok ? '✓' : '✗'} B ${ok ? '≤' : '&gt;'} ${allowed} mm ${esc(L('allowed at this A', 'المسموح عند هذه المسافة'))}</text>
+    <text class="mut" x="400" y="280" text-anchor="middle" font-size="11.5">NFPA 13 Table 10.2.7.2.1.3 — ${esc(L('standard-spray pendent / upright', 'رشاش قياسي متدلٍّ / قائم'))}</text>`);
 }
 
 // ───────────────────────── quiz situations
@@ -236,7 +236,7 @@ const m = {
     const spkTab = () => `<div class="adv-grid c2">
       <div class="card"><h3>📐 ${esc(L('Sprinkler spacing & protection area (light hazard)', 'تباعد الرشاشات ومساحة الحماية (خطورة خفيفة)'))}</h3>
         <div id="instSpkSp">${svgSpkSpacing(ui.sS, ui.sL)}</div><div id="instSpkSt">${spkState()}</div>
-        <div class="adv-form"><div class="adv-range"><div class="lbl">S (${esc(L('along branch', 'على طول الفرع'))}) <b id="instSSv">${ui.sS.toFixed(1)} m</b></div><input type="range" id="instSS" min="1.5" max="5.5" step="0.1" value="${ui.sS}"></div>
+        <div class="inst-sliders"><div class="adv-range"><div class="lbl">S (${esc(L('along branch', 'على طول الفرع'))}) <b id="instSSv">${ui.sS.toFixed(1)} m</b></div><input type="range" id="instSS" min="1.5" max="5.5" step="0.1" value="${ui.sS}"></div>
         <div class="adv-range"><div class="lbl">L (${esc(L('between branches', 'بين الفروع'))}) <b id="instSLv">${ui.sL.toFixed(1)} m</b></div><input type="range" id="instSL" min="1.5" max="5.5" step="0.1" value="${ui.sL}"></div></div>
         <p class="adv-note">${esc(L('NFPA 13 Table 10.2.4.2.1(a): light hazard, standard-spray: ≤ 20.9 m² (225 ft²) per head, S and L ≤ 4.6 m (15 ft); heads ≥ 1.8 m (6 ft) apart so one does not cold-solder its neighbour; ≤ ½ S from walls and ≥ 0.1 m (4 in).', 'NFPA 13 الجدول 10.2.4.2.1(a): خطورة خفيفة، رش قياسي: ≤ 20.9 م² (225 قدم²) لكل رشاش، وS وL ≤ 4.6 م (15 قدماً)؛ والرشاشات ≥ 1.8 م (6 أقدام) كي لا يبرد أحدها جاره؛ و≤ ½ S من الجدران و≥ 0.1 م.'))}</p></div>
       <div class="card"><h3>📏 ${esc(L('Deflector distance below the ceiling', 'بُعد العاكس تحت السقف'))}</h3>
@@ -244,7 +244,7 @@ const m = {
         <div class="adv-range"><div class="lbl">${esc(L('Deflector below ceiling', 'العاكس تحت السقف'))} <b id="instDv">${ui.defl} mm</b></div><input type="range" id="instD" min="0" max="450" step="5" value="${ui.defl}"></div></div>
       <div class="card" style="grid-column:1/-1"><h3>🚧 ${esc(L('Obstructions: the beam rule', 'العوائق: قاعدة العارضة'))}</h3>
         <div class="adv-row"><div class="grow"><div id="instBR">${svgBeamRule(ui.A, ui.B)}</div>
-          <div class="adv-form"><div class="adv-range"><div class="lbl">A — ${esc(L('distance to beam side', 'المسافة إلى جانب العارضة'))} <b id="instAv">${ui.A.toFixed(2)} m</b></div><input type="range" id="instA" min="0.1" max="1.8" step="0.05" value="${ui.A}"></div>
+          <div class="inst-sliders"><div class="adv-range"><div class="lbl">A — ${esc(L('distance to beam side', 'المسافة إلى جانب العارضة'))} <b id="instAv">${ui.A.toFixed(2)} m</b></div><input type="range" id="instA" min="0.1" max="1.8" step="0.05" value="${ui.A}"></div>
           <div class="adv-range"><div class="lbl">B — ${esc(L('deflector above beam bottom', 'العاكس فوق أسفل العارضة'))} <b id="instBv">${ui.B} mm</b></div><input type="range" id="instB" min="0" max="480" step="5" value="${ui.B}"></div></div></div>
           <div class="inst-table"><div class="adv-scroll"><table class="adv-table" id="instBRT"></table></div></div></div>
         <p class="adv-note">${esc(L('Applies to beams, ducts, lights and any continuous obstruction near the ceiling. For isolated obstructions (columns, pipes) use the "three-times rule": ≥ 3 × the obstruction width, max. 0.6 m (24 in). Obstructions wider than 1.2 m (4 ft) need sprinklers below them.', 'تنطبق على العوارض والمجاري والإنارة وأي عائق مستمر قرب السقف. وللعوائق المنفردة (أعمدة، أنابيب) تُطبق "قاعدة الأضعاف الثلاثة": ≥ 3 × عرض العائق وبحد أقصى 0.6 م (24 بوصة). والعوائق الأعرض من 1.2 م (4 أقدام) تحتاج رشاشات أسفلها.'))}</p></div>

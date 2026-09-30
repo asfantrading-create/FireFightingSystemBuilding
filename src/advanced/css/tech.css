@@ -109,3 +109,4 @@
 @keyframes tech-spin { to { transform: rotate(360deg); } }
 .tech-fire-pulse > circle { animation: tech-blink 1s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .tech [class*="tech-"] { animation: none !important; } }
+.tech-tt th { position: static; }

@@ -65,3 +65,4 @@
 .tl .tl-bad { color: var(--alarm); font-weight: 700; }
 .tl .tl-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 14px; align-items: start; }
 .tl .tl-col { display: flex; flex-direction: column; min-width: 0; }
+.tl .tl-edit select { direction: ltr; }

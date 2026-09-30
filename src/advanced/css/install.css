@@ -44,3 +44,4 @@
 .inst-exp { font-size: .84em; line-height: 1.5; color: var(--muted); }
 .inst-q.right .inst-exp b { color: var(--ok); } .inst-q.wrong .inst-exp b { color: var(--alarm); }
 @media (max-width: 1300px) { .inst-hero { flex-direction: column; align-items: stretch; } .inst-hero-art { max-width: none; flex-basis: auto; } .inst-table { flex-basis: 200px; } }
+.inst-sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; margin: 8px 0; }

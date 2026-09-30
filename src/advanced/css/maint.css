@@ -83,3 +83,5 @@
 .mt-tbl td.num { white-space: nowrap; }
 .mt-g-a .btn { white-space: nowrap; }
 .mt td.num { white-space: nowrap; }
+.mt svg { direction: ltr; }
+.mt-plan tbody tr.opt:not(.on) td { background: color-mix(in srgb, var(--ok) 9%, transparent); }

@@ -31,13 +31,14 @@ const PRE = [
   { id: 'earth', unit: 'kΩ', inst: 'kohm', defect: 'ground', name: T('Earth-fault monitor: loop resistance to earth (panel reading)', 'مراقب التسرّب الأرضي: مقاومة الحلقة للأرضي (قراءة اللوحة)'), crit: '≥ 50 kΩ', ok: (v) => v >= 50, read: (s) => (s.ground ? 3.9 : Infinity), ref: 'NFPA 72 §12.6' },
   { id: 'eol1', unit: 'kΩ', inst: 'kohm', defect: 'nac', name: T('NAC1 end-of-line resistor', 'مقاومة نهاية الخط NAC1'), crit: '4.7 kΩ ± 5 %', ok: (v) => v >= 4.46 && v <= 4.94, read: (s) => nacR(s.nacFaults.NAC1), ref: 'NFPA 72 §12.6' },
   { id: 'eol2', unit: 'kΩ', inst: 'kohm', defect: 'nac', name: T('NAC2 end-of-line resistor', 'مقاومة نهاية الخط NAC2'), crit: '4.7 kΩ ± 5 %', ok: (v) => v >= 4.46 && v <= 4.94, read: (s) => nacR(s.nacFaults.NAC2), ref: 'NFPA 72 §12.6' },
-  { id: 'scan', unit: 'dev', inst: 'scan', name: T('Loop scan: devices answering = devices programmed, no double address', 'مسح الحلقة: الأجهزة المستجيبة = الأجهزة المبرمجة، دون عناوين مكررة'), crit: '= programmed', ok: (v, s) => v === Object.keys(s.config).length && !s.devices.some((d) => d.dup), read: (s) => s.devices.filter((d) => d.comm && !d.dup && d.fault !== 'dead').length, ref: 'NFPA 72 §14.4.1' },
+  { id: 'scan', unit: 'dev', inst: 'scan', name: T('Loop scan: devices answering = devices programmed, no double address', 'مسح الحلقة: الأجهزة المستجيبة = الأجهزة المبرمجة، دون عناوين مكررة'), crit: '= programmed', critAr: '= عدد المبرمج', ok: (v, s) => v === Object.keys(s.config).length && !s.devices.some((d) => d.dup), read: (s) => s.devices.filter((d) => d.comm && !d.dup && d.fault !== 'dead').length, ref: 'NFPA 72 §14.4.1' },
   { id: 'spacing', unit: 'm', inst: 'tape', name: T('Max. smoke-detector spacing, smooth ceiling (corridor)', 'أقصى تباعد لكواشف الدخان – سقف أملس (الممر)'), crit: '≤ 9.1 m', ok: (v) => v <= 9.1, read: (s) => maxSpacing(s), ref: 'NFPA 72 §17.7.4.2.3' },
   { id: 'labels', kind: 'check', name: T('Device labels & addresses match the as-built drawings', 'ملصقات الأجهزة وعناوينها مطابقة لمخططات التنفيذ'), ref: 'NFPA 72 §7.5.5' },
   { id: 'caps', kind: 'check', name: T('Detector dust covers removed after construction clean-up', 'إزالة أغطية الغبار عن الكواشف بعد تنظيف الموقع'), ref: 'NFPA 72 §17.7.1.11' },
   { id: 'backup', kind: 'check', name: T('Site-specific software (panel program) backed up, copy stored at the panel', 'حفظ نسخة احتياطية من برنامج اللوحة وتخزينها بجانب اللوحة'), ref: 'NFPA 72 §14.6.1.2' },
-  { id: 'battDate', unit: 'mo', inst: 'label', name: T('Battery date code – age at acceptance', 'رمز تاريخ البطارية – العمر عند الاستلام'), crit: '≤ 6 months', ok: (v) => v <= 6, read: () => 3, ref: 'NFPA 72 §10.6.10.1.1' },
+  { id: 'battDate', unit: 'mo', inst: 'label', name: T('Battery date code – age at acceptance', 'رمز تاريخ البطارية – العمر عند الاستلام'), crit: '≤ 6 months', critAr: '≤ 6 أشهر', ok: (v) => v <= 6, read: () => 3, ref: 'NFPA 72 §10.6.10.1.1' },
 ];
+const critTx = (p) => (p.critAr ? L(p.crit, p.critAr) : p.crit);
 function nacR(f) { return f === 'eol' || f === 'open' ? Infinity : f === 'short' ? 0.02 : 4.7; }
 function maxSpacing(s) {
   const c = s.devices.filter((d) => d.floor === 'G' && d.room === 'cor' && d.type === 'smoke').map((d) => d.x).sort((a, b) => a - b);
@@ -181,8 +182,8 @@ function tabPre(body, ctx) {
     const st = S.pre[p.id] || {}; const v = parseVal(st.v);
     if (Number.isNaN(v)) return L('Not a number – enter the reading (use OL for over-range)', 'ليست قيمة رقمية – أدخل القراءة (OL لتجاوز المدى)');
     const good = p.ok(v, sys);
-    if (st.verdict === 'pass' && !good) return L(`Reading ${fmt(v, 2)} ${p.unit} does NOT meet ${p.crit} — cannot be passed`, `القراءة ${fmt(v, 2)} ${p.unit} لا تحقق ${p.crit} — لا يمكن قبولها`);
-    if (st.verdict === 'fail' && good) return L(`Reading meets ${p.crit} — why fail it?`, `القراءة تحقق ${p.crit} — لماذا الرفض؟`);
+    if (st.verdict === 'pass' && !good) return L(`Reading ${fmt(v, 2)} ${p.unit} does NOT meet ${p.crit} — cannot be passed`, `القراءة ${fmt(v, 2)} ${p.unit} لا تحقق ${critTx(p)} — لا يمكن قبولها`);
+    if (st.verdict === 'fail' && good) return L(`Reading meets ${p.crit} — why fail it?`, `القراءة تحقق ${critTx(p)} — لماذا الرفض؟`);
     return L('Entered value does not match the instrument reading — re-measure', 'القيمة المدخلة لا تطابق قراءة الجهاز — أعد القياس');
   };
   const draw = () => {
@@ -205,11 +206,11 @@ function tabPre(body, ctx) {
             const st = S.pre[p.id] || {}; const s = states[i];
             const ic = { ok: '<span class="cm-st ok">✓</span>', pend: '<span class="cm-st pend">○</span>', flag: '<span class="cm-st bad">!</span>', defect: '<span class="cm-st warn">✕</span>' }[s];
             if (p.kind === 'check') {
-              return `<tr class="cm-${s}"><td>${ic}</td><td><b>${esc(tr(p.name))}</b><div class="cm-ref">${esc(p.ref)}</div></td>
+              return `<tr class="cm-row-${s}"><td>${ic}</td><td><b>${esc(tr(p.name))}</b><div class="cm-ref">${esc(p.ref)}</div></td>
                 <td colspan="3"><label class="cm-chk"><input type="checkbox" data-chk="${p.id}" ${st.checked ? 'checked' : ''}> ${L('Verified on site', 'تم التحقق في الموقع')}</label></td></tr>`;
             }
-            return `<tr class="cm-${s}"><td>${ic}</td>
-              <td><b>${esc(tr(p.name))}</b><div class="cm-ref"><span class="cm-crit">${esc(p.crit)}</span> · ${esc(p.ref)}</div>
+            return `<tr class="cm-row-${s}"><td>${ic}</td>
+              <td><b>${esc(tr(p.name))}</b><div class="cm-ref"><span class="cm-crit">${esc(critTx(p))}</span> · ${esc(p.ref)}</div>
                 ${s === 'flag' ? `<div class="cm-flag">⚠ ${esc(flagText(p))}</div>` : ''}${s === 'defect' ? `<div class="cm-defect">✕ ${L('Defect recorded – rectify before functional testing', 'تم تسجيل عيب – يُصلح قبل الاختبار الوظيفي')}</div>` : ''}</td>
               <td><div class="cm-valin"><input data-val="${p.id}" value="${esc(st.v ?? '')}" placeholder="—"><span>${esc(p.unit === 'dev' ? L('dev.', 'جهاز') : p.unit === 'mo' ? L('months', 'شهر') : p.unit)}</span></div></td>
               <td><button class="btn sm" data-meas="${p.id}">📏 ${L('Measure', 'قياس')}</button></td>
@@ -328,7 +329,7 @@ function makeRunner(sys, onChange) {
         }
       } else {
         const e = findEv(d, exp, j.t0, false) || (j.preEv ? findEv(d, exp, 0, true) : null);
-        if (e) { j.found = j.preEv ? 0 : el; j.obs = obsFor(d); endDev(d); j.phase = 'clear'; j.clearT = sys.time; }
+        if (e) { j.found = j.preEv ? 0 : Math.max(0.2, e.t - j.t0); j.obs = obsFor(d); endDev(d); j.phase = 'clear'; j.clearT = sys.time; }
         else if (el > j.limit) { j.obs = obsFor(d); endDev(d); j.phase = 'clear'; j.clearT = sys.time; }
       }
     } else if (j.phase === 'clear') {
@@ -390,7 +391,7 @@ function tabDev(body, ctx, runner) {
           <div class="cm-bytype-g">${Object.keys(CORRECT).map((t) => `<label class="adv-field">${esc(typeName(t))}<select data-bytype="${t}">${methodOpts('')}</select></label>`).join('')}</div>
         </details>
         <div class="adv-scroll cm-scroll"><table class="adv-table cm-dt">
-          <thead><tr><th class="num">${L('Addr', 'العنوان')}</th><th>${L('Floor', 'الطابق')}</th><th>${L('Location', 'الموقع')}</th><th>${L('Programmed type', 'النوع المبرمج')}</th><th>${L('Test method', 'طريقة الاختبار')}</th><th></th><th>${L('Result', 'النتيجة')}</th><th class="num">${L('Resp. s', 'الاستجابة ث')}</th><th>${L('Diagnosis', 'التشخيص')}</th></tr></thead>
+          <thead><tr><th class="num">${L('Addr', 'العنوان')}</th><th>${L('Location', 'الموقع')}</th><th>${L('Programmed type', 'النوع المبرمج')}</th><th>${L('Test method', 'طريقة الاختبار')}</th><th></th><th>${L('Result', 'النتيجة')}</th><th class="num">${L('Resp.', 'الاستجابة')}</th><th>${L('Diagnosis', 'التشخيص')}</th></tr></thead>
           <tbody id="cmRows"></tbody></table></div>
       </div>
       <div class="cm-side">
@@ -435,17 +436,17 @@ function tabDev(body, ctx, runner) {
       const t = S.tests[d.id]; const busy = runner.job?.id === d.id;
       const pt = progType(sys, d);
       return `<tr class="${busy ? 'cm-busy' : ''} ${t ? 'cm-r-' + t.result : ''}" data-row="${d.id}">
-        <td class="num"><b>${pad3(d.addr)}</b></td><td>${esc(d.floor)}</td>
-        <td><div class="cm-loc">${esc(tr(d.label))}</div></td>
+        <td class="num"><b>${pad3(d.addr)}</b></td>
+        <td><div class="cm-loc"><span class="cm-fl">${esc(d.floor)}F</span>${esc(tr(d.label))}</div></td>
         <td><span class="cm-typ"><span class="cm-sym cm-sym-${pt}">${DEVICE_TYPES[pt]?.sym || '?'}</span>${esc(shortName(pt))}</span></td>
         <td><select class="cm-msel" data-meth="${d.id}">${methodOpts(S.methods[d.id] || t?.method || '')}</select>
           ${t && !t.methodOk ? `<div class="cm-merr">⚠ ${L('Wrong method', 'طريقة خاطئة')}</div>` : ''}</td>
         <td><button class="btn sm ${t ? '' : 'primary'}" data-test="${d.id}" ${runner.job ? 'disabled' : ''}>${busy ? '⏳' : t ? '↻' : '▶'} ${L('Test', 'اختبار')}</button></td>
         <td>${resultPill(t)}${t?.obs?.length ? `<div class="cm-obs" title="${esc(t.obs.map(tr).join(' | '))}">${esc(tr(t.obs[0]))}</div>` : ''}</td>
-        <td class="num">${t?.rt != null ? t.rt.toFixed(1) : '—'}</td>
+        <td class="num">${t?.rt != null ? t.rt.toFixed(1) + ' s' : '—'}</td>
         <td>${t ? `<select class="cm-dsel ${t.diag && t.diag !== 'none' ? 'set' : ''}" data-diag="${d.id}">${DIAGS.map((k) => `<option value="${k === 'none' ? '' : k}" ${(t.diag || '') === (k === 'none' ? '' : k) ? 'selected' : ''}>${esc(diagName(k))}</option>`).join('')}</select>` : ''}</td>
       </tr>`;
-    }).join('') || `<tr><td colspan="9" class="adv-note">${L('No devices match the filter.', 'لا توجد أجهزة مطابقة للتصفية.')}</td></tr>`;
+    }).join('') || `<tr><td colspan="8" class="adv-note">${L('No devices match the filter.', 'لا توجد أجهزة مطابقة للتصفية.')}</td></tr>`;
     tb.querySelectorAll('[data-meth]').forEach((s) => { s.onchange = () => { S.methods[s.dataset.meth] = s.value; save(); }; });
     tb.querySelectorAll('[data-test]').forEach((b) => {
       b.onclick = () => {
