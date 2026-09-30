@@ -171,7 +171,7 @@ const common = (s) => ({
 
 // ───────────────────────── Scene 1: walk-through & pressure sequence
 export const pumpRoomScene = {
-  id: 'pumproom', icon: '🛠️', video: '4sedsM8qPRA',
+  id: 'pumproom', icon: '🛠️',
   title: T('Fire pump room walk-through & start sequence', 'جولة في غرفة مضخات الحريق وتسلسل التشغيل'),
   summary: T('NFPA 20 pump room: tank, suction, jockey / electric / diesel pumps, controllers, relief valve, test loop. Operate the demand and watch the pressure-switch sequence.', 'غرفة مضخات وفق NFPA 20: الخزان والسحب ومضخات الجوكي والكهربائية والديزل والمتحكمات وصمام التنفيس ودائرة الاختبار. تحكّم بالطلب وراقب تسلسل مفاتيح الضغط.'),
   build() {
@@ -215,7 +215,7 @@ export const pumpRoomScene = {
 
 // ───────────────────────── Scene 2: annual flow test
 export const flowTestScene = {
-  id: 'flowtest', icon: '📈', video: '4sedsM8qPRA',
+  id: 'flowtest', icon: '📈',
   title: T('Annual fire pump flow test (NFPA 25)', 'اختبار التدفق السنوي لمضخة الحريق (NFPA 25)'),
   summary: T('Run the pump at churn, 100 % and 150 % of rated flow through the flow-meter loop, record net pressure and compare with the acceptance curve.', 'شغّل المضخة عند الإغلاق و100% و150% من التدفق المقنن عبر دائرة العداد، وسجّل الضغط الصافي وقارنه بمنحنى القبول.'),
   build() {

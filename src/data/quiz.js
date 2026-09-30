@@ -564,7 +564,7 @@ export const QUIZ = [
     explain: { en: 'The annual flow test compares results with the original acceptance curve (must be within 95%).', ar: 'يقارن اختبار التدفق السنوي النتائج بمنحنى القبول الأصلي (ويجب أن تكون ضمن 95%).' }
   },
 
-  // ================= Questions drawn from the client training videos (see docs/VIDEO_COVERAGE.md)
+  // ================= Additional questions
 
   // ---------------- fire-extinguishers
   {
@@ -676,7 +676,7 @@ export const QUIZ = [
     explain: { en: 'Wet chemical saponifies the hot oil into a soapy foam that seals and cools it. (The course calls it a "potassium powder", but Class K units are wet chemical.)', ar: 'يحوّل الكيميائي الرطب الزيت الساخن إلى رغوة صابونية تعزله وتبرّده. (تسميه الدورة «مسحوق بوتاسيوم»، لكن طفايات الفئة K كيميائية رطبة.)' }
   },
 
-  // ---------------- clean-agent (video mbIollEju5w)
+  // ---------------- clean-agent
   {
     id: 'q55', topic: 'clean-agent',
     q: { en: 'FM-200, IP units: server room 35 × 28 × 13 ft, minimum 70 °F (S = 1.885 + 0.0046·T ft³/lb), design concentration 7%. Agent weight?', ar: 'FM-200 بالوحدات الإمبراطورية: غرفة خوادم 35 × 28 × 13 قدماً، وأدنى حرارة 70 °ف (S = 1.885 + 0.0046·T قدم³/رطل)، وتركيز تصميمي 7%. ما وزن الغاز؟' },
@@ -703,7 +703,7 @@ export const QUIZ = [
   },
   {
     id: 'q57', topic: 'clean-agent',
-    q: { en: 'The video\'s software used 9% × 1.2 = 10.8% FM-200. Why is this unacceptable in a normally occupied server room?', ar: 'استخدم البرنامج في الفيديو تركيز FM-200 ‏9% × 1.2 = 10.8%. لماذا لا يُقبل ذلك في غرفة خوادم مشغولة عادةً؟' },
+    q: { en: 'A design software used 9% × 1.2 = 10.8% FM-200. Why is this unacceptable in a normally occupied server room?', ar: 'استخدم أحد برامج التصميم تركيز FM-200 ‏9% × 1.2 = 10.8%. لماذا لا يُقبل ذلك في غرفة خوادم مشغولة عادةً؟' },
     options: [
       { en: 'It is below the extinguishing concentration', ar: 'لأنه أقل من تركيز الإطفاء' },
       { en: 'It would take more than 10 s to discharge', ar: 'لأن تصريفه يستغرق أكثر من 10 ثوانٍ' },
@@ -750,7 +750,7 @@ export const QUIZ = [
     explain: { en: 'Class A: 1.2 × extinguishing; Class B: 1.3 × extinguishing; Class C: at least 1.35 × the Class A extinguishing concentration.', ar: 'الفئة A: ‏1.2 × تركيز الإطفاء؛ والفئة B: ‏1.3 × تركيز الإطفاء؛ والفئة C: لا يقل عن 1.35 × تركيز الإطفاء للفئة A.' }
   },
 
-  // ---------------- fire-pumps (videos 4sedsM8qPRA, yZxJw9A-KoU, GUmI_lH9cAc)
+  // ---------------- fire-pumps
   {
     id: 'q61', topic: 'fire-pumps',
     q: { en: 'What is the job of the jockey pump?', ar: 'ما وظيفة مضخة الجوكي؟' },
@@ -812,7 +812,7 @@ export const QUIZ = [
     explain: { en: 'Split-case pumps cover up to about 25,000 gpm and 500 ft head; end-suction pumps are smaller (≈ 4000 gpm, 150 ft in HVAC use).', ar: 'تغطي المضخات منقسمة الغلاف حتى نحو 25,000 جالون/دقيقة وضاغط 500 قدم، بينما مضخات السحب الطرفي أصغر (≈ 4000 جالون/دقيقة و150 قدماً في التكييف).' }
   },
 
-  // ---------------- sprinklers (videos T3LonjZStqs, K3SudP-9Xe0, GUmI_lH9cAc)
+  // ---------------- sprinklers
   {
     id: 'q66', topic: 'sprinklers',
     q: { en: 'A sprinkler glass bulb of 3 mm diameter normally indicates:', ar: 'تدل أمبولة الرشاش الزجاجية بقطر 3 مم عادةً على:' },
@@ -1024,7 +1024,7 @@ export const QUIZ = [
     explain: { en: 'Larger new systems must be hydraulically calculated unless 50 psi residual is available at the highest sprinkler at the tabulated flow; extra hazard is not permitted.', ar: 'يجب حساب الأنظمة الجديدة الأكبر هيدروليكياً ما لم يتوفر ضغط متبقٍّ 50 رطل/بوصة² عند أعلى رشاش بالتدفق المجدول، ولا يُسمح بها للخطورة العالية.' }
   },
 
-  // ---------------- hydraulic-calcs (video Y7iMQxipEAs)
+  // ---------------- hydraulic-calcs
   {
     id: 'q83', topic: 'hydraulic-calcs',
     q: { en: 'Light hazard, density 0.10 gpm/ft², 155 ft² per sprinkler, K = 5.3. Pressure required at the most remote sprinkler?', ar: 'خطورة خفيفة، كثافة 0.10 جالون/دقيقة/قدم²، و155 قدم² لكل رشاش، وK = 5.3. ما الضغط المطلوب عند الرشاش الأبعد؟' },
@@ -1047,7 +1047,7 @@ export const QUIZ = [
       { en: '3.0 psi', ar: '3.0 رطل/بوصة²' }
     ],
     answer: 2,
-    explain: { en: '3 ft × 0.433 psi/ft = 1.30 psi (1 psi = 2.31 ft). Multiplying 3 × 2.31 = 6.93 is the error made in the video.', ar: '3 أقدام × 0.433 رطل/بوصة²/قدم = 1.30 رطل/بوصة² (1 رطل/بوصة² = 2.31 قدم). أما ضرب 3 × 2.31 = 6.93 فهو الخطأ الوارد في الفيديو.' }
+    explain: { en: '3 ft × 0.433 psi/ft = 1.30 psi (1 psi = 2.31 ft). Multiplying 3 × 2.31 = 6.93 is a common error.', ar: '3 أقدام × 0.433 رطل/بوصة²/قدم = 1.30 رطل/بوصة² (1 رطل/بوصة² = 2.31 قدم). أما ضرب 3 × 2.31 = 6.93 فهو خطأ شائع.' }
   },
   {
     id: 'q85', topic: 'hydraulic-calcs',

@@ -109,13 +109,12 @@ function exitTraining(reload = true) {
 function renderTrainingPage() {
   const L = (en, ar) => (getLang() === 'ar' ? ar : en);
   const esc = (x) => String(x).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
-  $('trainInner').innerHTML = `<h1>${t('tabTrain')}</h1><p class="lead">${L('Interactive 3D training scenes based on the course videos: explore every component, then perform the procedure step by step on live physics. Results are saved to the Classroom.',
-    'مشاهد تدريبية تفاعلية ثلاثية الأبعاد مبنية على فيديوهات الدورة: استكشف كل مكوّن ثم نفّذ الإجراء خطوة بخطوة على فيزياء حية. تُحفظ النتائج في الصف الدراسي.')}</p>
+  $('trainInner').innerHTML = `<h1>${t('tabTrain')}</h1><p class="lead">${L('Interactive 3D training scenes on real fire-protection equipment: explore every component, then perform the procedure step by step on live physics. Results are saved to the Classroom.',
+    'مشاهد تدريبية تفاعلية ثلاثية الأبعاد على معدات حماية من الحريق حقيقية: استكشف كل مكوّن ثم نفّذ الإجراء خطوة بخطوة على فيزياء حية. تُحفظ النتائج في الصف الدراسي.')}</p>
     <div class="adv-promo"><span class="ic">🧠</span><div><b>${L('New: Smart Systems Lab', 'جديد: المختبر المتقدم للأنظمة الذكية')}</b><div class="muted">${L('Addressable panel, cause & effect, BMS integration, commissioning, predictive maintenance, incident command and certificates.', 'لوحة الإنذار المعنونة، السبب والنتيجة، التكامل مع BMS، الاستلام، الصيانة التنبؤية، قيادة الحوادث والشهادات.')}</div></div><button class="btn primary" id="goAdv">${L('Open the Smart Lab', 'افتح المختبر الذكي')} →</button></div>
     <div class="train-grid">${SCENES.map((sc, i) => `<div class="card train-card"><div class="ic">${sc.icon}</div><h4>${esc(tr(sc.title))}</h4>
       <p class="muted" style="font-size:.9em">${esc(tr(sc.summary))}</p>
-      <button class="btn primary" data-scene="${i}">${sceneAllowed(sc.id) ? `▶ ${L('Start', 'ابدأ')}` : `🔒 ${L('Not included in your license', 'غير مشمول في ترخيصك')}`}</button>
-      ${sc.video ? `<a class="vid" href="https://www.youtube.com/watch?v=${sc.video}" target="_blank" rel="noopener" style="margin-inline-start:8px">▶ ${L('Source video', 'الفيديو المصدر')}</a>` : ''}</div>`).join('')}</div>`;
+      <button class="btn primary" data-scene="${i}">${sceneAllowed(sc.id) ? `▶ ${L('Start', 'ابدأ')}` : `🔒 ${L('Not included in your license', 'غير مشمول في ترخيصك')}`}</button></div>`).join('')}</div>`;
   document.querySelectorAll('[data-scene]').forEach((b) => { b.onclick = () => startTraining(+b.dataset.scene); });
   $('goAdv').onclick = () => setPage('adv');
 }
@@ -399,7 +398,7 @@ function wire() {
     else if (cmd === 'report') setPage('reports');
     else if (cmd === 'license') openLicenseModal(openModal, closeModal);
     else if (cmd === 'about') {
-      openModal(`<h2>${t('appName')}</h2><p>v${appVersion} · © 2026 ASFAN Trading</p><p class="muted">${t('refDesignTip')}</p><p>NFPA 13 · 14 · 20 · 25 · 72 · 2001 · 11 · 409</p><button class="btn primary" id="mClose">${t('close')}</button>`);
+      openModal(`<img src="assets/asfan-logo.png" alt="ASFAN" style="height:40px;margin-bottom:8px"/><h2>${t('appName')}</h2><p>v${appVersion} · © 2026 ASFAN Trading</p><p class="muted">${t('refDesignTip')}</p><p>NFPA 13 · 14 · 20 · 25 · 72 · 2001 · 11 · 409</p><button class="btn primary" id="mClose">${t('close')}</button>`);
       $('mClose').onclick = closeModal;
     }
     else if (cmd.startsWith('page:')) setPage(cmd.slice(5));

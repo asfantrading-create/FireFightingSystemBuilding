@@ -361,11 +361,10 @@ const LESSON_LINK = {
 function renderLearn() {
   $('learnInner').innerHTML = `<h1>${t('learnTitle')}</h1><p class="lead">${L('Structured lessons based on NFPA 13, 14, 20, 25, 72, 2001, 11 and 409 — each one opens the matching system in the 3D twin.',
     'دروس منظمة وفق NFPA 13 و14 و20 و25 و72 و2001 و11 و409 — كل درس يفتح المنظومة المطابقة في التوأم الرقمي.')}</p>
-    <div class="lesson-list">${LESSONS.map((l, i) => `<div class="card lesson-card" data-i="${i}"><div class="ic">${l.icon}${l.video || l.sections.some((x) => x.video) ? ' <span class="vbadge">▶ YouTube</span>' : ''}</div><h4>${esc(tr(l.title))}</h4><div class="muted" style="font-size:.9em">${esc(tr(l.summary))}</div></div>`).join('')}</div>`;
+    <div class="lesson-list">${LESSONS.map((l, i) => `<div class="card lesson-card" data-i="${i}"><div class="ic">${l.icon}</div><h4>${esc(tr(l.title))}</h4><div class="muted" style="font-size:.9em">${esc(tr(l.summary))}</div></div>`).join('')}</div>`;
   document.querySelectorAll('.lesson-card').forEach((el) => { el.onclick = () => renderLesson(LESSONS[+el.dataset.i]); });
 }
 
-const videoLink = (id) => `<a class="vid" href="https://www.youtube.com/watch?v=${encodeURIComponent(id)}" target="_blank" rel="noopener">▶ ${L('Source video', 'الفيديو المصدر')}</a>`;
 
 function renderLesson(l) {
   const link = LESSON_LINK[l.id];
@@ -374,8 +373,7 @@ function renderLesson(l) {
     ${link ? `<button class="btn primary" id="tryL">🏙️ ${L('Explore in the 3D twin', 'استكشف في التوأم الرقمي')}</button>` : ''}
     <button class="btn" id="quizL">🎓 ${L('Quiz on this lesson', 'اختبار هذا الدرس')}</button>
     <h1 style="margin-top:18px">${l.icon} ${esc(tr(l.title))}</h1><p class="lead">${esc(tr(l.summary))}</p>
-    ${l.video ? videoLink(l.video) : ''}
-    ${l.sections.map((s) => `<h2>${esc(tr(s.h))}</h2>${s.video ? videoLink(s.video) : ''}<p>${esc(tr(s.p))}</p>
+    ${l.sections.map((s) => `<h2>${esc(tr(s.h))}</h2><p>${esc(tr(s.p))}</p>
       ${s.formula ? `<div class="formula">${esc(s.formula)}</div>` : ''}
       ${s.bullets ? `<ul>${s.bullets.map((b) => `<li>${esc(tr(b))}</li>`).join('')}</ul>` : ''}`).join('')}
     <h2>${L('References', 'المراجع')}</h2><ul class="refs">${(l.refs || []).map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>`;

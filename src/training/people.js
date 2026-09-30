@@ -71,7 +71,7 @@ function coverage(exts, maxTravel = 22.9) {
 }
 
 export const extinguisherScene = {
-  id: 'extinguishers', icon: '🧯', video: 'K3SudP-9Xe0',
+  id: 'extinguishers', icon: '🧯',
   title: T('Portable extinguishers: placement & PASS', 'طفايات الحريق المحمولة: التوزيع وطريقة PASS'),
   summary: T('Place 2-A:10-B:C extinguishers on a light-hazard office floor so every point is within 22.9 m (75 ft) travel distance (NFPA 10), then fight a fire using P-A-S-S.', 'وزّع طفايات 2-A:10-B:C في طابق مكاتب خفيف الخطورة بحيث لا تزيد مسافة الوصول عن 22.9 م (75 قدماً) وفق NFPA 10، ثم أطفئ حريقاً بطريقة PASS.'),
   build() {
@@ -196,7 +196,7 @@ export const extinguisherScene = {
 
 // ───────────────────────── Scene 6: hose drill
 export const hoseDrillScene = {
-  id: 'hosedrill', icon: '🧑‍🚒', video: 'zFMxvWsOZpU',
+  id: 'hosedrill', icon: '🧑‍🚒',
   title: T('Hose drill: landing valve & fire hose cabinet', 'تدريب الخرطوم: صمام الهبوط وخزانة الحريق'),
   summary: T('Two-person team: open the cabinet, run out the 65 mm hose without kinks, couple and tug-test, fit the branch nozzle, open the landing valve slowly and attack the fire at its base.', 'فريق من شخصين: افتح الخزانة، ومد خرطوم 65 مم دون التواء، واربط الوصلة واختبرها بالشد، وركّب القاذف، وافتح صمام الهبوط ببطء وهاجم قاعدة الحريق.'),
   build() {

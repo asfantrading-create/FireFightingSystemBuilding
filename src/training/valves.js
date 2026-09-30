@@ -25,7 +25,7 @@ function facp() {
 
 // ───────────────────────── Scene 3: dry-pipe valve
 export const dryPipeScene = {
-  id: 'drypipe', icon: '🧊', video: 'K3SudP-9Xe0',
+  id: 'drypipe', icon: '🧊',
   title: T('Dry-pipe valve: trip test & reset', 'صمام الأنابيب الجافة: اختبار الفصل وإعادة الضبط'),
   summary: T('Air holds the clapper closed; opening the inspector’s test lets air escape, the valve trips and water must reach the test outlet within the NFPA 13 limit. Then restore the system step by step.', 'يحفظ الهواء المصراع مغلقاً؛ فتح وصلة المفتش يسرّب الهواء فيفصل الصمام ويجب أن يصل الماء إلى المخرج ضمن حد NFPA 13. ثم أعد المنظومة للخدمة خطوة بخطوة.'),
   build() {
@@ -196,7 +196,7 @@ export const dryPipeScene = {
 
 // ───────────────────────── Scene 4: floor control riser assembly
 export const floorValveScene = {
-  id: 'floorvalve', icon: '🚿', video: 'GUmI_lH9cAc',
+  id: 'floorvalve', icon: '🚿',
   title: T('Floor control valve assembly: alarm & tamper tests', 'مجموعة صمام التحكم بالطابق: اختبار الإنذار ومفتاح العبث'),
   summary: T('Zone control valve with tamper switch, waterflow switch with retard, gauge, test-and-drain with sight glass and PRV. Run the waterflow alarm test and the valve supervisory test.', 'صمام تحكم المنطقة بمفتاح عبث، ومفتاح تدفق بمؤخّر، ومقياس، وصمام اختبار وتصريف بزجاج رؤية، وصمام خفض ضغط. نفّذ اختبار إنذار التدفق واختبار الإشراف على الصمام.'),
   build() {

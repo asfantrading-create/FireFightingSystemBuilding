@@ -65,7 +65,7 @@ function certHtml(c) {
   const rows = Object.entries(p.req).map(([k]) => `<tr><td>${esc(MODS[k].en)}</td><td style="text-align:right;direction:rtl">${esc(MODS[k].ar)}</td><td style="text-align:center;font-weight:700">${c.mods?.[k] ?? '—'}%</td></tr>`).join('');
   return `<div style="width:190mm;min-height:270mm;margin:0 auto;padding:10mm;box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif;color:#1f2937;position:relative;border:3mm solid ${p.color};outline:1mm solid #1f2937;outline-offset:-6mm;background:linear-gradient(180deg,#fff,#fbfaf6)">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:10px"><svg viewBox="0 0 40 28" width="54" height="38"><path d="M20 2 38 26H2Z" fill="none" stroke="#7c5cff" stroke-width="3"/><path d="M20 10 31 26H9Z" fill="#7c5cff" opacity=".45"/></svg><div><div style="font-weight:800;letter-spacing:.12em;font-size:15pt">ASFAN</div><div style="font-size:8pt;color:#6b7280">Fire Protection Digital Twin · Smart Systems Lab</div></div></div>
+      <div><img src="assets/asfan-logo.png" alt="ASFAN" style="height:11mm;display:block"/><div style="font-size:8pt;color:#6b7280;margin-top:1.5mm">Fire Protection Digital Twin · Smart Systems Lab</div></div>
       <div style="text-align:right;font-size:8.5pt;color:#6b7280">No. <b style="color:#111">${esc(c.no)}</b><br>${esc(c.date)}</div></div>
     <div style="text-align:center;margin-top:14mm">
       <div style="font-size:11pt;letter-spacing:.35em;color:${p.color};font-weight:800">CERTIFICATE OF COMPETENCE</div>

@@ -104,3 +104,10 @@ tests/           engine + Smart Lab tests (node --test)
 ```
 
 Support: info@asfanco.com · WhatsApp +962 77 614 0404 — © 2026 ASFAN Trading
+
+## Releases & permanent download link
+
+* Public download repository (no source code): **https://github.com/asfantrading-create/firetwin-releases** — README template in `docs/releases-repo/README.md`.
+* Pushing a tag `vX.Y.Z` (= `package.json` version) builds the app and, with the secret `RELEASES_TOKEN`, publishes the installer, portable exe and manuals there (`tools/publish-release.mjs`) and updates `latest.json` for the in-app "new version available" notice.
+* Permanent link: `https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe`
+* Full steps (Arabic/English): `docs/seller/ASFAN_Seller_Guide.pdf`.

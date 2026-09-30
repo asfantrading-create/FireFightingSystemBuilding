@@ -57,7 +57,7 @@ const HEADS = [
 ];
 
 export const sprinklerTypesScene = {
-  id: 'sprinklertypes', icon: '💧', video: '-c13S__OfMM',
+  id: 'sprinklertypes', icon: '💧',
   title: T('Sprinkler types & response race', 'أنواع الرشاشات وسباق الاستجابة'),
   summary: T('Compare pendent, upright, sidewall, concealed, recessed, ESFR and open heads, then light a t² fire under six bulbs of different temperature rating and RTI and watch which operates first.', 'قارن الرشاشات المتدلية والقائمة والجانبية والمخفية والغائرة وESFR والمفتوحة، ثم أشعل حريقاً t² تحت ستة رشاشات بدرجات حرارة ومؤشرات RTI مختلفة وشاهد أيها يعمل أولاً.'),
   build() {
@@ -172,7 +172,7 @@ export const sprinklerTypesScene = {
 // ───────────────────────── Scene 8: stair pressurization
 const FLOORS = 6, FH = 3.5, DOOR_A = 0.9 * 2.1, LEAK_A = 0.02;
 export const stairScene = {
-  id: 'stairpress', icon: '🌬️', video: 'Y7iMQxipEAs',
+  id: 'stairpress', icon: '🌬️',
   title: T('Stairwell pressurization (NFPA 92)', 'ضغط بيت الدرج (NFPA 92)'),
   summary: T('Keep smoke out of the escape stair: set the supply fan so ΔP ≥ 12.5 Pa, keep door-opening force ≤ 133 N, and see what happens when doors are opened. Q = 0.839·A·√ΔP.', 'امنع الدخان من دخول درج الهروب: اضبط مروحة الإمداد ليكون ΔP ≥ 12.5 باسكال، مع قوة فتح باب ≤ 133 نيوتن، وشاهد ما يحدث عند فتح الأبواب. Q = 0.839·A·√ΔP.'),
   build() {
@@ -276,7 +276,7 @@ export const stairScene = {
 
 // ───────────────────────── Scene 9: FM-200 room + live calculator
 export const fm200Scene = {
-  id: 'fm200room', icon: '🧪', video: 'mbIollEju5w',
+  id: 'fm200room', icon: '🧪',
   title: T('FM-200 room: design calculator & discharge sequence', 'غرفة FM-200: حاسبة التصميم وتسلسل التفريغ'),
   summary: T('Size the agent live (W = V/S × C/(100−C)) with NOAEL/LOAEL warnings, then run the release sequence: cross-zoned detection, 30 s pre-discharge, HVAC shutdown, 10 s discharge and hold.', 'احسب كمية المادة مباشرة (W = V/S × C/(100−C)) مع تحذيرات NOAEL/LOAEL، ثم نفّذ تسلسل الإطلاق: كشف متقاطع، و30 ث قبل التفريغ، وإيقاف التكييف، وتفريغ خلال 10 ث، والاحتفاظ.'),
   build() {
@@ -382,7 +382,7 @@ export const fm200Scene = {
             { text: T('Raise the concentration above 10.5 %. What is the problem for an occupied room?', 'ارفع التركيز فوق 10.5%. ما المشكلة في غرفة مشغولة؟'), button: T('', ''), choices: [
               { text: T('It exceeds the LOAEL (10.5 %) — not allowed in normally occupied spaces', 'يتجاوز LOAEL (10.5%) — غير مسموح في الأماكن المشغولة عادةً'), correct: (x) => x.C > 10.5 },
               { text: T('No problem, more agent is always safer', 'لا مشكلة، المادة الأكثر أكثر أماناً دائماً'), correct: false }],
-              explain: T('NOAEL 9 %, LOAEL 10.5 % for HFC-227ea — the video example (10.8 %) exceeded this by applying the safety factor twice.', 'NOAEL 9% وLOAEL 10.5% لمادة HFC-227ea — مثال الفيديو (10.8%) تجاوزها بسبب تطبيق معامل الأمان مرتين.') },
+              explain: T('NOAEL 9 %, LOAEL 10.5 % for HFC-227ea — a common design-software example (10.8 %) exceeded this by applying the safety factor twice.', 'NOAEL 9% وLOAEL 10.5% لمادة HFC-227ea — مثال شائع (10.8%) تجاوزها بسبب تطبيق معامل الأمان مرتين.') },
           ],
         },
         {
