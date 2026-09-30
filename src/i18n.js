@@ -11,6 +11,7 @@ const S = {
   tabData: ['Design Data', 'بيانات التصميم'],
   tabLearn: ['Learn', 'تعلّم'],
   tabTrain: ['Training', 'التدريب العملي'],
+  tabAdv: ['Smart Lab', 'المختبر الذكي'],
   tabQuiz: ['Quiz', 'اختبار'],
   tabClass: ['Classroom', 'الصف الدراسي'],
   tabReports: ['Reports', 'التقارير'],

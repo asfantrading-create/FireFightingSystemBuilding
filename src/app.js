@@ -7,6 +7,7 @@ import { t, tr, setLang, getLang } from './i18n.js';
 import { kpis, metricValue, componentDetails, mmss, fmt } from './ui/metrics.js';
 import * as Pages from './ui/pages.js';
 import { SCENES, Trainer } from './training/index.js';
+import { renderAdvanced, leaveAdvanced } from './advanced/index.js';
 import { initLicense, licenseAllowsUse, openLicenseModal, facilityAllowed, trainingAllowed, onLicenseChange } from './ui/license.js';
 
 const $ = (id) => document.getElementById(id);
@@ -78,6 +79,7 @@ function startTraining(i) {
   state.training = true;
   trainer.start(SCENES[i]);
 }
+function startTrainingById(id) { const i = SCENES.findIndex((s) => s.id === id); if (i >= 0) startTraining(i); }
 function exitTraining(reload = true) {
   if (!state.training) return;
   trainer.stop();
@@ -276,10 +278,15 @@ function closeModal() { $('modal').classList.add('hidden'); }
 // ───────────────────────── wiring
 function setPage(p) {
   if (!licenseAllowsUse() && p !== 'twin') { openLicenseModal(openModal, closeModal); return; }
+  if (state.page === 'adv' && p !== 'adv') leaveAdvanced();
   state.page = p;
   document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('active', b.dataset.page === p));
   document.querySelectorAll('.page').forEach((s) => s.classList.toggle('active', s.id === `page-${p}`));
   if (p === 'train') renderTrainingPage();
+  if (p === 'adv') {
+    if (!trainingAllowed()) { $('advInner').innerHTML = `<div style="padding:40px"><h1>🔒 ${t('tabAdv')}</h1><p>${getLang() === 'ar' ? 'المختبر الذكي غير مشمول في ترخيصك.' : 'The Smart Lab is not included in your license.'}</p></div>`; }
+    else renderAdvanced($('advInner'), { openModal, closeModal, startTraining, startTrainingById, recordResult: (r) => Pages.recordResult(r), setPage });
+  }
   Pages.show(p, ctx(), { openModal, closeModal, goTwin, startChallenge, screenshot: () => world.screenshot(), getEdits: currentEdits, setEdits });
 }
 
