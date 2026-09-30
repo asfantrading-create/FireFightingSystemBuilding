@@ -86,10 +86,10 @@ function evaluate(st) {
       [z - Z0, (o) => Math.abs(o.x - x) < SPK_WALL_MAX && o.z < z - 0.05, T('north', 'الشمالي')],
       [Z1 - z, (o) => Math.abs(o.x - x) < SPK_WALL_MAX && o.z > z + 0.05, T('south', 'الجنوبي')],
     ];
-    for (const [dist, between, name] of sides) {
-      if (dist > SPK_WALL_MAX + 1e-6 && !st.spks.some((o) => o !== r.d && between(o))) {
-        r.reasons.push({ k: 'wallmax', t: T(`${f2(dist)} m from the ${name.en} wall — max. 2.3 m (½ × 4.6 m spacing) (NFPA 13 §10.2.5.2)`, `${f2(dist)} م من الجدار ${name.ar} — الحد الأقصى 2.3 م (نصف التباعد 4.6 م) (NFPA 13 §10.2.5.2)`) });
-      }
+    const far = sides.filter(([dist, between]) => dist > SPK_WALL_MAX + 1e-6 && !st.spks.some((o) => o !== r.d && between(o)));
+    if (far.length) {
+      r.reasons.push({ k: 'wallmax', t: T(`outermost head ${far.map(([dd, , nm]) => `${f2(dd)} m from the ${nm.en} wall`).join(', ')} — max. 2.3 m (½ × 4.6 m spacing) (NFPA 13 §10.2.5.2)`,
+        `رشاش طرفي ${far.map(([dd, , nm]) => `${f2(dd)} م من الجدار ${nm.ar}`).join('، ')} — الحد الأقصى 2.3 م (نصف التباعد 4.6 م) (NFPA 13 §10.2.5.2)`) });
     }
     for (const o of st.spks) {
       if (o === r.d) continue;
@@ -363,12 +363,15 @@ export const installScene = {
     const dfTex = diffuserTexture();
     const dfMat = std(0xffffff, 0.45, 0.3, { map: dfTex });
     const diffs = new THREE.Group();
-    const flex = std(0xc8ccd0, 0.55, 0.6);
+    const flex = std(0xc8ccd0, 0.55, 0.6), plenum = new THREE.Group();
     for (const [x, z] of DIFFS) {
       diffs.add(box(0.6, 0.035, 0.6, dfMat, x, H - 0.035, z));
-      diffs.add(box(0.4, 0.25, 0.4, MAT.galv, x, H + 0.005, z));                       // plenum box
-      diffs.add(pipe([V(x, H + 0.26, z), V(x, H + 0.45, z), V(x + (x < 0 ? 1.2 : -1.0), H + 0.5, z)], 0.11, flex));
+      plenum.add(box(0.4, 0.25, 0.4, MAT.galv, x, H + 0.005, z));                      // plenum box
+      plenum.add(pipe([V(x, H + 0.26, z), V(x, H + 0.45, z), V(x + (x < 0 ? 1.2 : -1.0), H + 0.5, z)], 0.11, flex));
     }
+    // above-ceiling services are seen through the cut-away but never intercept clicks on the tiles
+    plenum.traverse((o) => { o.raycast = () => {}; });
+    root.add(plenum);
     P('diffusers', diffs, T('Supply-air diffusers (4-way, 600 × 600)', 'ناشرات هواء الإمداد (رباعية الاتجاه 600 × 600)'),
       T('High-velocity supply air dilutes smoke and blows it away from a nearby detector. Smoke detectors must be ≥ 0.9 m (3 ft) from supply-air diffusers (NFPA 72 §17.7.4.3). Devices cannot be installed in the diffuser itself.',
         'هواء الإمداد عالي السرعة يخفف الدخان ويبعده عن الكاشف القريب. يجب أن تبعد كواشف الدخان ≥ 0.9 م (3 أقدام) عن ناشرات هواء الإمداد (NFPA 72 §17.7.4.3). ولا يجوز تركيب الأجهزة في الناشر نفسه.'));
@@ -627,7 +630,7 @@ export const installScene = {
         return;
       }
       if (inRect(px, pz, BEAM, 0.02)) return api.msg('That is the beam soffit — mount devices on the ceiling in a beam pocket', 'هذا أسفل العارضة — ركّب الأجهزة على السقف داخل جيب العارضة', 'bad');
-      if (inRect(px, pz, DUCT, 0.02) && x.tool === 'spk') return api.msg('The duct runs here — a pendent head cannot be installed above it', 'المجرى يمر هنا — لا يمكن تركيب رشاش متدلٍّ فوقه', 'bad');
+      if (inRect(px, pz, DUCT, 0.02)) return api.msg('The duct runs directly below this tile — a device cannot be installed here', 'المجرى يمر أسفل هذه البلاطة مباشرة — لا يمكن تركيب جهاز هنا', 'bad');
       if (DIFFS.some((d) => inRect(px, pz, diffRect(d), 0.02))) return api.msg('That tile is a supply diffuser — choose a ceiling tile', 'هذه البلاطة ناشر هواء — اختر بلاطة سقف', 'bad');
       if (LIGHTS.some((l) => inRect(px, pz, lightRect(l), 0.02))) return api.msg('That tile is a light fitting — choose a ceiling tile', 'هذه البلاطة وحدة إنارة — اختر بلاطة سقف', 'bad');
       const list = x.tool === 'det' ? x.dets : x.spks;
