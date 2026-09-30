@@ -8,7 +8,7 @@ import { kpis, metricValue, componentDetails, mmss, fmt } from './ui/metrics.js'
 import * as Pages from './ui/pages.js';
 import { SCENES, Trainer } from './training/index.js';
 import { renderAdvanced, leaveAdvanced } from './advanced/index.js';
-import { initLicense, licenseAllowsUse, openLicenseModal, facilityAllowed, trainingAllowed, onLicenseChange } from './ui/license.js';
+import { initLicense, licenseAllowsUse, openLicenseModal, facilityAllowed, trainingAllowed, sceneAllowed, labAny, featureAllowed, onLicenseChange } from './ui/license.js';
 
 const $ = (id) => document.getElementById(id);
 const api = window.api ?? null;
@@ -63,6 +63,22 @@ function enforceLicense() {
   if (state.refFac && !facilityAllowed(state.refFac.id) && firstOk) loadFacility(firstOk, 0);
   else buildFacMenu();
   if (state.page === 'train') renderTrainingPage();
+  // tabs not included in the license show a lock
+  document.querySelectorAll('.tabs button').forEach((b) => {
+    const p = b.dataset.page;
+    b.classList.toggle('locked', p === 'adv' ? !labAny() : p === 'train' ? !trainingAllowed() : !featureAllowed(p));
+  });
+  if (state.page !== 'twin' && state.page !== 'train' && state.page !== 'adv' && !featureAllowed(state.page)) setPage('twin');
+}
+
+/** Friendly "not in your package" page with a button to the license window. */
+function lockedPage(el, title) {
+  const ar = getLang() === 'ar';
+  el.innerHTML = `<div class="locked-page"><div class="ic">🔒</div><h1>${title}</h1>
+    <p>${ar ? 'هذا الجزء غير مشمول في باقة ترخيصك الحالية. تواصل معنا لترقية الترخيص.' : 'This part is not included in your current license package. Contact us to upgrade your license.'}</p>
+    <p class="muted">info@asfanco.com · WhatsApp +962 77 614 0404</p>
+    <button class="btn primary" id="lockLic">🔑 ${ar ? 'عرض الترخيص / التفعيل' : 'View license / activate'}</button></div>`;
+  el.querySelector('#lockLic').onclick = () => openLicenseModal(openModal, closeModal);
 }
 
 // ───────────────────────── facility / scenario
@@ -72,7 +88,7 @@ function saveEdits() { try { localStorage.setItem('ftw.edits', JSON.stringify(st
 
 let trainer;
 function startTraining(i) {
-  if (!trainingAllowed()) { openLicenseModal(openModal, closeModal); return; }
+  if (!sceneAllowed(SCENES[i]?.id)) { openLicenseModal(openModal, closeModal); return; }
   state.playing = false;
   setPage('twin');
   document.getElementById('page-twin').classList.add('training');
@@ -96,7 +112,7 @@ function renderTrainingPage() {
     <div class="adv-promo"><span class="ic">🧠</span><div><b>${L('New: Smart Systems Lab', 'جديد: المختبر المتقدم للأنظمة الذكية')}</b><div class="muted">${L('Addressable panel, cause & effect, BMS integration, commissioning, predictive maintenance, incident command and certificates.', 'لوحة الإنذار المعنونة، السبب والنتيجة، التكامل مع BMS، الاستلام، الصيانة التنبؤية، قيادة الحوادث والشهادات.')}</div></div><button class="btn primary" id="goAdv">${L('Open the Smart Lab', 'افتح المختبر الذكي')} →</button></div>
     <div class="train-grid">${SCENES.map((sc, i) => `<div class="card train-card"><div class="ic">${sc.icon}</div><h4>${esc(tr(sc.title))}</h4>
       <p class="muted" style="font-size:.9em">${esc(tr(sc.summary))}</p>
-      <button class="btn primary" data-scene="${i}">${trainingAllowed() ? `▶ ${L('Start', 'ابدأ')}` : `🔒 ${L('Not included in your license', 'غير مشمول في ترخيصك')}`}</button>
+      <button class="btn primary" data-scene="${i}">${sceneAllowed(sc.id) ? `▶ ${L('Start', 'ابدأ')}` : `🔒 ${L('Not included in your license', 'غير مشمول في ترخيصك')}`}</button>
       ${sc.video ? `<a class="vid" href="https://www.youtube.com/watch?v=${sc.video}" target="_blank" rel="noopener" style="margin-inline-start:8px">▶ ${L('Source video', 'الفيديو المصدر')}</a>` : ''}</div>`).join('')}</div>`;
   document.querySelectorAll('[data-scene]').forEach((b) => { b.onclick = () => startTraining(+b.dataset.scene); });
   $('goAdv').onclick = () => setPage('adv');
@@ -286,9 +302,11 @@ function setPage(p) {
   document.querySelectorAll('.page').forEach((s) => s.classList.toggle('active', s.id === `page-${p}`));
   if (p === 'train') renderTrainingPage();
   if (p === 'adv') {
-    if (!trainingAllowed()) { $('advInner').innerHTML = `<div style="padding:40px"><h1>🔒 ${t('tabAdv')}</h1><p>${getLang() === 'ar' ? 'المختبر الذكي غير مشمول في ترخيصك.' : 'The Smart Lab is not included in your license.'}</p></div>`; }
-    else renderAdvanced($('advInner'), { openModal, closeModal, startTraining, startTrainingById, recordResult: (r) => Pages.recordResult(r), setPage });
+    if (!labAny()) lockedPage($('advInner'), t('tabAdv'));
+    else renderAdvanced($('advInner'), { openModal, closeModal, startTraining, startTrainingById, recordResult: (r) => Pages.recordResult(r), setPage, openLicense: () => openLicenseModal(openModal, closeModal) });
   }
+  const inner = { dash: 'dashInner', data: 'dataInner', learn: 'learnInner', quiz: 'quizInner', class: 'classInner', reports: 'reportsInner' }[p];
+  if (inner && !featureAllowed(p)) { lockedPage($(inner), t({ dash: 'tabDash', data: 'tabData', learn: 'tabLearn', quiz: 'tabQuiz', class: 'tabClass', reports: 'tabReports' }[p])); Pages.show('none', ctx(), {}); return; }
   Pages.show(p, ctx(), { openModal, closeModal, goTwin, startChallenge, screenshot: () => world.screenshot(), getEdits: currentEdits, setEdits });
 }
 
@@ -363,6 +381,10 @@ function wire() {
     sp.appendChild(b);
   }
   $('licBadge').onclick = () => openLicenseModal(openModal, closeModal);
+  $('helpBtn').onclick = () => {
+    if (api?.openManual) api.openManual(getLang());
+    else { openModal(`<h2>❓ ${getLang() === 'ar' ? 'دليل المستخدم' : 'User manual'}</h2><p>${getLang() === 'ar' ? 'دليل المستخدم متوفر في البرنامج المثبّت من قائمة Help.' : 'The user manual is available in the installed program from the Help menu.'}</p><button class="btn primary" id="mClose">${t('close')}</button>`); $('mClose').onclick = closeModal; }
+  };
   $('modal').addEventListener('pointerdown', (e) => { if (e.target === $('modal') && licenseAllowsUse()) closeModal(); });
   window.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;

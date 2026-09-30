@@ -1,0 +1,21 @@
+﻿FIRE PROTECTION DIGITAL TWIN — END USER LICENSE AGREEMENT
+© 2026 ASFAN Trading. All rights reserved.
+
+1. LICENSE. ASFAN Trading grants you a non-exclusive, non-transferable right to install and use the software on the number of computers (seats) stated in your license key, for the subscription period (monthly or yearly) and the package (full program or selected parts) stated in that key. A 14-day evaluation period is included.
+2. RESTRICTIONS. You may not copy, sell, rent, sub-license, reverse-engineer, modify or remove notices from the software, and you may not share or publish license keys.
+3. EDUCATIONAL USE. The software is an educational simulator. Facility data are public information; the fire-protection systems are NFPA-based reference designs for teaching. The software is not a substitute for professional engineering design, approval by the authority having jurisdiction, or manufacturer documentation. Do not use its results for real designs without independent verification by a qualified engineer.
+4. NO WARRANTY. The software is provided "as is" without warranties of any kind. To the maximum extent permitted by law, ASFAN Trading is not liable for any indirect or consequential damages arising from its use.
+5. TERMINATION. The license ends automatically when the subscription expires or if you breach this agreement. After expiry the program stops working until a new key is activated.
+6. SUPPORT. info@asfanco.com · WhatsApp +962 77 614 0404
+
+----------------------------------------------------------------------
+
+التوأم الرقمي لأنظمة مكافحة الحريق — اتفاقية ترخيص المستخدم النهائي
+© 2026 أصفان للتجارة. جميع الحقوق محفوظة.
+
+1. الترخيص: تمنحك أصفان للتجارة حقاً غير حصري وغير قابل للتحويل لتثبيت البرنامج واستخدامه على عدد الأجهزة (المقاعد) المذكور في مفتاح ترخيصك، خلال مدة الاشتراك (شهري أو سنوي) وضمن الباقة (البرنامج كاملاً أو أجزاء محددة) المذكورة في المفتاح. تشمل النسخة فترة تجريبية مدتها 14 يوماً.
+2. القيود: لا يجوز نسخ البرنامج أو بيعه أو تأجيره أو ترخيصه من الباطن أو الهندسة العكسية له أو تعديله أو إزالة الإشعارات منه، ولا يجوز مشاركة مفاتيح الترخيص أو نشرها.
+3. الاستخدام التعليمي: البرنامج محاكٍ تعليمي. بيانات المنشآت معلومات منشورة، وأنظمة الحماية من الحريق تصاميم مرجعية وفق NFPA لأغراض التعليم. لا يُغني البرنامج عن التصميم الهندسي المتخصص أو موافقة الجهة المختصة أو وثائق المصنّعين، ولا تُستخدم نتائجه في تصاميم حقيقية دون تحقق مستقل من مهندس مؤهل.
+4. إخلاء المسؤولية: يُقدَّم البرنامج "كما هو" دون أي ضمانات. وإلى أقصى حد يسمح به القانون لا تتحمل أصفان للتجارة أي مسؤولية عن أضرار غير مباشرة أو تبعية ناتجة عن استخدامه.
+5. الإنهاء: ينتهي الترخيص تلقائياً عند انتهاء الاشتراك أو عند مخالفة هذه الاتفاقية، ويتوقف البرنامج عن العمل حتى تفعيل مفتاح جديد.
+6. الدعم: info@asfanco.com · واتساب ‎+962 77 614 0404

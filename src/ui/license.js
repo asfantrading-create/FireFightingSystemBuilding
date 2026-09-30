@@ -1,6 +1,7 @@
 // License UI. Verification happens in the Electron main process (electron/license.js);
 // the renderer only displays the status and forwards activation keys.
-import { t, getLang } from '../i18n.js';
+import { t, tr, getLang } from '../i18n.js';
+import { CATALOG, PACKAGE_NAMES } from '../data/packages.js';
 
 let status = { state: 'trial', daysLeft: 14, plan: 'trial' };
 const api = window.api ?? null;
@@ -9,7 +10,15 @@ const $ = (id) => document.getElementById(id);
 export function licenseAllowsUse() { return status.state === 'licensed' || status.state === 'trial'; }
 /** Facility included in the license (null list = all facilities). */
 export const facilityAllowed = (id) => !Array.isArray(status.facilities) || status.facilities.includes(id);
-export const trainingAllowed = () => status.training !== false;
+const inList = (list, id) => !Array.isArray(list) || list.includes(id);
+/** Hands-on 3D training scene included? (training:false = none). */
+export const sceneAllowed = (id) => status.training !== false && inList(status.scenes, id);
+export const trainingAllowed = () => status.training !== false && (!Array.isArray(status.scenes) || status.scenes.length > 0);
+/** Smart Lab module included? */
+export const labAllowed = (id) => inList(status.lab, id);
+export const labAny = () => !Array.isArray(status.lab) || status.lab.length > 0;
+/** Program page (dash, data, learn, quiz, class, reports) included? The 3D twin is always available. */
+export const featureAllowed = (page) => !['dash', 'data', 'learn', 'quiz', 'class', 'reports'].includes(page) || inList(status.features, page);
 export const isSupervisor = () => status.state === 'trial' || status.role === 'supervisor';
 export const licenseStatus = () => status;
 
@@ -51,7 +60,8 @@ export function openLicenseModal(openModal, closeModal) {
       <div>${t('licensedTo')}</div><div>${status.name ? `${esc(status.name)}${status.org ? ' — ' + esc(status.org) : ''}` : '—'}</div>
       <div>${t('expires')}</div><div>${exp}${status.daysLeft !== undefined ? ` (${status.daysLeft} ${t('daysLeft')})` : ''}</div>
       <div>${ar ? 'المقاعد' : 'Seats'}</div><div>${status.seats ?? 1}</div>
-      <div>${ar ? 'المنشآت' : 'Facilities'}</div><div>${Array.isArray(status.facilities) ? esc(status.facilities.join(', ')) : (ar ? 'الكل' : 'All')}</div>
+      <div>${ar ? 'الباقة' : 'Package'}</div><div><b>${esc(tr(PACKAGE_NAMES[status.package || 'full'] || PACKAGE_NAMES.custom))}</b></div>
+      ${contentRows(ar)}
       <div>${ar ? 'الدور' : 'Role'}</div><div>${status.role === 'supervisor' ? (ar ? 'مشرف (مدرّس)' : 'Supervisor (teacher)') : status.state === 'trial' ? '—' : (ar ? 'مستخدم' : 'User')}${status.training === false ? (ar ? ' · بدون المشاهد التدريبية' : ' · no training scenes') : ''}</div>
       <div>${t('machineId')}</div><div class="mono">${esc(status.machineId ?? '—')} <button class="btn" id="cpMid" style="padding:2px 8px">⧉</button></div>
     </div>
@@ -76,6 +86,17 @@ export function openLicenseModal(openModal, closeModal) {
       setTimeout(closeModal, 900);
     } else $('licMsg').innerHTML = `<span class="err">✗ ${esc(r.error)}</span>`;
   };
+}
+
+function contentRows(ar) {
+  const groups = [['facilities', ar ? 'المنشآت' : 'Facilities', status.facilities], ['scenes', ar ? 'المشاهد التدريبية' : 'Training scenes', status.training === false ? [] : status.scenes],
+    ['lab', ar ? 'المختبر الذكي' : 'Smart Lab', status.lab], ['features', ar ? 'الصفحات' : 'Pages', status.features]];
+  return groups.map(([g, label, list]) => {
+    const all = CATALOG[g];
+    const v = !Array.isArray(list) ? `${ar ? 'الكل' : 'All'} (${all.length})`
+      : list.length ? `${list.length}/${all.length}: ${all.filter(([id]) => list.includes(id)).map(([, n]) => esc(tr(n))).join('، ')}` : (ar ? 'غير مشمول' : 'Not included');
+    return `<div>${label}</div><div style="font-size:.9em">${v}</div>`;
+  }).join('');
 }
 
 function esc(s) { return String(s).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m])); }

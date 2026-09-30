@@ -2,7 +2,9 @@
 // Vendor license tool (same key format as tools/license-generator.html: ECDSA P-256, WebCrypto-compatible).
 //   node tools/license-tool.mjs init [--force]      → create keys/private.jwk.json (SECRET) + electron/license-public.js
 //   node tools/license-tool.mjs issue --name "Univ. of Jordan" --plan yearly|monthly [--expires 2027-06-30]
-//        [--org ...] [--machine XXXX-XXXX-XXXX-XXXX] [--seats 30] [--facilities HIGH_RISE,WAREHOUSE] [--no-training] [--supervisor] [--staff]
+//        [--org ...] [--machine XXXX-XXXX-XXXX-XXXX] [--seats 30] [--package full|sprinkler|alarm|special|basic|custom]
+//        [--facilities HIGH_RISE,WAREHOUSE] [--scenes pumproom,install] [--lab facp,cause] [--features learn,quiz] [--no-training] [--supervisor] [--staff]
+//        (a group left out = all of it; --lab none / --scenes none = not included)
 //   node tools/license-tool.mjs verify <key> [--machine ID]
 import crypto from 'crypto';
 import fs from 'fs';
@@ -20,6 +22,7 @@ const cmd = args[0];
 const opt = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : d; };
 const flag = (k) => args.includes(`--${k}`);
 const iso = (d) => d.toISOString().slice(0, 10);
+const list = (k) => { const v = opt(k); if (!v) return undefined; return v === 'none' ? [] : v.split(',').map((x) => x.trim()).filter(Boolean); };
 
 if (cmd === 'init') {
   if (fs.existsSync(privFile) && !flag('force')) { console.error('keys/private.jwk.json already exists (use --force — all existing licenses stop working).'); process.exit(1); }
@@ -41,10 +44,12 @@ if (cmd === 'init') {
     else { const d = new Date(); d.setMonth(d.getMonth() + (plan === 'monthly' ? 1 : 12)); expires = iso(d); }
   }
   const payload = {
-    v: 1, id: crypto.randomUUID(), name: opt('name', 'Customer'), org: opt('org'), email: opt('email'),
+    v: 2, id: crypto.randomUUID(), name: opt('name', 'Customer'), org: opt('org'), email: opt('email'),
     type: staff ? 'staff' : 'subscription', plan: opt('expires') && !staff ? 'custom' : plan, issued: iso(new Date()), expires,
     machine: opt('machine') ? opt('machine').toUpperCase() : null, seats: +opt('seats', 1),
-    facilities: opt('facilities') ? opt('facilities').split(',') : undefined, training: flag('no-training') ? false : undefined,
+    package: opt('package', (opt('facilities') || opt('scenes') || opt('lab') || opt('features') || flag('no-training')) ? 'custom' : 'full'),
+    facilities: list('facilities'), scenes: list('scenes')?.length ? list('scenes') : undefined,
+    training: flag('no-training') || list('scenes')?.length === 0 ? false : undefined, lab: list('lab'), features: list('features'),
     role: flag('supervisor') ? 'supervisor' : undefined, notes: opt('notes'),
   };
   const data = Buffer.from(JSON.stringify(payload));

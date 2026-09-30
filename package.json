@@ -1,7 +1,7 @@
 {
   "name": "fire-protection-digital-twin",
   "productName": "Fire Protection Digital Twin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Educational real-time fire-fighting system digital twin simulator (sprinklers, fire pumps, standpipes, clean agent, foam).",
   "author": "ASFAN Trading <info@asfanco.com>",
   "license": "UNLICENSED",
@@ -42,11 +42,30 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "shortcutName": "Fire Protection Digital Twin",
-      "artifactName": "FireProtectionDigitalTwin-Setup-${version}.${ext}"
+      "artifactName": "FireProtectionDigitalTwin-Setup-${version}.${ext}",
+      "installerLanguages": [
+        "en_US",
+        "ar_SA"
+      ],
+      "multiLanguageInstaller": true,
+      "uninstallDisplayName": "Fire Protection Digital Twin",
+      "createStartMenuShortcut": true,
+      "menuCategory": "ASFAN",
+      "runAfterFinish": true,
+      "license": "build/EULA.txt"
     },
     "portable": {
       "artifactName": "FireProtectionDigitalTwin-Portable-${version}.${ext}"
-    }
+    },
+    "extraResources": [
+      {
+        "from": "docs/manual",
+        "to": "manual",
+        "filter": [
+          "*.pdf"
+        ]
+      }
+    ]
   },
   "devDependencies": {
     "electron": "^33.4.11",

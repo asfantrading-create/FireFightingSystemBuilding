@@ -1,7 +1,8 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-  version: '1.0.0',
+  version: '1.1.0',
+  openManual: (lang) => ipcRenderer.invoke('help:manual', lang),
   licenseStatus: () => ipcRenderer.invoke('license:status'),
   activateLicense: (key) => ipcRenderer.invoke('license:activate', key),
   saveImage: (dataUrl, name) => ipcRenderer.invoke('file:saveImage', dataUrl, name),

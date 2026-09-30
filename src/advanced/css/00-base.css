@@ -152,3 +152,12 @@ body.printing #printArea { display: block; position: fixed; inset: 0; z-index: 9
 .adv-promo { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 12px; margin-bottom: 16px; border: 1px solid #fed7aa;
   background: linear-gradient(90deg, color-mix(in srgb, #f97316 12%, var(--panel)), var(--panel)); }
 .adv-promo .ic { font-size: 2em; } .adv-promo > div { flex: 1; } .adv-promo .muted { font-size: .9em; margin-top: 2px; }
+/* license-locked content */
+.tabs button.locked { opacity: .55; }
+.tabs button.locked::after { content: '🔒'; font-size: .8em; margin-inline-start: 2px; }
+.adv-nav-item.locked { opacity: .6; }
+.adv-nav-item .lock { font-size: .85em; flex: none; }
+.locked-page { max-width: 640px; margin: 60px auto; text-align: center; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 36px 30px; box-shadow: var(--shadow); }
+.locked-page .ic { font-size: 3em; }
+.locked-page h1 { margin: 8px 0; }
+.locked-page p { line-height: 1.6; }

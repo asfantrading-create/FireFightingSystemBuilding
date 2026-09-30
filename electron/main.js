@@ -13,6 +13,15 @@ const APP_DIR = path.join(__dirname, '..', 'app');
 
 function send(cmd) { win?.webContents.send('menu', cmd); }
 
+/** Open the bundled PDF user manual (resources/manual in the installed app, docs/manual in development). */
+function openManual(lang) {
+  const name = `FireTwin_User_Manual_${lang}.pdf`;
+  const candidates = [path.join(process.resourcesPath || '', 'manual', name), path.join(__dirname, '..', 'docs', 'manual', name)];
+  const file = candidates.find((f) => fs.existsSync(f));
+  if (file) shell.openPath(file);
+  else dialog.showMessageBox(win, { type: 'info', message: 'User manual not found', detail: name });
+}
+
 function buildMenu() {
   const template = [
     { label: 'File', submenu: [
@@ -34,6 +43,9 @@ function buildMenu() {
       { label: 'Reset', accelerator: 'CmdOrCtrl+R', click: () => send('reset') },
     ] },
     { label: 'Help', submenu: [
+      { label: 'User manual (English)', accelerator: 'F11', registerAccelerator: false, click: () => openManual('EN') },
+      { label: 'دليل المستخدم (العربية)', click: () => openManual('AR') },
+      { type: 'separator' },
       { label: 'License…', click: () => send('license') },
       { label: 'Contact support (WhatsApp)', click: () => shell.openExternal('https://wa.me/962776140404') },
       { label: 'E-mail info@asfanco.com', click: () => shell.openExternal('mailto:info@asfanco.com') },
@@ -74,6 +86,7 @@ app.whenReady().then(() => {
   });
   store = new LicenseStore(app.getPath('userData'));
   ipcMain.handle('license:status', () => store.status());
+  ipcMain.handle('help:manual', (_e, lang) => openManual(lang === 'ar' ? 'AR' : 'EN'));
   ipcMain.handle('license:activate', (_e, key) => store.activate(key));
   ipcMain.handle('file:saveImage', async (_e, dataUrl, name) => {
     const r = await dialog.showSaveDialog(win, { defaultPath: name, filters: [{ name: 'PNG', extensions: ['png'] }] });
