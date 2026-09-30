@@ -122,7 +122,21 @@
 <li>إذا تسرّب المفتاح: يمكن توليد مفتاح جديد وإعادة بناء البرنامج، لكن كل التراخيص القديمة ستتوقف ويجب إعادة إصدارها للعملاء.</li>
 </ul>
 
-<h1>8 · التحديثات والدعم</h1>
+<h1>8 · نشر تحديث جديد وتنبيه العملاء تلقائياً</h1>
+<p>كل نسخة من الإصدار 1.1.0 فما فوق تتحقق عند التشغيل (إذا كان الجهاز متصلاً بالإنترنت) من ملف صغير اسمه <code>latest.json</code>، فإذا وجدت إصداراً أحدث يظهر للعميل شريط أخضر «يتوفر إصدار جديد» مع زر «ما الجديد» وزر «تنزيل». البرنامج يبحث عن الملف في هذين العنوانين بالترتيب:</p>
+<table><tr><th>#</th><th>العنوان</th></tr>
+<tr><td>1</td><td><code>https://asfanco.com/firetwin/latest.json</code> (موقع شركتك – موصى به)</td></tr>
+<tr><td>2</td><td><code>https://raw.githubusercontent.com/asfantrading-create/firetwin-releases/main/latest.json</code> (مستودع GitHub عام للإصدارات فقط – احتياطي)</td></tr></table>
+<ol class="steps">
+<li>ابنِ الإصدار الجديد (القسم 2) برقم أعلى، مثلاً 1.2.0.</li>
+<li>ارفع ملف التثبيت الجديد إلى مكان عام، مثلاً <code>https://asfanco.com/firetwin/FireProtectionDigitalTwin-Setup-1.2.0.exe</code>.</li>
+<li>أنشئ ملف <code>latest.json</code>: يستطيع Claude تجهيزه لك، أو بالأمر <code>node tools/make-update-manifest.mjs --url &lt;رابط الملف&gt; --en "ملاحظة|ملاحظة" --ar "ملاحظة|ملاحظة"</code>. نموذج جاهز في <code>docs/update/latest.json</code>.</li>
+<li>ارفع <code>latest.json</code> إلى <code>asfanco.com/firetwin/</code> (استبدل القديم). من اللحظة التالية يرى كل عميل يفتح البرنامج التنبيه.</li>
+<li>لتحديث <b>إلزامي</b> (مثلاً إصلاح مهم) اجعل <code>"mandatory": true</code> أو ضع <code>"minVersion"</code> فلا يستطيع العميل تأجيله.</li>
+</ol>
+<div class="box warn"><b>مهم:</b> التنبيه يعمل فقط في النسخ التي تحتوي الميزة (1.1.0 فما فوق). وزّع على العملاء الإصدار 1.1.0 أو أحدث من البداية.</div>
+
+<h1>9 · التحديثات والدعم</h1>
 <ol class="steps">
 <li>بعد أي تحديث للبرنامج أنشئ Release جديداً (القسم 2) وارفع الملف الجديد مكان القديم في رابط التنزيل.</li>
 <li>أبلغ العملاء: «نزّلوا النسخة الجديدة وشغّلوا ملف التثبيت» — يبقى الترخيص والنتائج كما هي.</li>
@@ -144,6 +158,7 @@
 <li><b>SmartScreen:</b> customers click <i>More info → Run anyway</i> (browsers: <i>Keep</i>). A code-signing certificate is optional and can be added later.</li>
 <li><b>Distribute</b> through a Google Drive / OneDrive / website link or USB — the file (~80 MB) is too large for e-mail/WhatsApp attachments; the GitHub repository is private.</li>
 <li><b>License a customer:</b> open <code>license-generator.html</code> → private key → customer data → monthly / yearly / custom → optional Machine ID → package (Full, Sprinklers &amp; pumps, Smart fire alarm, Special hazards, Basic awareness or Custom selection of facilities, training scenes, Smart Lab modules and pages) → Generate → download <code>.lic</code> → send with the download link and manual. Renew or upgrade with <i>Reuse</i> in the ledger.</li>
+<li><b>Update notice:</b> upload the new installer and a new <code>latest.json</code> (see <code>docs/update/latest.json</code>, <code>tools/make-update-manifest.mjs</code>) to <code>https://asfanco.com/firetwin/</code> — every copy from 1.1.0 on shows “A new version is available” at start-up. Set <code>"mandatory": true</code> for required updates.</li>
 <li><b>Protect</b> <code>private.jwk.json</code>: two offline backups, never share or commit it.</li>
 </ol></div>
 </body>

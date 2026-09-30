@@ -3,6 +3,7 @@ const { pathToFileURL } = require('url');
 const path = require('path');
 const fs = require('fs');
 const { LicenseStore } = require('./license.js');
+const { checkForUpdate } = require('./updates.js');
 
 let win;
 let store;
@@ -46,6 +47,7 @@ function buildMenu() {
       { label: 'User manual (English)', accelerator: 'F11', registerAccelerator: false, click: () => openManual('EN') },
       { label: 'دليل المستخدم (العربية)', click: () => openManual('AR') },
       { type: 'separator' },
+      { label: 'Check for updates… / التحقق من التحديثات', click: () => manualUpdateCheck() },
       { label: 'License…', click: () => send('license') },
       { label: 'Contact support (WhatsApp)', click: () => shell.openExternal('https://wa.me/962776140404') },
       { label: 'E-mail info@asfanco.com', click: () => shell.openExternal('mailto:info@asfanco.com') },
@@ -56,6 +58,14 @@ function buildMenu() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
+async function manualUpdateCheck() {
+  const r = await checkForUpdate(app.getVersion());
+  if (r.state === 'available') { win?.webContents.send('update', r); return; }
+  dialog.showMessageBox(win, r.state === 'latest'
+    ? { type: 'info', title: 'Fire Protection Digital Twin', message: `You have the latest version (${r.current}).\nلديك أحدث إصدار (${r.current}).` }
+    : { type: 'warning', title: 'Fire Protection Digital Twin', message: 'Could not check for updates — check the internet connection.\nتعذّر التحقق من التحديثات — تأكد من الاتصال بالإنترنت.', detail: r.error });
+}
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1600, height: 960, minWidth: 1200, minHeight: 720, backgroundColor: '#eef1f4',
@@ -64,6 +74,11 @@ function createWindow() {
   });
   win.loadURL('app://local/index.html');
   win.once('ready-to-show', () => { win.maximize(); win.show(); });
+  // silent update check shortly after start-up (ignored when offline)
+  if (!process.env.FTW_SMOKE || process.env.FTW_UPDATE_URL) win.webContents.once('did-finish-load', () => setTimeout(async () => {
+    const r = await checkForUpdate(app.getVersion());
+    if (r.state === 'available') win?.webContents.send('update', r);
+  }, process.env.FTW_SMOKE ? 1500 : 6000));
   // Automated smoke test: FTW_SMOKE=<png path> captures the window after start-up and exits
   if (process.env.FTW_SMOKE) {
     win.webContents.once('did-finish-load', () => setTimeout(async () => {
@@ -86,6 +101,9 @@ app.whenReady().then(() => {
   });
   store = new LicenseStore(app.getPath('userData'));
   ipcMain.handle('license:status', () => store.status());
+  ipcMain.handle('app:version', () => app.getVersion());
+  ipcMain.handle('update:check', () => checkForUpdate(app.getVersion()));
+  ipcMain.handle('update:open', (_e, url) => { if (/^https:\/\//.test(String(url))) shell.openExternal(String(url)); });
   ipcMain.handle('help:manual', (_e, lang) => openManual(lang === 'ar' ? 'AR' : 'EN'));
   ipcMain.handle('license:activate', (_e, key) => store.activate(key));
   ipcMain.handle('file:saveImage', async (_e, dataUrl, name) => {

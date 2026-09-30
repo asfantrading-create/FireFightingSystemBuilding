@@ -8,6 +8,7 @@ import { kpis, metricValue, componentDetails, mmss, fmt } from './ui/metrics.js'
 import * as Pages from './ui/pages.js';
 import { SCENES, Trainer } from './training/index.js';
 import { renderAdvanced, leaveAdvanced } from './advanced/index.js';
+import { initUpdates } from './ui/update.js';
 import { initLicense, licenseAllowsUse, openLicenseModal, facilityAllowed, trainingAllowed, sceneAllowed, labAny, featureAllowed, onLicenseChange } from './ui/license.js';
 
 const $ = (id) => document.getElementById(id);
@@ -20,6 +21,7 @@ const state = {
 };
 
 let world;
+let appVersion = '1.1.0';
 let lastUi = 0;
 
 function ctx() {
@@ -349,7 +351,7 @@ function wire() {
     b.onclick = () => {
       setLang(b.dataset.lang);
       try { localStorage.setItem('ftw.lang', b.dataset.lang); } catch { /* ignore */ }
-      applyI18n(); loadFacility(state.refFac, state.scIdx, true); setPage(state.page); refreshToggles(); initLicense(() => {});
+      applyI18n(); loadFacility(state.refFac, state.scIdx, true); setPage(state.page); refreshToggles(); initLicense(() => {}); initUpdates(openModal, closeModal);
     };
   });
   let fs = 14;
@@ -397,7 +399,7 @@ function wire() {
     else if (cmd === 'report') setPage('reports');
     else if (cmd === 'license') openLicenseModal(openModal, closeModal);
     else if (cmd === 'about') {
-      openModal(`<h2>${t('appName')}</h2><p>v${api.version ?? '1.0.0'} · © 2026 ASFAN Trading</p><p class="muted">${t('refDesignTip')}</p><p>NFPA 13 · 14 · 20 · 25 · 72 · 2001 · 11 · 409</p><button class="btn primary" id="mClose">${t('close')}</button>`);
+      openModal(`<h2>${t('appName')}</h2><p>v${appVersion} · © 2026 ASFAN Trading</p><p class="muted">${t('refDesignTip')}</p><p>NFPA 13 · 14 · 20 · 25 · 72 · 2001 · 11 · 409</p><button class="btn primary" id="mClose">${t('close')}</button>`);
       $('mClose').onclick = closeModal;
     }
     else if (cmd.startsWith('page:')) setPage(cmd.slice(5));
@@ -442,6 +444,8 @@ async function main() {
   trainer = new Trainer(world, { panel: $('trainCard'), onExit: () => exitTraining(true), record: (r) => Pages.recordResult(r) });
   wire();
   refreshToggles();
+  initUpdates(openModal, closeModal);
+  api?.getVersion?.().then((v) => { appVersion = v; });
   loadFacility(FACILITIES[0], 0);
   onLicenseChange(() => enforceLicense());
   await initLicense((st) => {

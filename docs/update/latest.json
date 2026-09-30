@@ -1,0 +1,22 @@
+{
+  "version": "1.1.0",
+  "date": "2026-09-30",
+  "url": "https://asfanco.com/firetwin/FireProtectionDigitalTwin-Setup-1.1.0.exe",
+  "page": "https://asfanco.com/firetwin/",
+  "mandatory": false,
+  "minVersion": "1.0.0",
+  "notes": {
+    "en": [
+      "Smart Systems Lab with 10 advanced modules",
+      "License packages: full program or selected parts",
+      "Bilingual user manual inside the program (❓)",
+      "Update notifications"
+    ],
+    "ar": [
+      "المختبر الذكي بعشر وحدات متقدمة",
+      "باقات الترخيص: البرنامج كاملاً أو أجزاء محددة",
+      "دليل المستخدم باللغتين داخل البرنامج (❓)",
+      "تنبيه تلقائي بالتحديثات الجديدة"
+    ]
+  }
+}
