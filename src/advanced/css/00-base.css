@@ -145,3 +145,9 @@ body.printing #printArea { display: block; position: fixed; inset: 0; z-index: 9
 @media (max-width: 1450px) { .adv-nav { width: 240px; } .adv-nav-item .tx small { display: none; } }
 .tabs .adv-tab:not(.active) { color: #c2410c; }
 .tabs .adv-tab:not(.active) span[data-i18n] { background: linear-gradient(90deg, #b91c1c, #f97316); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+.adv-refs span { direction: ltr; unicode-bidi: isolate; }
+.adv-log > div, .ic-f span, .bms-a .x { unicode-bidi: plaintext; }
+@media (max-width: 1750px) { .topbar .brand > div:last-child { display: none; } }
+.adv-promo { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 12px; margin-bottom: 16px; border: 1px solid #fed7aa;
+  background: linear-gradient(90deg, color-mix(in srgb, #f97316 12%, var(--panel)), var(--panel)); }
+.adv-promo .ic { font-size: 2em; } .adv-promo > div { flex: 1; } .adv-promo .muted { font-size: .9em; margin-top: 2px; }

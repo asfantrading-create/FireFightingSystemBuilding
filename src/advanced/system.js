@@ -455,6 +455,7 @@ export class FireSystem {
       L.target = alt ? 1 : 0;
       if (L.mode === 'normal') { L.mode = 'recalling'; L.doors = 'closed'; }
     }
+    if (L.key === 'on' && L.mode === 'normal') { L.target = 0; L.mode = 'recalling'; L.doors = 'closed'; this.log('info', T('Lift Phase I key switch ON – manual recall', 'مفتاح المرحلة الأولى للمصعد – استدعاء يدوي')); }
     if (L.mode === 'phase2' && L.carCalls.length) L.target = L.carCalls[0];
     const dir = Math.sign(L.target - L.pos);
     if (dir && (L.mode !== 'recalled') && L.doors === 'closed') {

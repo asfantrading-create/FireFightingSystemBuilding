@@ -1,0 +1,121 @@
+/* ═════════════ Module 2 — Cause & Effect ═════════════ */
+.ce-wrap { overflow-x: auto; padding: 10px; }
+.ce-m { border-collapse: separate; border-spacing: 0; font-size: .86em; }
+.ce-m th, .ce-m td { border-bottom: 1px solid var(--line); border-inline-end: 1px solid var(--line); }
+.ce-corner { min-width: 300px; vertical-align: bottom; text-align: start; padding: 8px; color: var(--muted); font-size: .8em; font-weight: 600; }
+.ce-h { height: 150px; width: 54px; min-width: 54px; vertical-align: bottom; padding: 6px 0; background: var(--panel2); }
+.ce-h div { writing-mode: vertical-rl; transform: rotate(180deg); margin: 0 auto; white-space: nowrap; font-weight: 700; font-size: .92em; }
+[dir="rtl"] .ce-h div { transform: none; }
+.ce-r { text-align: start; padding: 8px 10px; font-weight: 500; background: var(--panel); position: sticky; inset-inline-start: 0; z-index: 1; }
+.ce-c { width: 54px; height: 40px; text-align: center; cursor: pointer; font-size: 1.15em; color: var(--accent); transition: background .12s; }
+.ce-c:hover { background: var(--accent-bg); }
+.ce-c.v1 { background: color-mix(in srgb, var(--accent) 16%, var(--panel)); font-weight: 800; }
+.ce-c.v2 { background: color-mix(in srgb, var(--warn) 18%, var(--panel)); color: #b45309; }
+.ce-c.v2 span { font-size: .62em; font-weight: 800; }
+.ce-m tr:hover .ce-r { color: var(--accent); }
+.ce-leg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; font-size: .84em; }
+.ce-leg div { display: flex; flex-direction: column; } .ce-leg span { color: var(--muted); }
+.ce-brief li, .ce-learn li { line-height: 1.6; margin: 5px 0; font-size: .92em; }
+
+.ce-run { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 1300px) { .ce-run { grid-template-columns: 1fr; } }
+.ce-sbtn { display: flex; gap: 10px; align-items: center; width: 100%; text-align: start; border: 1px solid var(--line); background: var(--panel); border-radius: 9px; padding: 9px 11px; margin-bottom: 6px; font-size: .9em; }
+.ce-sbtn:hover { border-color: var(--accent-line); }
+.ce-sbtn.active { border-color: var(--accent); background: var(--accent-bg); font-weight: 600; }
+.ce-sbtn span:first-child { font-size: 1.2em; }
+.ce-out { display: flex; flex-direction: column; gap: 4px; }
+.ce-o { display: flex; justify-content: space-between; gap: 10px; font-size: .85em; padding: 5px 8px; border-radius: 7px; background: var(--panel2); }
+.ce-o b { font-family: var(--mono); font-size: .92em; direction: ltr; unicode-bidi: isolate; }
+.ce-o.on { background: color-mix(in srgb, var(--alarm) 12%, var(--panel)); } .ce-o.on b { color: var(--alarm); }
+
+/* building section */
+.ce-sec .ground { fill: #9ca38f; }
+.ce-sec .slab { fill: #9aa3ad; } .ce-sec .wall { fill: #8b949e; }
+.ce-sec .fl-bg { fill: #fbfaf6; }
+.ce-sec .fl-t { font-size: 12px; font-weight: 700; fill: #475569; }
+.ce-sec .stair { fill: #e6ecf2; } .ce-sec .flight { stroke: #94a3b8; stroke-width: 3; }
+.ce-sec .shaft { fill: #e2e8f0; stroke: #94a3b8; } .ce-sec .rope { stroke: #64748b; stroke-dasharray: 3 3; }
+.ce-sec .car rect:first-child { fill: #cbd5e1; stroke: #475569; stroke-width: 1.5; }
+.ce-sec .car .cardoor { fill: #94a3b8; transition: width .6s, x .6s; }
+.ce-sec .car.open .cardoor { width: 6px; }
+.ce-sec .car.recalling rect:first-child, .ce-sec .car.recalled rect:first-child { fill: #fecaca; stroke: #b91c1c; }
+.ce-sec .car .carT { font-size: 16px; }
+.ce-sec .lbl { font-size: 11px; font-weight: 700; fill: #334155; }
+.ce-sec .lbl2 { font-size: 13px; font-weight: 800; fill: #334155; }
+.ce-sec .lbl3 { font-size: 9.5px; font-weight: 700; fill: #475569; }
+.ce-sec .srv { fill: #ede9fe; stroke: #7c3aed; stroke-dasharray: 4 3; } .ce-sec .srv-t { font-size: 10px; font-weight: 700; fill: #6d28d9; }
+.ce-sec .rack { fill: #1f2937; }
+.ce-sec .cyl { fill: #dc2626; stroke: #7f1d1d; } .ce-sec .valve { fill: #6b7280; } .ce-sec .fmpipe { fill: none; stroke: #6b7280; stroke-width: 3; } .ce-sec .nozzle { fill: #374151; }
+.ce-sec .fm .fog { opacity: 0; transition: opacity 1.5s; }
+.ce-sec .fm.dis .fog { opacity: 1; animation: ceFog 2s ease-in-out infinite; } .ce-sec .fm.done .fog { opacity: .55; }
+.ce-sec .fm .fmstrobe { fill: #fde68a; opacity: .3; }
+.ce-sec .fm.pre .fmstrobe, .ce-sec .fm.dis .fmstrobe { fill: #f59e0b; opacity: 1; animation: ceBlink .5s steps(2) infinite; }
+.ce-sec .fm-t { font-size: 10.5px; font-weight: 800; fill: #b91c1c; }
+@keyframes ceFog { 50% { transform: scale(1.06); transform-origin: 650px 300px; } }
+.ce-sec .box { fill: #cbd5e1; stroke: #475569; stroke-width: 1.5; }
+.ce-sec .fan-ring { fill: #f1f5f9; stroke: #475569; }
+.ce-sec .fan path { fill: #475569; }
+.ce-sec .ahu.on .fan, .ce-sec .sfan.on .fan { animation: ceSpin .6s linear infinite; }
+.ce-sec .sfan.on .box { fill: #bbf7d0; stroke: #15803d; }
+.ce-sec .ahu:not(.on) .box { fill: #fecaca; stroke: #b91c1c; }
+@keyframes ceSpin { to { transform: rotate(360deg); } }
+.ce-sec .fan { transform-box: fill-box; transform-origin: center; }
+.ce-sec .duct-h, .ce-sec .duct-v { fill: #cbd5e1; stroke: #94a3b8; stroke-width: 10; }
+.ce-sec .duct-h { stroke-width: 1; }
+.ce-sec .damper .dbox { fill: #f8fafc; stroke: #475569; } .ce-sec .damper .blade { stroke: #0f172a; stroke-width: 2.5; transform-box: fill-box; transform-origin: center; transform: rotate(90deg); transition: transform .8s; }
+.ce-sec .damper.closed .blade { transform: rotate(0deg); stroke: #b91c1c; }
+.ce-sec .press-air path { stroke: #22c55e; stroke-width: 2; stroke-dasharray: 6 10; opacity: 0; }
+.ce-sec .press-air.on path { opacity: .8; animation: ceFlow 1s linear infinite; }
+@keyframes ceFlow { to { stroke-dashoffset: -32; } }
+.ce-sec .det { fill: #fff; stroke: #475569; }
+.ce-sec .fl.fire .det:nth-child(1) { fill: #dc2626; }
+.ce-sec .fire-ico, .ce-sec .smoke-ico { display: none; }
+.ce-sec .fl.fire .fire-ico, .ce-sec .fl.fire .smoke-ico { display: block; }
+.ce-sec .flame { fill: #f97316; animation: ceFlick .35s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: bottom center; }
+.ce-sec .flame2 { fill: #fde047; }
+.ce-sec .smoke-ico circle { fill: #6b7280; opacity: .45; }
+@keyframes ceFlick { to { transform: scaleY(1.12) skewX(3deg); } }
+.ce-sec .spk rect, .ce-sec .spk path:not(.w1):not(.w2) { fill: #e2e8f0; stroke: #475569; }
+.ce-sec .spk .w1, .ce-sec .spk .w2 { fill: none; stroke-width: 2.5; opacity: 0; }
+.ce-sec .spk.evac .w1, .ce-sec .spk.evac .w2 { stroke: #dc2626; opacity: 1; animation: ceBlink .8s infinite; }
+.ce-sec .spk.alert .w1 { stroke: #f59e0b; opacity: 1; animation: ceBlink 1.6s infinite; }
+.ce-sec .spk-t { font-size: 10px; font-weight: 800; fill: #b91c1c; }
+.ce-sec .spk.alert .spk-t { fill: #b45309; }
+.ce-sec .hs rect:first-child { fill: #b91c1c; } .ce-sec .hs .st { fill: #fee2e2; } .ce-sec .hs .hn { fill: #fff; }
+.ce-sec .hs.on .st { animation: ceStrobe .45s steps(2) infinite; }
+@keyframes ceStrobe { 50% { fill: #fff; } 0% { fill: #fef08a; } }
+@keyframes ceBlink { 50% { opacity: .2; } }
+.ce-sec .door .frame { fill: #64748b; } .ce-sec .door .leaf { fill: #b45309; opacity: .85; transform-box: fill-box; transform-origin: left center; transform: scaleX(.25); transition: transform .8s; }
+.ce-sec .door.released .leaf { transform: scaleX(1); }
+.ce-sec .door .holder { fill: #22c55e; } .ce-sec .door.released .holder { fill: #9ca3af; }
+.ce-sec .people .p circle { fill: #1e3a8a; } .ce-sec .people .p path { stroke: #1e3a8a; stroke-width: 2.5; fill: none; }
+.ce-sec .fl.evac .people .p { animation: ceWalk 16s linear forwards; animation-delay: calc(var(--i) * .6s); }
+@keyframes ceWalk { 85% { opacity: 1; } to { transform: translate(var(--dx), 0); opacity: 0; } }
+.ce-sec .ant .mast { stroke: #475569; stroke-width: 3; } .ce-sec .ant .tip { fill: #475569; }
+.ce-sec .ant path:not(.mast) { fill: none; stroke: #dc2626; stroke-width: 2.5; opacity: 0; }
+.ce-sec .ant.on path:not(.mast) { animation: ceWave 1.2s infinite; }
+.ce-sec .ant.on .w2 { animation-delay: .2s !important; } .ce-sec .ant.on .w3 { animation-delay: .4s !important; }
+@keyframes ceWave { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+.ce-sec .sig { fill: none; stroke: #dc2626; stroke-width: 2; stroke-dasharray: 5 7; opacity: 0; }
+.ce-sec .sig.on { opacity: .8; animation: ceFlow .8s linear infinite; }
+.ce-sec .cd-b { fill: #fee2e2; stroke: #b91c1c; }
+.ce-sec .cd .lbl3 { font-size: 9px; } .ce-sec .cd-r { fill: #b91c1c; } .ce-sec .cd-t { font-size: 22px; }
+.ce-sec .cd.on .cd-b { fill: #fecaca; animation: ceBlink 1s infinite; }
+.ce-sec .acc .frame { fill: #64748b; } .ce-sec .acc .mag { fill: #b91c1c; } .ce-sec .acc.unlocked .mag { fill: #16a34a; }
+.ce-sec .bms .mon { fill: #334155; } .ce-sec .bms .scr { fill: #0ea5e9; } .ce-sec .bms-t { font-size: 9px; font-weight: 800; fill: #fff; }
+.ce-sec .bms.on .scr { fill: #dc2626; animation: ceBlink 1s infinite; }
+.ce-sec .facp-s rect { fill: #2a2e35; } .ce-sec .facp-s .scr { fill: #a9cf6c; }
+.ce-sec .facp-s circle.ok { fill: #22c55e; } .ce-sec .facp-s circle.fire { fill: #ff2d2d; animation: ceBlink .6s infinite; } .ce-sec .facp-s circle.trb { fill: #f59e0b; }
+.ce-sec .fl.ahufail .damper .dbox { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+
+/* dark (BMS / HMI) variant */
+.ce-sec.dark .ground { fill: #1c2a22; } .ce-sec.dark .fl-bg { fill: #121c28; } .ce-sec.dark .fl-t, .ce-sec.dark .lbl, .ce-sec.dark .lbl2, .ce-sec.dark .lbl3 { fill: #9fb7cc; }
+.ce-sec.dark .slab, .ce-sec.dark .wall { fill: #33475b; } .ce-sec.dark .stair { fill: #172432; } .ce-sec.dark .shaft { fill: #16212d; stroke: #33475b; }
+.ce-sec.dark .srv { fill: #1d1733; } .ce-sec.dark .box { fill: #22324a; stroke: #5b7a99; } .ce-sec.dark .fan-ring { fill: #16212d; stroke: #5b7a99; } .ce-sec.dark .fan path { fill: #7fb3d9; }
+.ce-sec.dark .ahu.on .box, .ce-sec.dark .sfan.on .box { fill: #0f3325; stroke: #22c55e; }
+.ce-sec.dark .ahu:not(.on) .box { fill: #3a1216; stroke: #ef4444; }
+.ce-sec.dark .duct-h, .ce-sec.dark .duct-v { fill: #22324a; stroke: #33475b; }
+.ce-sec.dark .damper .dbox { fill: #16212d; stroke: #7fb3d9; } .ce-sec.dark .damper .blade { stroke: #7fb3d9; }
+.ce-sec.dark .people .p circle { fill: #7dd3fc; } .ce-sec.dark .people .p path { stroke: #7dd3fc; }
+.ce-sec.dark .car rect:first-child { fill: #22324a; stroke: #7fb3d9; }
+.ce-sec.dark .cd-b { fill: #2a1216; }

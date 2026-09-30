@@ -10,7 +10,7 @@
   "scripts": {
     "build:renderer": "node tools/build.mjs",
     "start": "npm run build:renderer && electron .",
-    "test": "node --test tests/engine.test.mjs",
+    "test": "node --test \"tests/*.test.mjs\"",
     "license:init": "node tools/license-tool.mjs init",
     "license:issue": "node tools/license-tool.mjs issue",
     "dist:win": "npm run build:renderer && electron-builder --win nsis portable --x64 --publish never",

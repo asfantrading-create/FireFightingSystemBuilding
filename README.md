@@ -39,6 +39,17 @@ Site names, coordinates and building facts are public data. **The fire-protectio
   7. Sprinkler types (pendent, upright, sidewall, concealed, recessed, ESFR, open) and a response race of six bulbs (rating & RTI) under a t² fire
   8. Stairwell pressurization (NFPA 92): ΔP ≥ 12.5 Pa, door-opening force ≤ 133 N, relief damper, open-door velocity, smoke ingress; Q = 0.839·A·√ΔP
   9. FM-200 room: live NFPA 2001 calculator (SI/IP, NOAEL/LOAEL warnings) and the cross-zoned discharge sequence with abort, 10 s discharge and hold
+* **Smart Lab (advanced) — المختبر الذكي** — ten modules for engineers of smart (addressable) fire-alarm & life-safety systems, all driven by one live engine (`src/advanced/system.js`) so a fault planted in one module appears everywhere:
+  1. **Addressable panel lab** — realistic FACP faceplate (LCD, LEDs, ACK / SILENCE / RESET / DRILL, access-level key, buzzer), 3-storey building plans with the SLC loop and NAC wiring, field test of every device, cut / short / earth faults, Class A vs B, isolators, auto-learn & addressing, alarm verification, guided exercises and a hidden-fault inspector challenge; device install & wiring encyclopedia.
+  2. **Cause & effect matrix** — program inputs × outputs with 30 s delays, graded against NFPA 72 / 90A / 92 / 101 / 2001, and run fire scenarios on a live building section (voice evac, AHU, dampers, stair fans, lift recall, door holders, access control, FM-200, Civil Defense, BMS).
+  3. **BMS & integration** — SCADA-style BMS graphics, BACnet objects & Modbus registers with live traffic, firefighter lift Phase I / II, phased voice-evacuation console, monitoring-centre receiver with Contact-ID decoding.
+  4. **Installation mode (3D)** — place detectors and sprinklers on a real ceiling with beams, diffusers and ducts; spacing / obstruction rules checked live.
+  5. **Commissioning** — pre-functional checks, device-by-device functional test, audibility, battery & hydrostatic tests, printable NFPA 72 Record of Completion.
+  6. **Predictive maintenance** — fleet health, trend forecasts, NFPA 72 / 25 ITM schedule and work orders.
+  7. **Incident commander** — timed decisions in cascading-failure fires with a replay debrief.
+  8. **Modern technologies** — VESDA, beam, UV/IR flame, linear heat, water mist, pre-action interlocks.
+  9. **Engineering tools** — hydraulic calculation with supply/demand graph, battery, NAC voltage drop, loop loading, auto-generated riser diagram.
+  10. **Learning paths & certificates** — Technician / Engineer / Supervisor / Designer paths, final exam, printable certificates with an offline verification code, instructor heat-map dashboard.
 * **Design Data editor** — change any design value (hazard, K, spacing, RTI, pipes, elevation, PRV, fire, pump, tank, FM-200, foam), see NFPA compliance checks and run the simulation on your own data.
 * **Dashboard** — live trends, pump curve with moving operating point.
 * **Learn** — 11 bilingual lessons (fire basics, sprinklers, hazard classes, pipe schedule, hydraulics, fire pumps, standpipes, detection & alarm, FM-200, foam, NFPA 25).
@@ -87,8 +98,9 @@ src/engine/      design.js (NFPA calculations) · sim.js (physics simulator)
 src/scene/       world.js (renderer, sky, terrain, labels) · kit.js (models & effects) · sites.js (facilities)
 src/data/        facilities, lessons (EN/AR), quiz (EN/AR)
 src/ui/          metrics, pages, license UI
+src/advanced/    Smart Lab: system.js (FACP / loop / C&E engine), building.js, one file per module, css/
 tools/           build.mjs, license-tool.mjs
-tests/           engine tests (node --test)
+tests/           engine + Smart Lab tests (node --test)
 ```
 
 Support: info@asfanco.com · WhatsApp +962 77 614 0404 — © 2026 ASFAN Trading

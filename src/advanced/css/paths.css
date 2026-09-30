@@ -1,0 +1,25 @@
+/* ═════════════ Module 10 — Paths & certificates ═════════════ */
+.p-who { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.p-who .adv-field { min-width: 260px; }
+.p-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 14px; }
+.p-card { border-top: 4px solid var(--pc) !important; }
+.p-top { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+.p-top h3 { font-size: 1.05em !important; color: var(--text) !important; letter-spacing: 0 !important; margin: 0 0 4px !important; }
+.p-top p { margin: 0; color: var(--muted); font-size: .9em; }
+.p-top > div:nth-child(2) { flex: 1; }
+.p-ic { font-size: 2em; }
+.p-ring { --p: 0; width: 58px; height: 58px; border-radius: 50%; flex: none; display: grid; place-items: center; background: conic-gradient(var(--pc) calc(var(--p) * 1%), var(--line) 0); }
+.p-ring span { width: 46px; height: 46px; border-radius: 50%; background: var(--panel); display: grid; place-items: center; font-weight: 800; font-size: .85em; font-family: var(--mono); }
+.p-req { display: grid; gap: 5px; margin-bottom: 12px; }
+.p-r { display: flex; justify-content: space-between; border: 1px solid var(--line); background: var(--panel2); border-radius: 8px; padding: 6px 10px; font-size: .88em; text-align: start; }
+.p-r b { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; }
+.p-r.ok { border-color: #bbf7d0; background: color-mix(in srgb, var(--ok) 8%, var(--panel)); } .p-r.ok span { color: var(--ok); font-weight: 600; }
+.p-r:hover { border-color: var(--accent); }
+.p-bars { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 6px 24px; }
+.p-bar { display: grid; grid-template-columns: 170px 1fr 48px; gap: 10px; align-items: center; font-size: .88em; margin: 4px 0; }
+.p-bar > div { height: 9px; border-radius: 99px; background: var(--panel2); border: 1px solid var(--line); overflow: hidden; }
+.p-bar i { display: block; height: 100%; background: var(--accent); }
+.p-bar b { font-family: var(--mono); text-align: end; }
+.p-exam { max-width: 900px; }
+.p-exam-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: .9em; }
+.p-heat td.num { font-weight: 700; } .p-heat tr.avg td { border-top: 2px solid var(--text); }
