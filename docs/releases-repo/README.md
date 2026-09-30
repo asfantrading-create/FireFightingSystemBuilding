@@ -10,10 +10,10 @@
 
 | | |
 |---|---|
-| **Installer (recommended) · ملف التثبيت (موصى به)** | [**FireProtectionDigitalTwin-Setup.exe**](https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe) |
-| Portable (no installation) · النسخة المحمولة (دون تثبيت) | [FireProtectionDigitalTwin-Portable.exe](https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Portable.exe) |
-| User manual · دليل المستخدم | [English (PDF)](https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireTwin_User_Manual_EN.pdf) · [العربية (PDF)](https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireTwin_User_Manual_AR.pdf) |
-| All versions · جميع الإصدارات | [Releases](https://github.com/asfantrading-create/firetwin-releases/releases) |
+| **Installer (recommended) · ملف التثبيت (موصى به)** | [**FireProtectionDigitalTwin-Setup.exe**](https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe) |
+| Portable (no installation) · النسخة المحمولة (دون تثبيت) | [FireProtectionDigitalTwin-Portable.exe](https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireProtectionDigitalTwin-Portable.exe) |
+| User manual · دليل المستخدم | [English (PDF)](https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireTwin_User_Manual_EN.pdf) · [العربية (PDF)](https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireTwin_User_Manual_AR.pdf) |
+| All versions · جميع الإصدارات | [Releases](https://github.com/asfantrading-create/firetwinsystem-releases/releases) |
 
 **Requirements · المتطلبات:** Windows 10 / 11 (64-bit), 8 GB RAM (16 GB recommended), DirectX 11 / WebGL 2 graphics.
 

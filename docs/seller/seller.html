@@ -54,13 +54,13 @@
 <h2>أ – إنشاء مستودع التنزيلات العام</h2>
 <ol class="steps">
 <li>ادخل GitHub بحساب <code>asfantrading-create</code> ← زر <b>+</b> أعلى الصفحة ← <b>New repository</b>.</li>
-<li>الاسم بالضبط: <code>firetwin-releases</code> · اختر <b>Public</b> · علّم <b>Add a README file</b> ← <b>Create repository</b>.</li>
+<li>الاسم بالضبط: <code>firetwinsystem-releases</code> · اختر <b>Public</b> · علّم <b>Add a README file</b> ← <b>Create repository</b>.</li>
 <li>افتح ملف README ← أيقونة القلم ✏️ ← احذف المحتوى والصق محتوى الملف <code>docs/releases-repo/README.md</code> (صفحة تنزيل جاهزة باللغتين) ← <b>Commit changes</b>.</li>
 </ol>
 <h2>ب – إنشاء مفتاح النشر (Token)</h2>
 <ol class="steps">
 <li>GitHub ← صورتك أعلى اليمين ← <b>Settings</b> ← <b>Developer settings</b> ← <b>Personal access tokens</b> ← <b>Fine-grained tokens</b> ← <b>Generate new token</b>.</li>
-<li>الاسم: <code>firetwin-publish</code> · المدة: سنة (أو بلا انتهاء) · <b>Repository access</b>: <b>Only select repositories</b> ← اختر <code>firetwin-releases</code>.</li>
+<li>الاسم: <code>firetwin-publish</code> · المدة: سنة (أو بلا انتهاء) · <b>Repository access</b>: <b>Only select repositories</b> ← اختر <code>firetwinsystem-releases</code>.</li>
 <li><b>Permissions</b> ← <b>Repository permissions</b> ← <b>Contents</b>: <b>Read and write</b> ← <b>Generate token</b> ← انسخ المفتاح (يظهر مرة واحدة).</li>
 </ol>
 <h2>ج – حفظ المفتاح في مستودع الكود</h2>
@@ -75,7 +75,7 @@
 <li>(اختياري) اكتب ملاحظات الإصدار بالعربي والإنجليزي في <code>docs/update/latest.json</code> (أو اطلب من Claude). تأكد أن رقم الإصدار في <code>package.json</code> هو الرقم الجديد.</li>
 <li>مستودع الكود ← <b>Releases</b> ← <b>Draft a new release</b> ← <b>Choose a tag</b>: اكتب <code>v1.1.0</code> (نفس الرقم) ← <b>Create new tag</b> ← <b>Target</b>: الفرع الذي فيه آخر نسخة ← <b>Publish release</b>.</li>
 <li>تلقائياً خلال 4–5 دقائق: يُبنى البرنامج، ويُنشر في مستودع التنزيلات العام مع دليلي المستخدم، ويُحدَّث ملف التنبيه <code>latest.json</code>.</li>
-<li>تحقق: افتح <code>github.com/asfantrading-create/firetwin-releases/releases</code> وتأكد من ظهور الإصدار وملفاته.</li>
+<li>تحقق: افتح <code>github.com/asfantrading-create/firetwinsystem-releases/releases</code> وتأكد من ظهور الإصدار وملفاته.</li>
 </ol>
 <h1>3 · اختبار النسخة قبل البيع</h1>
 <ol class="steps">
@@ -98,9 +98,9 @@
 <h1>5 · رابط التنزيل الدائم للعميل</h1>
 <p>بعد الإعداد في القسم 2 يصبح لديك روابط <b>لا تتغير أبداً</b> وتعطي العميل دائماً <b>أحدث إصدار</b>:</p>
 <table><tr><th>الرابط</th><th>الاستخدام</th></tr>
-<tr><td><code>https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe</code></td><td><b>رابط التنزيل المباشر</b> لملف التثبيت (يبدأ التنزيل فوراً).</td></tr>
-<tr><td><code>https://github.com/asfantrading-create/firetwin-releases</code></td><td><b>صفحة التنزيل</b> باللغتين (التثبيت، النسخة المحمولة، الأدلة، الدعم).</td></tr>
-<tr><td><code>https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Portable.exe</code></td><td>النسخة المحمولة.</td></tr>
+<tr><td><code>https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe</code></td><td><b>رابط التنزيل المباشر</b> لملف التثبيت (يبدأ التنزيل فوراً).</td></tr>
+<tr><td><code>https://github.com/asfantrading-create/firetwinsystem-releases</code></td><td><b>صفحة التنزيل</b> باللغتين (التثبيت، النسخة المحمولة، الأدلة، الدعم).</td></tr>
+<tr><td><code>https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireProtectionDigitalTwin-Portable.exe</code></td><td>النسخة المحمولة.</td></tr>
 <tr><td><code>…/releases/latest/download/FireTwin_User_Manual_AR.pdf</code> و <code>_EN.pdf</code></td><td>دليل المستخدم.</td></tr></table>
 <div class="box tip">ضع رابط صفحة التنزيل في موقعك وعروض الأسعار ورسائل واتساب. يمكن أيضاً اختصاره بخدمة مثل bit.ly أو ربطه بزر في موقعك asfanco.com.</div>
 <div class="box warn">صفحة التنزيل عامة، لكن البرنامج لا يعمل بعد الفترة التجريبية (14 يوماً) إلا بترخيص موقّع منك، فلا مشكلة في أن يكون الرابط عاماً.</div>
@@ -164,7 +164,7 @@
 <h1 class="en">Seller guide – English summary</h1>
 <div class="en">
 <ol>
-<li><b>One-time setup:</b> create the public repository <code>firetwin-releases</code> (paste <code>docs/releases-repo/README.md</code> as its README), create a fine-grained token with Contents read/write on it, and save it as the secret <code>RELEASES_TOKEN</code> in the code repository.</li><li><b>Publish a version (no certificate needed):</b> Releases → Draft a new release → tag <code>v1.1.0</code> (= package.json version) → Publish. The workflow builds and publishes to the public repository and updates <code>latest.json</code>.</li><li><b>Permanent link:</b> <code>https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe</code></li>
+<li><b>One-time setup:</b> create the public repository <code>firetwinsystem-releases</code> (paste <code>docs/releases-repo/README.md</code> as its README), create a fine-grained token with Contents read/write on it, and save it as the secret <code>RELEASES_TOKEN</code> in the code repository.</li><li><b>Publish a version (no certificate needed):</b> Releases → Draft a new release → tag <code>v1.1.0</code> (= package.json version) → Publish. The workflow builds and publishes to the public repository and updates <code>latest.json</code>.</li><li><b>Permanent link:</b> <code>https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe</code></li>
 <li><b>Test</b> on a clean Windows PC: trial, activation with a test key, locked parts, the ❓ user manual.</li>
 <li><b>SmartScreen:</b> customers click <i>More info → Run anyway</i> (browsers: <i>Keep</i>). A code-signing certificate is optional and can be added later.</li>
 

@@ -5,7 +5,7 @@
 // Without --en/--ar the notes already in docs/update/latest.json are kept (edit them there before a release).
 // The release workflow runs this automatically on every v* tag and publishes the result.
 // Upload the file to https://asfanco.com/firetwin/latest.json (and/or the public
-// asfantrading-create/firetwin-releases repository) — every installed copy checks it on start-up.
+// asfantrading-create/firetwinsystem-releases repository) — every installed copy checks it on start-up.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -21,8 +21,8 @@ const notes = (k) => (opt(k) ? opt(k).split('|').filter(Boolean) : prev.notes?.[
 const manifest = {
   version,
   date: new Date().toISOString().slice(0, 10),
-  url: opt('url', `https://github.com/asfantrading-create/firetwin-releases/releases/download/v${version}/FireProtectionDigitalTwin-Setup-${version}.exe`),
-  page: opt('page', 'https://github.com/asfantrading-create/firetwin-releases/releases/latest'),
+  url: opt('url', `https://github.com/asfantrading-create/firetwinsystem-releases/releases/download/v${version}/FireProtectionDigitalTwin-Setup-${version}.exe`),
+  page: opt('page', 'https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest'),
   mandatory: args.includes('--mandatory') || (!args.includes('--optional') && !!prev.mandatory && prev.version === version),
   minVersion: opt('min', prev.minVersion || '1.0.0'),
   notes: { en: notes('en'), ar: notes('ar') },

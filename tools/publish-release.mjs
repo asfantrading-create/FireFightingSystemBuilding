@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 // Publishes a built version to the PUBLIC download repository (no source code there):
-//   https://github.com/asfantrading-create/firetwin-releases
+//   https://github.com/asfantrading-create/firetwinsystem-releases
 // • creates the GitHub Release vX.Y.Z (marked "latest") with the installer, the portable exe,
 //   fixed-name copies for the permanent links and the PDF user manuals;
 // • updates latest.json in that repository, which every installed copy reads for the
 //   "new version available" notice.
 // Run by the CI workflow on every v* tag. Needs the secret RELEASES_TOKEN (fine-grained token with
-// "Contents: Read and write" on the firetwin-releases repository).
+// "Contents: Read and write" on the firetwinsystem-releases repository).
 //
 // Permanent links for customers:
-//   https://github.com/asfantrading-create/firetwin-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe
-//   https://github.com/asfantrading-create/firetwin-releases/releases/latest
+//   https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest/download/FireProtectionDigitalTwin-Setup.exe
+//   https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest
 import fs from 'fs';
 import path from 'path';
 import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
-const OWNER = 'asfantrading-create', REPO = 'firetwin-releases';
+const OWNER = 'asfantrading-create', REPO = 'firetwinsystem-releases';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const token = process.env.RELEASES_TOKEN;
 if (!token) { console.log('::warning::RELEASES_TOKEN secret is not set — skipping the public download page. See docs/seller (section 2).'); process.exit(0); }

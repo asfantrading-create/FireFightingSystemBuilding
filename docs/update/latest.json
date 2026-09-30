@@ -1,8 +1,8 @@
 {
   "version": "1.1.0",
   "date": "2026-09-30",
-  "url": "https://github.com/asfantrading-create/firetwin-releases/releases/download/v1.1.0/FireProtectionDigitalTwin-Setup-1.1.0.exe",
-  "page": "https://github.com/asfantrading-create/firetwin-releases/releases/latest",
+  "url": "https://github.com/asfantrading-create/firetwinsystem-releases/releases/download/v1.1.0/FireProtectionDigitalTwin-Setup-1.1.0.exe",
+  "page": "https://github.com/asfantrading-create/firetwinsystem-releases/releases/latest",
   "mandatory": false,
   "minVersion": "1.0.0",
   "notes": {

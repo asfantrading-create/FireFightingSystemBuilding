@@ -10,7 +10,7 @@
 // "mandatory": true, or an installed version older than "minVersion", blocks "Later".
 
 const UPDATE_URLS = [
-  'https://raw.githubusercontent.com/asfantrading-create/firetwin-releases/main/latest.json',
+  'https://raw.githubusercontent.com/asfantrading-create/firetwinsystem-releases/main/latest.json',
   'https://asfanco.com/firetwin/latest.json',
 ];
 
