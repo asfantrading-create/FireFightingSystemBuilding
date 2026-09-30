@@ -17,6 +17,8 @@ const ul = (items) => `<ul class="tech-ul">${items.map((x) => `<li>${x}</li>`).j
 const explain = (how, keys) => `<div class="adv-grid c2 tech-explain">${card('⚙️ ' + L('How it works', 'مبدأ العمل'), ul(how))}${card('🛠️ ' + L('Installation & commissioning — key points', 'التركيب والاختبار والاستلام — نقاط أساسية'), ul(keys))}</div>`;
 const lay = (scene, side) => `<div class="tech-lay"><div class="tech-main">${scene}</div><aside class="tech-side">${side}</aside></div>`;
 const mmssT = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+/** Wall-clock delta (s) so simulations keep real time even if timers are throttled. */
+const clock = () => { let last = performance.now(); return () => { const t = performance.now(); const d = Math.min(1, (t - last) / 1000); last = t; return d; }; };
 const TICK = '#8b97a5';
 const GRID = 'rgba(139,151,165,.18)';
 
@@ -316,11 +318,14 @@ function tabVesda(root) {
     }
   }
 
+  const vdt = clock();
   const timer = setInterval(() => {
+    const dw = vdt();
     if (!S.run) return;
-    S.t += 0.1 * S.speed;
+    const dts = dw * S.speed;
+    S.t += dts;
     if (S.t >= 900) { S.run = false; K.log('vLog', S.t, L('Simulation end (15 min)', 'نهاية المحاكاة (15 دقيقة)')); }
-    S.sample += 0.1 * S.speed;
+    S.sample += dts;
     if (S.sample >= 2) {
       S.sample = 0;
       const r = reading(S.t);
@@ -526,8 +531,9 @@ function tabBeam(root) {
     normal: [L('Normal', 'طبيعي'), 'ok'], fire: [L('FIRE', 'حريق'), 'alarm'], false: [L('FALSE FIRE', 'حريق كاذب'), 'alarm'],
     block: [L('FAULT – beam blocked', 'عطل – الشعاع محجوب'), 'warn'], comp: [L('FAULT – clean optics', 'عطل – نظّف البصريات'), 'warn'], align: [L('FAULT – alignment lost', 'عطل – فقدان المحاذاة'), 'warn'],
   };
+  const bdt = clock();
   function tick() {
-    const dt = 0.2; S.t += dt;
+    const dt = bdt(); S.t += dt;
     if (P.auto) { const d = P.drift - S.corr; S.corr += clamp(d, -0.15 * dt, 0.15 * dt); } else S.corr = 0;
     S.comp += clamp(Math.min(P.dirt / 100, 0.6) - S.comp, -0.03 * dt, 0.03 * dt);
     if (S.block > 0) S.block -= dt;
@@ -967,8 +973,9 @@ function tabLhd(root) {
       : `<div class="adv-callout tech-mt">✅ ${L(`Rating margin ${margin} °C above max. ambient (≥ 11 °C, NFPA 72 §17.6.2).`, `هامش الدرجة ${margin}°م فوق أقصى حرارة محيطة (≥ 11°م، NFPA 72 §17.6.2).`)}</div>`;
     K.html('lCalc', h);
   }
+  const ldt = clock();
   function tick() {
-    const dt = 0.2 * S.speed; S.t += dt;
+    const dt = ldt() * S.speed; S.t += dt;
     const target = Math.max(P.Th, P.Ta);
     S.Tc += (target - S.Tc) * (1 - Math.exp(-dt / 20));
     const dig = P.mode === 'digital';
@@ -1179,7 +1186,7 @@ function tabMist(root) {
   let X = panel();
   let last = performance.now();
   function frame(now) {
-    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const dt = Math.min(0.25, (now - last) / 1000); last = now;
     // fire model
     if (S.on) {
       S.t += dt;
@@ -1393,8 +1400,9 @@ function tabPre(root, ctx) {
     }).join('')}</tbody></table>`);
     K.html('pTyN', TYN[P.type]);
   }
+  const pdt = clock();
   function tick() {
-    const dt = 0.2; S.t += dt;
+    const dt = pdt(); S.t += dt;
     const leaking = P.fused && S.fill < 1;
     if (leaking) S.air = Math.max(0, S.air - 3.2 * dt + (S.comp ? 0.5 * dt : 0));
     else if (!S.open && S.air < 40) S.air = Math.min(40, S.air + 1.5 * dt);

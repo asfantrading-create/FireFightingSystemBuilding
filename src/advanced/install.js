@@ -37,10 +37,10 @@ const svg = (id, w, h, body, cls = '') => `<svg class="adv-svg inst-svg ${cls}" 
 
 // ───────────────────────── diagrams
 function svgDetSpacing(S) {
-  const id = 'ids', sc = 12.5, R = 0.7 * S, ox = 250, oy = 150;
+  const id = 'ids', sc = 12.5, R = 0.7 * S, ox = 250, oy = 178;
   const half = (S / 2) * sc;
   const pts = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([a, b]) => [ox + a * half, oy + b * half]);
-  return svg(id, 500, 300, `
+  return svg(id, 500, 356, `
     <rect x="${ox - 2 * half}" y="${oy - 2 * half}" width="${4 * half}" height="${4 * half}" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/>
     ${pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${R * sc}" fill="url(#${id}g)" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>`).join('')}
     <rect x="${ox - half}" y="${oy - half}" width="${2 * half}" height="${2 * half}" fill="none" stroke="#2563eb" stroke-width="1.6"/>
@@ -49,7 +49,7 @@ function svgDetSpacing(S) {
     <text x="${pts[0][0] + R * sc * 0.36 + 8}" y="${pts[0][1] + R * sc * 0.36 - 4}" font-size="12.5" font-weight="700" fill="#dc2626" paint-order="stroke" stroke="var(--panel)" stroke-width="3">R = 0.7 S = ${R.toFixed(2)} m</text>
     ${dim(id, pts[2][0], pts[2][1] + 22, pts[3][0], pts[3][1] + 22, `S = ${S.toFixed(1)} m`, { off: 16 })}
     <text class="mut" x="14" y="22" font-size="12">${esc(L('Plan: square spacing S → every point within 0.7 S of a detector', 'مسقط: تباعد مربع S ← كل نقطة ضمن 0.7 S من كاشف'))}</text>
-    <text class="mut" x="14" y="288" font-size="11">${esc(L('0.7 S ≈ S/√2: the circle just reaches the far corner of the S × S square', '0.7 S ≈ S/√2: الدائرة تصل بالكاد إلى الزاوية البعيدة للمربع S × S'))}</text>`);
+    <text class="mut" x="14" y="346" font-size="11">${esc(L('0.7 S ≈ S/√2: the circle just reaches the far corner of the S × S square', '0.7 S ≈ S/√2: الدائرة تصل بالكاد إلى الزاوية البعيدة للمربع S × S'))}</text>`);
 }
 function svgWalls() {
   const id = 'iwl';
@@ -82,7 +82,7 @@ function svgBeamPocket() {
     <text x="120" y="102" text-anchor="middle" font-size="11" font-weight="700" fill="#16a34a">✓ ${esc(L('alarm', 'إنذار'))}</text>
     <text x="370" y="128" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">✗ ${esc(L('smoke never arrives', 'لا يصل الدخان'))}</text>
     ${dim(id, 285, 58, 285, 130, 'd = 0.5 m', { color: '#dc2626', off: 8 })}
-    ${dim(id, 460, 58, 460, 220, 'H = 3.0 m', { color: '#2563eb', off: -8 })}
+    ${dim(id, 30, 58, 30, 220, 'H = 3.0 m', { color: '#2563eb', off: 8 })}
     <text class="tx" x="250" y="160" text-anchor="middle" font-size="12.5" font-weight="700">d / H = 17 % &gt; 10 % → ${esc(L('each pocket = separate area', 'كل جيب = منطقة مستقلة'))}</text>
     <text class="mut" x="250" y="250" text-anchor="middle" font-size="11">NFPA 72 §17.7.3.2.4 — ${esc(L('smoke fills the pocket where it starts before spilling under the beam', 'يملأ الدخان الجيب الذي يبدأ فيه قبل أن يتسرب تحت العارضة'))}</text>`);
 }
@@ -93,11 +93,11 @@ function svgDiffuser() {
     <rect x="${cx - 110}" y="${cy - 110}" width="220" height="220" rx="80" fill="#f59e0b" opacity=".10" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="6 4"/>
     <g filter="url(#F)"><rect x="${cx - 26}" y="${cy - 26}" width="52" height="52" fill="url(#${id}d)" stroke="#6b7280"/>${[0, 1, 2, 3].map((k) => `<rect x="${cx - 22 + k * 5}" y="${cy - 22 + k * 5}" width="${44 - k * 10}" height="${44 - k * 10}" fill="none" stroke="#8d949a" stroke-width="1.4"/>`).join('')}</g>
     ${[[0, -1], [1, 0], [0, 1], [-1, 0]].map(([a, b]) => `<path d="M${cx + a * 32} ${cy + b * 32} l${a * 44} ${b * 44}" stroke="#38bdf8" stroke-width="3" marker-end="url(#${id}a)" style="color:#38bdf8" opacity=".85"/>`).join('')}
-    ${detSym(cx + 150, cy - 50, true)}${detSym(cx + 70, cy + 40, false)}
-    ${dim(id, cx + 26, cy + 95, cx + 110, cy + 95, '0.9 m (3 ft)', { color: '#d97706', off: 16 })}
+    ${detSym(cx + 150, cy - 50, true)}${detSym(cx + 58, cy - 58, false)}
+    ${dim(id, cx + 26, cy + 72, cx + 110, cy + 72, '0.9 m (3 ft)', { color: '#d97706', off: 16 })}
     <text class="mut" x="${cx + 32}" y="${cy + 44}" font-size="10.5" font-weight="700">${esc(L('SUPPLY', 'إمداد'))}</text>
     <text x="${cx + 164}" y="${cy - 64}" font-size="11" font-weight="700" fill="#16a34a">✓</text>
-    <text x="${cx + 84}" y="${cy + 56}" font-size="11" font-weight="700" fill="#dc2626">✗ 0.45 m</text>
+    <text x="${cx + 72}" y="${cy - 70}" font-size="11" font-weight="700" fill="#dc2626">✗ 0.45 m</text>
     <text class="mut" x="250" y="250" text-anchor="middle" font-size="11">NFPA 72 §17.7.4.3 — ${esc(L('measured from the diffuser edge; the jet dilutes and deflects smoke', 'تُقاس من حافة الناشر؛ التيار يخفف الدخان ويحرفه'))}</text>`);
 }
 function svgSpkSpacing(S, Lm) {
