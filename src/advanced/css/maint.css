@@ -1,0 +1,85 @@
+/* ═════════════ Module 6 — Predictive Maintenance (CMMS) ═════════════ */
+.mt-n { direction: ltr; unicode-bidi: isolate; font-family: var(--mono); }
+.mt-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(360px, 1fr); gap: 14px; align-items: start; }
+.mt-grid > .card { margin-bottom: 0; }
+.mt-side { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.mt-side > .card { margin-bottom: 0; }
+.mt-imp { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.mt-imp span { flex: 1; }
+.mt-chips { display: inline-flex; flex-wrap: wrap; gap: 5px; letter-spacing: 0; }
+.mt-chips button { border: 1px solid var(--line); background: var(--panel); color: var(--muted); border-radius: 999px; padding: 3px 10px; font-size: .95em; font-weight: 600; }
+.mt-chips button.on { background: var(--accent-bg); border-color: var(--accent-line); color: var(--accent); }
+.mt-scroll { max-height: 560px; }
+.mt-tbl td { padding: 5px 8px; }
+.mt-tbl tbody tr { cursor: pointer; }
+.mt-tbl tbody tr.sel td { background: var(--accent-bg); }
+.mt-tbl tbody tr.sel td:first-child { box-shadow: inset 3px 0 var(--accent); }
+[dir="rtl"] .mt-tbl tbody tr.sel td:first-child { box-shadow: inset -3px 0 var(--accent); }
+.mt-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+.mt-sort.on { color: var(--accent) !important; }
+.mt-an { font-weight: 600; font-size: .95em; }
+.mt-al { font-size: .78em; color: var(--muted); }
+.mt-tbl td.num small { color: var(--muted); }
+.mt-spark { display: block; }
+.mt-hb { display: inline-block; width: 46px; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin-inline-end: 6px; vertical-align: middle; }
+.mt-hb i { display: block; height: 100%; }
+.mt-sub { color: var(--muted); font-size: .85em; margin: -4px 0 8px; }
+.mt-detail h3 { text-transform: none; letter-spacing: 0; font-size: .95em; color: var(--text); }
+.mt-kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.mt-kv > div { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; }
+.mt-kv span { display: block; font-size: .74em; color: var(--muted); }
+.mt-kv b { font-size: .95em; }
+
+/* Gantt */
+.mt-g { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.mt-g-head, .mt-g-row { display: grid; grid-template-columns: minmax(260px, 2.2fr) 96px 118px minmax(380px, 4fr) 84px; align-items: center; }
+.mt-g-head { background: var(--panel2); font-size: .78em; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); }
+.mt-g-head > div { padding: 7px 10px; }
+.mt-g-row { border-bottom: 1px solid var(--line); font-size: .86em; }
+.mt-g-row:last-child { border-bottom: none; }
+.mt-g-row > div { padding: 6px 10px; }
+.mt-g-row:hover { background: color-mix(in srgb, var(--accent) 4%, transparent); }
+.mt-g-row.overdue { background: color-mix(in srgb, var(--alarm) 6%, transparent); }
+.mt-g-l b { display: block; font-weight: 600; line-height: 1.35; }
+.mt-g-l small, .mt-g-s small { display: block; color: var(--muted); font-size: .82em; margin-top: 2px; font-family: var(--mono); direction: ltr; unicode-bidi: isolate; text-align: start; }
+.mt-freq { font-size: .82em; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: var(--panel2); border: 1px solid var(--line); white-space: nowrap; }
+.mt-g-tl { position: relative; height: 34px; padding: 0 !important; align-self: stretch; }
+.mt-g-head .mt-g-tl { height: 30px; }
+.mt-g-tl > span { position: absolute; top: 0; bottom: 0; }
+.mt-g-head .mt-g-tl > span { display: flex; align-items: center; justify-content: center; border-inline-start: 1px solid var(--line); font-size: .95em; }
+.mt-g-head .mt-g-tl small { opacity: .7; margin-inline-start: 2px; }
+.mt-g-tl .grid { border-inline-start: 1px solid var(--line); }
+.mt-g-tl .grid.alt { background: color-mix(in srgb, var(--text) 2.5%, transparent); }
+.mt-g-tl .today { width: 2px; background: var(--alarm); opacity: .7; z-index: 1; }
+.mt-g-tl .mk { position: absolute; top: 50%; width: 11px; height: 11px; margin-inline-start: -5px; margin-top: -6px; border-radius: 3px; transform: rotate(45deg); box-shadow: 0 1px 2px rgba(0, 0, 0, .25); z-index: 2; }
+.mt-g-tl .mk.thin { width: 3px; height: 16px; margin-top: -8px; margin-inline-start: -1px; border-radius: 1px; transform: none; box-shadow: none; opacity: .85; }
+.mt-g-tl .mk.over { width: 16px; height: 16px; margin-top: -8px; margin-inline-start: -8px; border-radius: 50%; transform: none; background: var(--alarm); box-shadow: 0 0 0 4px color-mix(in srgb, var(--alarm) 25%, transparent); animation: mtPulse 1.4s infinite; }
+@keyframes mtPulse { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--alarm) 8%, transparent); } }
+.mt-g-a { text-align: end; }
+
+/* work orders */
+.mt-wo td { vertical-align: top; }
+.mt-won { font-family: var(--mono); font-size: .86em; white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
+.mt-act { font-size: .9em; max-width: 280px; }
+.mt-prio { display: inline-block; font-weight: 800; font-size: .76em; padding: 2px 7px; border-radius: 5px; color: #fff; font-family: var(--mono); }
+.mt-prio.P1 { background: #dc2626; } .mt-prio.P2 { background: #d97706; } .mt-prio.P3 { background: #2563eb; }
+.mt-wo .btn { white-space: nowrap; }
+.mt-lcd { background: #04140b; border: 1px solid #14532d; border-radius: 6px; padding: 8px 10px; font-family: var(--mono); font-size: .76em; margin-bottom: 10px; min-height: 54px; direction: ltr; text-align: left; }
+.mt-lcd .trb { color: #fcd34d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.6; }
+.mt-lcd .okk { color: #4ade80; line-height: 2.6; text-align: center; }
+.mt-mini { height: 5px; background: #1f2d3b; border-radius: 3px; overflow: hidden; }
+.mt-mini i { display: block; height: 100%; transition: width .6s; }
+
+/* plan challenge */
+.mt-plan tbody tr.on td { background: var(--accent-bg); }
+.mt-plan tbody tr.opt td:nth-child(2) { font-weight: 600; }
+.mt-plan input { accent-color: var(--accent); width: 16px; height: 16px; }
+.mt-budget { display: flex; align-items: center; gap: 10px; }
+.mt-bb { flex: 1; height: 14px; border-radius: 7px; background: var(--panel2); border: 1px solid var(--line); overflow: hidden; }
+.mt-bb i { display: block; height: 100%; transition: width .3s; }
+.mt-bl { font-weight: 700; }
+
+@media (max-width: 1400px) { .mt-grid { grid-template-columns: 1fr; } }
+.mt-tbl td.num { white-space: nowrap; }
+.mt-g-a .btn { white-space: nowrap; }
+.mt td.num { white-space: nowrap; }

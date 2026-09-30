@@ -1,0 +1,67 @@
+/* ═════════════ Module 9 — Engineering Tools ═════════════ */
+.tl .tl-n { direction: ltr; unicode-bidi: isolate; font-family: var(--mono); }
+.tl .tl-in { display: flex; align-items: center; gap: 6px; }
+.tl .tl-in input { flex: 1; min-width: 0; width: 100%; }
+.tl .tl-in em { font-style: normal; font-size: .82em; color: var(--muted); direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+.tl .tl-chart { position: relative; height: 300px; }
+.tl .tl-chart.tall { height: 430px; }
+.tl .tl-verdict { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+.tl .tl-vbig .adv-pill { font-size: .9em; padding: 5px 12px; }
+.tl .tl-warns { margin-top: 6px; font-size: .9em; color: var(--warn); }
+.tl .tl-formula { font-family: var(--mono); font-size: .92em; letter-spacing: 0; color: var(--text); direction: ltr; unicode-bidi: isolate; font-weight: 500; }
+.tl .tl-draw { border: 1px solid var(--line); }
+
+/* editable tables */
+.tl .tl-edit input, .tl .tl-edit select { padding: 4px 6px; font-size: .92em; border-radius: 6px; }
+.tl .tl-edit .tl-t { width: 74px; font-family: var(--mono); }
+.tl .tl-edit .tl-s { width: 72px; text-align: end; direction: ltr; }
+.tl .tl-edit .tl-xs { width: 48px; text-align: end; direction: ltr; }
+.tl .tl-edit select { max-width: 130px; }
+.tl .tl-edit td { padding: 4px 5px; white-space: nowrap; }
+.tl .tl-edit .tl-idx { color: var(--muted); font-size: .8em; }
+.tl .tl-del { color: var(--alarm); padding: 3px 8px; }
+.tl .tl-edit-wrap { max-height: 380px; }
+.tl .tl-live { font-size: .66em; padding: 1px 6px; margin-inline-start: 4px; vertical-align: 1px; }
+
+/* calculation sheet */
+.tl .tl-sheet { max-height: 560px; }
+.tl .tl-sheet-t td { font-size: .92em; vertical-align: top; }
+.tl .tl-sheet-t td.num small, .tl .tl-sheet-t th small { color: var(--muted); font-weight: 400; }
+.tl .tl-stack { line-height: 1.35; white-space: nowrap; }
+.tl .tl-note { color: var(--muted); font-size: .88em; }
+.tl tr.tl-sh-head td { background: color-mix(in srgb, var(--panel2) 70%, transparent); color: var(--muted); font-size: .86em; }
+.tl tr.tl-sh-bal td { background: color-mix(in srgb, var(--warn) 9%, var(--panel)); }
+.tl tr.tl-sh-tot td { background: var(--panel2); }
+.tl tr.tl-sh-info td { background: var(--accent-bg); }
+
+/* battery */
+.tl .tl-bat-top { grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr); }
+.tl .tl-formulas { display: flex; flex-direction: column; gap: 8px; }
+.tl .tl-f { display: grid; grid-template-columns: 170px 1fr; gap: 10px; align-items: baseline; font-size: .9em; }
+.tl .tl-f > span { color: var(--muted); }
+.tl .tl-f code { font-family: var(--mono); background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; direction: ltr; unicode-bidi: isolate; text-align: left; }
+.tl .tl-task { border-color: var(--accent-line); background: linear-gradient(180deg, var(--accent-bg), var(--panel) 120px); }
+
+/* NAC */
+.tl .tl-nac-top { grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr); }
+.tl tr.tl-best td { background: color-mix(in srgb, var(--ok) 10%, var(--panel)); }
+.tl tr.tl-cur td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+
+/* SLC address map */
+.tl .tl-amap { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; direction: ltr; }
+.tl .tl-cell { font-family: var(--mono); font-size: .66em; text-align: center; padding: 4px 0; border-radius: 4px; background: var(--panel2); color: var(--muted); border: 1px solid var(--line); }
+.tl .tl-cell.on { border-color: transparent; font-weight: 700; }
+.tl .tl-svgt { fill: var(--text); }
+
+/* riser */
+.tl .tl-riser { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fff; }
+.tl .tl-riser svg { border-radius: 0; }
+
+/* drawing text halo & flow animation */
+.tl-halo text, text.tl-halo { paint-order: stroke; stroke: #fbfcfe; stroke-width: 3px; stroke-linejoin: round; }
+.tl-flow { animation: tlFlow 1.1s linear infinite; }
+@keyframes tlFlow { from { stroke-dashoffset: 28; } to { stroke-dashoffset: 0; } }
+@media (max-width: 1250px) { .tl .tl-bat-top, .tl .tl-nac-top { grid-template-columns: 1fr; } }
+.tl .tl-bad { color: var(--alarm); font-weight: 700; }
+.tl .tl-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 14px; align-items: start; }
+.tl .tl-col { display: flex; flex-direction: column; min-width: 0; }

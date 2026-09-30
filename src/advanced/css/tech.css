@@ -1,0 +1,111 @@
+/* ═════════════ Module 8 — Modern Detection & Suppression Technologies ═════════════ */
+.tech-lay { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 14px; align-items: start; }
+.tech-main { min-width: 0; }
+.tech-side .card { margin-bottom: 12px; }
+.tech-side .adv-range { margin-bottom: 9px; }
+@media (max-width: 1250px) { .tech-lay { grid-template-columns: minmax(0, 1fr); } }
+.tech-scene { padding: 12px; }
+.tech-svg { direction: ltr; background: #0b1118; box-shadow: inset 0 0 0 1px rgba(148, 163, 184, .15); user-select: none; }
+.tech-svg text { font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif; }
+.tech-plan { max-width: 420px; margin: 0 auto; }
+.tech-n { font-family: var(--mono); direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+.tech-mut { color: var(--muted); font-size: .9em; }
+.tech-mt { margin-top: 10px; }
+.tech-stats { margin: 0 0 12px; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); }
+.tech-stats .adv-stat .v { font-size: 1.15em; }
+.tech-chart { position: relative; height: 260px; }
+.tech-tbl { max-height: 330px; }
+.tech-ul { margin: 0; padding-inline-start: 20px; line-height: 1.6; font-size: .92em; }
+.tech-ul li { margin-bottom: 6px; }
+.tech-ul li::marker { color: var(--accent); }
+.tech-explain .card { margin-bottom: 0; }
+.tech-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tech-lbl { font-size: .86em; color: var(--muted); min-width: 80px; }
+.tech-th { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 10px; }
+.tech-th input { width: 100%; font-family: var(--mono); direction: ltr; }
+
+/* segmented control */
+.tech-seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: var(--panel2); }
+.tech-seg button { border: none; background: none; padding: 6px 11px; font-size: .86em; color: var(--muted); font-weight: 600; border-inline-end: 1px solid var(--line); cursor: pointer; }
+.tech-seg button:last-child { border-inline-end: none; }
+.tech-seg button:hover { color: var(--text); }
+.tech-seg button.on { background: var(--accent); color: #fff; }
+:root[data-theme="dark"] .tech-seg button.on { color: #04221f; }
+
+/* checkbox rows */
+.tech-chk { display: flex; align-items: flex-start; gap: 8px; font-size: .88em; padding: 6px 8px; border-radius: 8px; cursor: pointer; line-height: 1.4; }
+.tech-chk:hover { background: var(--panel2); }
+.tech-chk input { accent-color: var(--accent); margin-top: 2px; flex: none; }
+
+/* mechanism / comparison bars */
+.tech-bar { margin-bottom: 11px; }
+.tech-bar-l { display: flex; justify-content: space-between; font-size: .87em; margin-bottom: 4px; gap: 8px; }
+.tech-bar-t { height: 10px; border-radius: 99px; background: var(--panel2); border: 1px solid var(--line); overflow: hidden; }
+.tech-bar-t.tall { height: 18px; }
+.tech-bar-t i { display: block; height: 100%; border-radius: 99px; transition: width .35s ease; }
+.tech-bar small { color: var(--muted); font-size: .78em; }
+
+/* LHD calc */
+.tech-calc { display: flex; flex-direction: column; gap: 8px; font-size: .9em; line-height: 1.6; }
+.tech-calc > div:not(.adv-note) { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 11px; }
+.tech-big { font-size: 1.05em; border-inline-start: 4px solid var(--accent) !important; }
+
+/* pre-action inputs */
+.tech-inputs { display: grid; gap: 8px; }
+.tech-tog { display: grid; grid-template-columns: 22px 1fr; grid-template-rows: auto auto; column-gap: 10px; text-align: start; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel2); cursor: pointer; transition: all .15s; }
+.tech-tog .dot { grid-row: span 2; align-self: center; width: 18px; height: 18px; border-radius: 50%; background: #475569; box-shadow: inset 0 -2px 3px rgba(0,0,0,.35); }
+.tech-tog b { font-size: .92em; color: var(--text); }
+.tech-tog small { color: var(--muted); font-size: .8em; }
+.tech-tog:hover { border-color: var(--accent-line); }
+.tech-tog.on { border-color: var(--alarm); background: color-mix(in srgb, var(--alarm) 10%, var(--panel)); }
+.tech-tog.on .dot { background: #ef4444; box-shadow: 0 0 10px #ef4444, inset 0 -2px 3px rgba(0,0,0,.3); }
+.tech-tt tr.on td { background: color-mix(in srgb, var(--accent) 16%, transparent) !important; font-weight: 700; }
+.tech-tt tr.on td:first-child { box-shadow: inset 4px 0 0 var(--accent); }
+[dir="rtl"] .tech-tt tr.on td:first-child { box-shadow: inset -4px 0 0 var(--accent); }
+.tech-mat th.on, .tech-mat td.on { background: color-mix(in srgb, var(--accent) 14%, transparent); font-weight: 700; }
+.tech-mini { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 10px; }
+.tech-mq { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--panel2); display: flex; flex-direction: column; gap: 8px; }
+.tech-mq-q { display: flex; gap: 8px; font-size: .9em; line-height: 1.5; }
+.tech-mq select { max-width: 260px; }
+.tech-mq-a { font-size: .85em; line-height: 1.5; color: var(--muted); }
+.tech-mq-a:empty { display: none; }
+.tech-badge { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-grid; place-items: center; font-size: .75em; font-weight: 800; background: var(--accent); color: #fff; }
+
+/* quiz */
+.tech-quiz { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 12px; margin: 12px 0; }
+.tech-qc { margin: 0; border-inline-start: 4px solid var(--line); transition: border-color .2s; }
+.tech-qc.ok { border-inline-start-color: var(--ok); }
+.tech-qc.bad { border-inline-start-color: var(--alarm); }
+.tech-qh { display: flex; gap: 10px; font-weight: 600; line-height: 1.5; margin-bottom: 10px; }
+.tech-opts { display: grid; gap: 6px; }
+.tech-opt { display: flex; gap: 9px; align-items: center; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; font-size: .9em; }
+.tech-opt:hover { border-color: var(--accent-line); background: var(--panel2); }
+.tech-opt input { accent-color: var(--accent); }
+.tech-opt.right { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, var(--panel)); }
+.tech-opt.wrong { border-color: var(--alarm); background: color-mix(in srgb, var(--alarm) 9%, var(--panel)); }
+.tech-why { font-size: .85em; color: var(--muted); line-height: 1.5; margin-top: 8px; }
+.tech-why:empty { display: none; }
+
+/* SVG animation */
+.tech-flow { animation: tech-dash 1.5s linear infinite; }
+.tech-flow2 { animation: tech-dash 0.9s linear infinite; }
+@keyframes tech-dash { to { stroke-dashoffset: -40; } }
+.tech-beam { stroke-dasharray: 14 6; animation: tech-dash .8s linear infinite; }
+.tech-belt { animation: tech-dash 2.2s linear infinite reverse; }
+.tech-spray { animation: tech-dash .5s linear infinite reverse; }
+.tech-blink { animation: tech-blink 1.6s ease-in-out infinite; }
+@keyframes tech-blink { 50% { opacity: .25; } }
+.tech-ledon { animation: tech-led 0.8s steps(2, jump-none) infinite; filter: drop-shadow(0 0 4px currentColor); }
+@keyframes tech-led { 50% { opacity: .45; } }
+.tech-flick { transform-box: fill-box; transform-origin: 50% 100%; animation: tech-flick .35s ease-in-out infinite alternate; }
+@keyframes tech-flick { from { transform: scale(1, 1); } to { transform: scale(.92, 1.1) skewX(3deg); } }
+.tech-rise { transform-box: fill-box; transform-origin: center; animation: tech-rise 3.6s ease-in infinite; }
+@keyframes tech-rise { 0% { transform: translateY(20px) scale(.7); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-40px) scale(1.25); opacity: 0; } }
+.tech-exh { animation: tech-exh 1.4s ease-out infinite; }
+@keyframes tech-exh { 0% { opacity: .2; transform: translateX(-3px); } 50% { opacity: 1; } 100% { opacity: .2; transform: translateX(4px); } }
+.tech-shim { animation: tech-shim 1.2s ease-in-out infinite alternate; }
+@keyframes tech-shim { to { transform: translateY(-6px); } }
+.tech-spin { transform-box: fill-box; transform-origin: center; animation: tech-spin .4s linear infinite; }
+@keyframes tech-spin { to { transform: rotate(360deg); } }
+.tech-fire-pulse > circle { animation: tech-blink 1s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .tech [class*="tech-"] { animation: none !important; } }
