@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { LicenseStore } = require('./license.js');
 const { checkForUpdate } = require('./updates.js');
+const asfanLms = require('./asfan-lms-link.cjs'); // ASFAN LMS link (active only when opened from Asfan Academy)
 
 let win;
 let store;
@@ -100,6 +101,7 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(file).toString());
   });
   store = new LicenseStore(app.getPath('userData'));
+  asfanLms.install(ipcMain);
   ipcMain.handle('license:status', () => store.status());
   ipcMain.handle('app:version', () => app.getVersion());
   ipcMain.handle('update:check', () => checkForUpdate(app.getVersion()));

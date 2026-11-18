@@ -7,6 +7,7 @@ import { HAZARDS, toUS } from '../engine/design.js';
 import { FIELDS, SAMPLE_DT } from '../engine/sim.js';
 import { fmt, mmss, hrrStr } from './metrics.js';
 import { licenseStatus, isSupervisor } from './license.js';
+import { CATALOG } from '../data/packages.js';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
@@ -446,6 +447,31 @@ export function recordResult(r) {
   const all = results();
   all.push({ date: new Date().toISOString(), student: localGet('ftw.student') || '—', group: localGet('ftw.group') || '', ...r });
   localSet('ftw.results', JSON.stringify(all.slice(-2000)));
+  reportToLms(all[all.length - 1]);
+}
+
+// ASFAN LMS link: send the finished test to Asfan Academy (only active when the platform opened the program).
+function lmsTopicTitle(topic, type) {
+  const t = String(topic ?? '');
+  if (t === 'all') return 'شامل';
+  const lesson = LESSONS.find((l) => l.id === t);
+  if (lesson) return lesson.title?.ar || tr(lesson.title);
+  const [head, ...rest] = t.split('/');
+  if (head === 'exam') return ['امتحان', ...rest].join(' / ');
+  const list = type === 'training' ? CATALOG.scenes : type === 'lab' ? CATALOG.lab : type === 'challenge' ? CATALOG.facilities : [];
+  const hit = list.find(([id]) => id === head);
+  return hit ? [hit[1].ar, ...rest].join(' / ') : t;
+}
+function reportToLms(r) {
+  try {
+    const KIND_AR = { quiz: 'اختبار', challenge: 'تحدي استكشاف الأعطال', training: 'تدريب ثلاثي الأبعاد', lab: 'تمرين عملي' };
+    if (window.asfanLMS && r) window.asfanLMS.report({
+      title: (KIND_AR[r.type] || r.type) + ' · ' + lmsTopicTitle(r.topic, r.type),
+      kind: r.type, score: r.score, maxScore: r.total, correct: r.score, total: r.total,
+      passMark: String(r.topic || '').startsWith('exam/') ? 80 : undefined,
+      student: r.student, data: { group: r.group, topic: r.topic, detail: r.detail }
+    })?.catch?.(() => {});
+  } catch (e) { /* the LMS link must never break the program */ }
 }
 
 function renderClassroom() {

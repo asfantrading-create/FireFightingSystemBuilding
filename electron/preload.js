@@ -12,3 +12,11 @@ contextBridge.exposeInMainWorld('api', {
   savePdf: (name) => ipcRenderer.invoke('file:savePdf', name),
   onMenu: (cb) => ipcRenderer.on('menu', (_e, cmd) => cb(cmd)),
 });
+
+// ASFAN LMS link: lets the page report finished tests to Asfan Academy
+try {
+  require('electron').contextBridge.exposeInMainWorld('asfanLMS', {
+    report: r => require('electron').ipcRenderer.invoke('asfan-lms:report', r),
+    info: () => require('electron').ipcRenderer.invoke('asfan-lms:info')
+  });
+} catch (e) { /* ignore */ }

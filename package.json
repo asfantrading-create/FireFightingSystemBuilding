@@ -1,7 +1,7 @@
 {
   "name": "fire-protection-digital-twin",
   "productName": "Fire Protection Digital Twin",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Educational real-time fire-fighting system digital twin simulator (sprinklers, fire pumps, standpipes, clean agent, foam).",
   "author": "ASFAN Trading <info@asfanco.com>",
   "license": "UNLICENSED",
